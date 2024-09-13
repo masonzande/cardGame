@@ -1,0 +1,6 @@
+# Window system
+pygame
+# Installing Python OpenGL Packages.
+# On success, both of these will say version 3.1.7, but they are correctly installing 3.1.8
+PyOpenGL @ git+https://github.com/mcfletch/pyopengl.git@release-3.1.8
+PyOpenGL_accelerate @ git+https://github.com/mcfletch/pyopengl.git@release-3.1.8#egg=pyopengl-accelerate&subdirectory=accelerate

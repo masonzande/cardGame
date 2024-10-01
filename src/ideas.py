@@ -53,7 +53,7 @@ Movements:
 '''
 Game Design:
     Environment:
-        Desert, Forest, Ocean, Savannah, Plains, Cave.
+        Desert, Forest, Ocean, Savannah, Plains, Cave, Tundra.
         Each environment buffs the animals from that respective environment and nerfs one other environment's animals.
         A random environment is chosen for every match with some environmental obstacles randomly assigned.
             A random weather event is chosen to start a match and it changes every 5 turns.
@@ -85,7 +85,8 @@ Animals:
 
     Forest:
         Wolf
-        Bear
+        Grizzly Bear
+        Black Bear
         Deer
         Rabbit
         Moose
@@ -122,6 +123,11 @@ Animals:
         Vulture
         Eagle
         Hawk
+
+    Tundra:
+        Polar Bear
+        Arctic Fox
+        Penguin
 
 Weather Cards:
     Rain, Sun, Clouds, Snow, Thunderstorm

@@ -3,14 +3,138 @@ Abilities/StatusEffects:
     Fear = Subtracts attack from opposing animal (1 per size difference).
     OnSight = Ability happens on sight of the animal.
     Paralysis = Immobilization of animal. Chance 1-3 turns of no movement (50% chance of paralysis during that time).
+    Flinch = Skip turn (Affects Lower Size Animals).
     Intellect = Able to use tools.
     Grouping = Animal is stronger in larger groups. Up to 5.
     Venom = Being bitten by the animal causes toxic damage. Max 2.
     Poison = Touching the animal causes toxic damage. Max 2.
     Bleed = Lose 1 health per level of bleed per turn. Max 3.
     Camoflauge = Unable to be seen easily. Visibility of animal is within one "space" distance. Enemy player knows that the card exists on the battlefield.
-    ColdBlooded = Gains 1 HP per turn in sun.
+    ColdBlooded = Gains 1 HP per turn in sun (not over maximum), -1 HP per turn in wildfire, drought. Decreased speed in blizzard, tundra.
     Exhaustion = Level 1: Lose half speed, rounded down. Level 2: Paralysis. Max 2.
+    Night Vision = Decreased loss of vision in the dark.
+    Rations = +1 HP per turn (not over maximum).
+    Scavenger = +1 HP (not over maximum) when resting on a square where an animal has died (one turn use per death on square).
+'''
+
+'''
+Map of Animals to Abilities/Movesets/Movements:
+    (All Animals Subject to Movement Exhaustion)
+    (Animals From a Certain Biome do Not Receive Negative Status Effects From That Biome)
+    (All Animals Can Double Movement of Any Time For One Additional Exhaustion Level)
+
+    Natural Disaster = 1 Per Deck
+    Legendary = 1 Per Deck
+    Epic = 3 Per Deck
+    Rare = 5 Per Deck
+    Common = Any # Per Deck
+    Weather = Any # Per Deck
+
+    Rattlesnake Legendary
+        Movement: Slither
+        Bite: Venom, Paralysis
+        ColdBlooded
+        Camoflauge
+        Rattle: Fear (All), Lowered Camoflauge
+        Smell: Night Vision
+
+    Camel Epic
+        Movement: Walk
+        Night Vision
+        Stomp: Flinch
+        Rations
+
+    Scorpion Rare
+        Movement: Walk
+        OnSight: Fear (Larger)
+        Tail Strike: Venom
+        Night Vision
+        ColdBlooded
+
+    Silver Ant Common
+        Movement: Walk
+        Grouping
+        ColdBlooded (+1 in Wildfire, Drought)
+        Exhaustion: Halved
+        Speed: HIGH (Exchange For 1 Attack Dmg)
+        Scavenger
+        Bite
+
+    Wolf Rare
+        Movement: Walk
+        OnSight: Fear (All)
+        Grouping
+        Bite: Bleed
+        Claw: Bleed
+        Night Vision
+        Smell: Reduces Camoflauge
+
+    Grizzly Bear Legendary
+        Movement: Walk
+        OnSight: Fear (All)
+        Immune to Fear
+        Bite: Bleed
+        Claw: Bleed
+        Night Vision
+        Smell: Reduces Camoflauge
+
+    Black Bear Epic
+        Movement: Walk, Climb
+        Night Vision
+        Smell: Reduces Camoflauge
+        Bite: Bleed
+        Claw: Bleed
+
+    Deer Common
+        Movement: Walk, Jump
+        Night Vision
+        Stomp: Flinch
+
+    Rabbit Common
+        Movement: Walk, Jump
+        Stomp: Flinch
+
+    Moose Epic
+        Movement: Walk
+        Stomp: Flinch
+        Night Vision
+
+    Eagle Rare
+        Movement: Walk, Fly
+        Claw
+
+    Hawk Rare
+        Movement: Walk, Fly
+        Claw
+
+    Shark
+    Dolphin
+    Orca
+    Plankton
+    Octopus
+    Crab
+
+    Lion
+    Giraffe
+    Elephant
+        Body Slam: Paralysis
+
+    Zebra
+    Hyena
+    Gazelle
+    Bison
+    Vulture
+
+    Monkey
+    Ape
+    Alligator
+    Crocodile
+    Poison Frog
+
+    Polar Bear
+    Arctic Fox
+    Penguin
+    Seal
 '''
 
 '''
@@ -35,11 +159,13 @@ Tool Cards:
 
 '''
 Movements:
-    Types (Slither, Fly, Walk, Swim).
+    Types (Slither, Climb, Fly, Walk, Swim).
         "Running" is possible for each type for double movement, but grants a level of exhaustion each use.
     Distance ranges, larger and faster animals get more range.
     Animals can have more than one method of movement.
 
+    Jump = Able to Jump Over Obstacles. Jumps can happen right before attacks. 1 Level of Exhaustion.
+    Climb = Able to Climb on/Off Obstacles.
     Amphibians can both walk and swim.
     Birds can both walk and fly.
     Fly can go over obstructions.
@@ -77,57 +203,62 @@ Game Design:
 
 '''
 Animals:
+    #Rank Relative to Environment
+
+    #Legendary = 1 Per Deck
+    #Epic = 3 Per Deck
+    #Rare = 5 Per Deck
+    #Common = Any # Per Deck
+
+    #Natural Disaster = 1 Per Deck
+    #Weather = Any # Per Deck
+
     Desert:
-        Rattlesnake
-        Scorpion
-        Silver Ant
-        Camel
+        Rattlesnake Legendary
+        Camel Epic
+        Scorpion Rare
+        Silver Ant Common
 
     Forest:
-        Wolf
-        Grizzly Bear
-        Black Bear
-        Deer
-        Rabbit
-        Moose
-        Monkey
-        Ape
+        Wolf Rare
+        Grizzly Bear Legendary
+        Black Bear Epic
+        Deer Common
+        Rabbit Common
+        Moose Epic
+        Eagle Rare
+        Hawk Rare
 
     Ocean:
-        Shark
-        Dolphin
-        Orca
-        Plankton
-        Octopus
-        Crab
+        Shark Epic
+        Dolphin Epic
+        Orca Legendary
+        Plankton Common
+        Octopus Rare
+        Crab Rare
 
-    Savannah:
-        Lion
-        Giraffe
-        Elephant
-        Zebra
-        Hyena
-        Gazelle
+    Grasslands:
+        Lion Legendary
+        Giraffe Epic
+        Elephant Legendary
+        Zebra Common
+        Hyena Rare
+        Gazelle Common
+        Bison Epic
+        Vulture Rare
 
-    Plains:
-        Bison
-
-    Cave:
-        Neanderthal
-
-    Swamp:
-        Alligator
-        Crocodile
-
-    Sky:
-        Vulture
-        Eagle
-        Hawk
+    Rainforest:
+        Monkey Rare
+        Ape Rare
+        Alligator Epic
+        Crocodile Epic
+        Poison Frog Common
 
     Tundra:
-        Polar Bear
-        Arctic Fox
-        Penguin
+        Polar Bear Legendary
+        Arctic Fox Rare
+        Penguin Common
+        Seal Common
 
 Weather Cards:
     Rain, Sun, Clouds, Snow, Thunderstorm

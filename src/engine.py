@@ -1,14 +1,12 @@
 import pygame as pg     # Using PyGame primarily for windowing and other framework style tasks
-from OpenGL.GL import *
+from OpenGL.GL import glClearColor
 
 class Engine:
     def __init__(self):
         pg.init()
-        pg.display.set_mode((680, 480), pg.OPENGL | pg.DOUBLEBUF)
+        self.display = pg.display.set_mode((680, 480), pg.OPENGL | pg.DOUBLEBUF)
         self.clock = pg.time.Clock()
-
-        glClearColor(0.5, 0.0, 0.8, 1.0) # Set a default clear color
-
+        self.init()
         self.load()
         self.tickLoop()
     
@@ -22,7 +20,10 @@ class Engine:
             self.update(self.clock)
             self.draw()
             pg.display.flip() # Equivalent to swapping backbuffer and displaybuffer in raw OpenGL
-        self.quit() # Unload
+        self.quit()           # Unload
+
+    def init(self):
+        raise NotImplementedError("Implement 'init' in super class.")
 
     def update(self, clock):
         raise NotImplementedError("Implement 'update' in super class.")

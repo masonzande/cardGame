@@ -101,6 +101,7 @@ Map of Animals to Abilities/Movesets/Movements:
         Movement: Walk, Swim
         Stomp: Flinch
         Night Vision
+        Horns: Bleed
 
     Eagle Common
         Movement: Walk, Fly
@@ -133,7 +134,7 @@ Map of Animals to Abilities/Movesets/Movements:
         Tail Slam: Flinch
         OnSight: Fear (All)
         Echo Location: Night Vision, Removes Camoflauge
-    
+
     Plankton Common
         Movement: Swim
         Grouping
@@ -170,6 +171,7 @@ Map of Animals to Abilities/Movesets/Movements:
         Body Slam: Paralysis
         Speed: Slow
         Trunk Grab: Paralysis
+        Stomp: Flinch
 
     Zebra Common
         Movement: Walk

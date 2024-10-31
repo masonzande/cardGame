@@ -265,4 +265,8 @@ Weather Cards:
 
     Natural Disasters (1 card per deck):
         Tsunami, Drought, Tornado, Earthquake, Meteor, Blizzard, Wildfire, Hail
+
+Day / Night Cycle
+    Some animals have night vision and see better than others at night
+    Animals with camouflage get further reduced visibility at night. 
 '''

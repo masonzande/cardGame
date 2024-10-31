@@ -1,11 +1,11 @@
 import pygame as pg     # Using PyGame primarily for windowing and other framework style tasks
-from OpenGL.GL import glClearColor
 
 class Engine:
     def __init__(self):
         pg.init()
         self.display = pg.display.set_mode((680, 480), pg.OPENGL | pg.DOUBLEBUF)
         self.clock = pg.time.Clock()
+        self.event_queue = None
         self.init()
         self.load()
         self.tickLoop()
@@ -13,13 +13,15 @@ class Engine:
     def tickLoop(self):
         running = True
         while running:
-            for ev in pg.event.get():
+            self.clock.tick(60)
+            for ev in pg.event.get(eventtype=pg.QUIT):
                 if ev.type == pg.QUIT:
                     running = False
-            self.clock.tick(60)
-            self.update(self.clock)
-            self.draw()
-            pg.display.flip() # Equivalent to swapping backbuffer and displaybuffer in raw OpenGL
+            if running:
+                self.event_queue = pg.event.get()
+                self.update(self.clock)
+                self.draw()
+                pg.display.flip() # Equivalent to swapping backbuffer and displaybuffer in raw OpenGL
         self.quit()           # Unload
 
     def init(self):

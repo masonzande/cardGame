@@ -6,7 +6,7 @@ from OpenGL.GL import *
 class CardGame(Engine):
     def __init__(self):
         super().__init__()
-    
+
     def init(self):
         # Prefer this to logic in __init__, as this logic is called before load but after engine setup
         pg.display.set_caption("Card Game")
@@ -30,7 +30,7 @@ class CardGame(Engine):
                     print("\n")
             # print(pg.event.event_name(event.type))
         self.dummy = 0
-    
+
     def draw(self):
         clear(0.2, 0.0, 0.0)
         # Drawing logic goes here

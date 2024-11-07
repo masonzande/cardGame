@@ -5,16 +5,17 @@ Abilities/StatusEffects:
     Paralysis = Immobilization of animal. Chance 1-3 turns of no movement (50% chance of paralysis during that time).
     Flinch = Skip turn (Affects Lower Size Animals).
     Intellect = Able to use tools.
-    Grouping = Animal is stronger in larger groups. Up to 5.
+    Grouping = Animal is stronger in larger groups. +1 HP for Prey, +1 Attack For Predators. Up to 3.
     Venom = Being bitten by the animal causes toxic damage. Max 2.
     Poison = Touching the animal causes toxic damage. Max 2.
     Bleed = Lose 1 health per level of bleed per turn. Max 3.
-    Camoflauge = Unable to be seen easily. Visibility of animal is within one "space" distance. Enemy player knows that the card exists on the battlefield.
+    Camoflauge = Unable to be seen easily. Visibility and attackability of animal is within one "space" distance. Enemy player knows that the card exists on the battlefield.
     ColdBlooded = Gains 1 HP per turn in sun (not over maximum), -1 HP per turn in wildfire, drought. Decreased speed in blizzard, tundra.
     Exhaustion = Level 1: Lose half speed, rounded down. Level 2: Paralysis. Max 2.
     Night Vision = Decreased loss of vision in the dark.
     Rations = +1 HP per turn (not over maximum).
     Scavenger = +1 HP (not over maximum) when resting on a square where an animal has died (one turn use per death on square).
+    Echo Location = Effectively is Night Vision + Removes Camoflauge.
 '''
 
 '''
@@ -22,6 +23,7 @@ Map of Animals to Abilities/Movesets/Movements:
     (All Animals Subject to Movement Exhaustion)
     (Animals From a Certain Biome do Not Receive Negative Status Effects From That Biome)
     (All Animals Can Double Movement of Any Time For One Additional Exhaustion Level)
+    (Each Playe Can Have n Animal Cards on The Battlefield at Once)
 
     Natural Disaster = 1 Per Deck
     Legendary = 1 Per Deck
@@ -38,7 +40,7 @@ Map of Animals to Abilities/Movesets/Movements:
         Rattle: Fear (All), Lowered Camoflauge
         Smell: Night Vision
 
-    Camel Epic
+    Camel Rare
         Movement: Walk
         Night Vision
         Stomp: Flinch
@@ -51,7 +53,7 @@ Map of Animals to Abilities/Movesets/Movements:
         Night Vision
         ColdBlooded
 
-    Silver Ant Common
+    Silver Ant Rare
         Movement: Walk
         Grouping
         ColdBlooded (+1 in Wildfire, Drought)
@@ -89,52 +91,187 @@ Map of Animals to Abilities/Movesets/Movements:
         Movement: Walk, Jump
         Night Vision
         Stomp: Flinch
+        Horns: Bleed
 
     Rabbit Common
         Movement: Walk, Jump
         Stomp: Flinch
 
     Moose Epic
-        Movement: Walk
+        Movement: Walk, Swim
         Stomp: Flinch
         Night Vision
+        Horns: Bleed
 
-    Eagle Rare
+    Eagle Common
         Movement: Walk, Fly
         Claw
 
-    Hawk Rare
+    Hawk Common
         Movement: Walk, Fly
         Claw
 
-    Shark
-    Dolphin
-    Orca
-    Plankton
-    Octopus
-    Crab
+    Shark Epic
+        Movement: Swim
+        Bite: Bleed
+        Tail Slam: Flinch
+        Night Vision
+        OnSight: Fear (Smaller)
 
-    Lion
-    Giraffe
-    Elephant
+    Dolphin Epic
+        Movement: Swim
+        Intellect
+        Grouping
+        Night Vision
+        Tail Slam: Flinch
+        Echo Location: Removes Camoflauge
+
+    Orca Legendary
+        Movement: Swim
+        Intellect
+        Grouping
+        Bite: Bleed
+        Tail Slam: Flinch
+        OnSight: Fear (All)
+        Echo Location: Night Vision, Removes Camoflauge
+
+    Plankton Common
+        Movement: Swim
+        Grouping
+        Rations
+
+    Octopus Rare
+        Movement: Swim
+        Night Vision
+        Punch
+        Intellect
+        Grab: Paralysis
+        Camoflauge
+
+    Crab Rare
+        Movement: Walk, Swim
+        Night Vision (Reduced)
+        Claw
+        Camoflauge
+
+    Lion Legendary
+        Movement: Walk
+        Night Vision
+        Grouping
+        OnSight: Fear (All)
+        Bite: Bleed
+        Claw: Bleed
+
+    Giraffe Legendary
+        Movement: Walk
+        Stomp: Flinch
+
+    Elephant Legendary
+        Movement: Walk
         Body Slam: Paralysis
+        Speed: Slow
+        Trunk Grab: Paralysis
+        Stomp: Flinch
 
-    Zebra
-    Hyena
-    Gazelle
-    Bison
-    Vulture
+    Zebra Common
+        Movement: Walk
+        Night Vision
+        Grouping
+        Stomp: Flinch
 
-    Monkey
-    Ape
-    Alligator
-    Crocodile
-    Poison Frog
+    Hyena Rare
+        Movement: Walk
+        Grouping
+        Night Vision
+        Scavenger
+        Camoflauge
+        Bite: Bleed
+        Claw: Bleed
 
-    Polar Bear
-    Arctic Fox
-    Penguin
-    Seal
+    Gazelle Common
+        Movement: Walk, Jump
+        Camoflauge
+        Grouping
+        Stomp: Flinch
+        Horns: Bleed
+
+    Bison Epic
+        Movement: Walk
+        Grouping
+        Stomp: Flinch, Paralysis w/Grouping
+        Headbutt: Flinch
+
+    Vulture Rare
+        Movement: Walk, Fly
+        Claw
+        Scavenger
+        Night Vision (Reduced)
+
+    Monkey Rare
+        Movement: Walk, Climb
+        Intellect
+        Punch
+
+    Ape Rare
+        Movement: Walk
+        Intellect
+        Grab: Paralysis
+        Punch
+
+    Alligator Epic
+        Movement: Walk, Swim
+        BiteSpin: Bleed
+        Bite: Bleed
+        TailSpin: Flinch
+        Night Vision
+        Camoflauge
+        OnSight: Fear (All)
+
+    Crocodile Epic
+        Movement: Walk, Swim
+        BiteSpin: Bleed
+        Bite: Bleed
+        TailSpin: Flinch
+        Night Vision
+        Camoflauge
+        OnSight: Fear (All)
+
+    Poison Frog Common
+        Movement: Walk, Jump
+        Hurt -> Poison
+
+    Polar Bear Legendary
+        Movement: Walk, Swim
+        Night Vision
+        Camoflauge
+        Bite: Bleed
+        Claw: Bleed
+        OnSight: Fear (All)
+
+    Arctic Fox Rare
+        Movement: Walk
+        Camoflauge
+        Night Vision
+        Bite
+        Claw
+        Bark: Fear
+
+    Penguin Common
+        Movement: Walk, Swim
+        Night Vision
+        Bite
+
+    Seal Common
+        Movement: Swim
+        Night Vision
+        Camoflauge
+        Body Slam: Paralysis
+'''
+
+'''
+ART:
+    Format:
+        Square
 '''
 
 '''
@@ -217,7 +354,7 @@ Animals:
         Rattlesnake Legendary
         Camel Epic
         Scorpion Rare
-        Silver Ant Common
+        Silver Ant Rare
 
     Forest:
         Wolf Rare

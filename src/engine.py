@@ -1,9 +1,11 @@
 import pygame as pg     # Using PyGame primarily for windowing and other framework style tasks
+from OpenGL.GL import glGetString, GL_VERSION
 
 class Engine:
     def __init__(self):
         pg.init()
         self.display = pg.display.set_mode((680, 480), pg.OPENGL | pg.DOUBLEBUF)
+        print(glGetString(GL_VERSION) )
         self.clock = pg.time.Clock()
         self.event_queue = None
         self.init()

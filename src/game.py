@@ -1,6 +1,6 @@
 import pygame as pg
 from engine import Engine
-from graphics import clear, Batcher2D
+from graphics import clear, Batcher2D, Shader, VERTEX_DEFAULT, FRAGMENT_DEFAULT
 from OpenGL.GL import *
 
 class CardGame(Engine):
@@ -13,6 +13,7 @@ class CardGame(Engine):
         self.dummy = 0
         self.b = True
         self.batcher = Batcher2D()
+        self.shader = Shader(VERTEX_DEFAULT, FRAGMENT_DEFAULT)
 
     def load(self):
         pass
@@ -33,7 +34,9 @@ class CardGame(Engine):
     def draw(self):
         clear(0.2, 0.0, 0.0)
         # Drawing logic goes here
+        self.batcher.begin(self.shader)
         self.batcher.draw_rect(pg.Vector2(0, 0), pg.Vector2(0.5, 0.5))
+        self.batcher.draw_rect(pg.Vector2(-0.4, 0.2), pg.Vector2(1, 0.1))
         self.batcher.draw_rect(pg.Vector2(-1, -1), pg.Vector2(0.6, 0.8))
         self.batcher.flush()
     def unload(self):

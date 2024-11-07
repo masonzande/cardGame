@@ -10,7 +10,7 @@ def main():
     #Print The Stats of All Animals Before Any Attacks.
     InitAnimals.Animals.PrintAllAnimals()
 
-    #Deer Attacks Wolf. Wolf Attacks Deer.
+    #All Animals Attack a Random Other Animal (All if Splash)
     for Animal in list(InitAnimals.Animals.AnimalList):
 
         if Animal.Health > 0:

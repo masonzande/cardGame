@@ -1,21 +1,22 @@
 '''
 Abilities/StatusEffects:
-    Fear = Subtracts attack from opposing animal (1 per size difference).
-    OnSight = Ability happens on sight of the animal.
-    Paralysis = Immobilization of animal. Chance 1-3 turns of no movement (50% chance of paralysis during that time).
-    Flinch = Skip turn (Affects Lower Size Animals).
-    Intellect = Able to use tools.
-    Grouping = Animal is stronger in larger groups. +1 HP for Prey, +1 Attack For Predators. Up to 3.
-    Venom = Being bitten by the animal causes toxic damage. Max 2.
-    Poison = Touching the animal causes toxic damage. Max 2.
-    Bleed = Lose 1 health per level of bleed per turn. Max 3.
-    Camoflauge = Unable to be seen easily. Visibility and attackability of animal is within one "space" distance. Enemy player knows that the card exists on the battlefield.
-    ColdBlooded = Gains 1 HP per turn in sun (not over maximum), -1 HP per turn in wildfire, drought. Decreased speed in blizzard, tundra.
-    Exhaustion = Level 1: Lose half speed, rounded down. Level 2: Paralysis. Max 2.
-    Night Vision = Decreased loss of vision in the dark.
-    Rations = +1 HP per turn (not over maximum).
-    Scavenger = +1 HP (not over maximum) when resting on a square where an animal has died (one turn use per death on square).
+    #Fear = Subtracts attack from opposing animal (1 per size difference).
+    #Paralysis = Immobilization of animal. Chance 1-3 turns of no movement (50% chance of paralysis during that time).
+    #Flinch = Skip turn (Affects Lower Size Animals).
+    #Intellect = Able to use tools.
+    #Grouping = Animal is stronger in larger groups. +1 HP for Prey, +1 Attack For Predators. Up to 3.
+    #Venom = Being bitten by the animal causes toxic damage. Max 2.
+    #Poison = Touching the animal causes toxic damage. Max 2.
+    #Bleed = Lose 1 health per level of bleed per turn. Max 3.
+    #Camoflauge = Unable to be seen easily. Visibility and attackability of animal is within one "space" distance. Enemy player knows that the card exists on the battlefield.
+    #ColdBlooded = Gains 1 HP per turn in sun (not over maximum), -1 HP per turn in wildfire, drought. Decreased speed in blizzard, tundra.
+    #Exhaustion = Level 1: Lose half speed, rounded down. Level 2: Paralysis. Max 2.
+    #Night Vision = Decreased loss of vision in the dark.
+    #Rations = +1 HP per turn (not over maximum).
+    #Scavenger = +1 HP (not over maximum) when resting on a square where an animal has died (one turn use per death on square).
+
     Echo Location = Effectively is Night Vision + Removes Camoflauge.
+    OnSight = Ability happens on sight of the animal.
 '''
 
 '''

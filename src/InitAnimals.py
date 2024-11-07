@@ -19,7 +19,7 @@ class Animals:
 
         #Animal Attacks/Abilities.
         Animal.AttackTypes = AttackTypes #{AttackType: Damage, AttackType: Damage}. {ClassObject: Damage}.
-        Animal.AbilityTypes = AbilityTypes #{Condition: Ability}.
+        Animal.AbilityTypes = AbilityTypes #{Condition: AbilityObjects}. "None" is Active at All Times.
 
     #Animal Attacks a Defender. Object Method.
     def Attack(Animal, Defender, Damage, Defenders, AttackType):
@@ -89,6 +89,66 @@ class AbilityTypes:
         AbilityType.AbilityName = AbilityName #String Name of The Ability. Unique.
         AbilityType.SubEffects = SubEffects #List of String Effects From This Ability.
         AbilityTypes.AbilityTypeList.append(AbilityType) #The AbilityTypes Class Contains a List of Every AbilityType.
+
+    #Define The Effects of All Abilities (by Ability Name).
+    def Effects(AbilityType):
+
+        #Check Which Ability This Ability is. Perform The Ability's Effects.
+        if AbilityType.AbilityName == "Venom":
+            #Venom = Being bitten by the animal causes toxic damage. Max 2.
+            pass
+
+        elif AbilityType.AbilityName == "Paralysis":
+            #Paralysis = Immobilization of animal. Chance 1-3 turns of no movement (50% chance of paralysis during that time).
+            pass
+
+        elif AbilityType.AbilityName == "ColdBlooded":
+            #ColdBlooded = Gains 1 HP per turn in sun (not over maximum), -1 HP per turn in wildfire, drought. Decreased speed in blizzard, tundra.
+            pass
+
+        elif AbilityType.AbilityName == "Camoflauge":
+            #Camoflauge = Unable to be seen easily. Visibility and attackability of animal is within one "space" distance. Enemy player knows that the card exists on the battlefield.
+            pass
+
+        elif AbilityType.AbilityName == "Night Vision":
+            #Night Vision = Decreased loss of vision in the dark.
+            pass
+
+        elif AbilityType.AbilityName == "Flinch":
+            #Flinch = Skip turn (Affects Lower Size Animals).
+            pass
+
+        elif AbilityType.AbilityName == "Rations":
+            #Rations = +1 HP per turn (not over maximum).
+            pass
+
+        elif AbilityType.AbilityName == "Grouping":
+            #Grouping = Animal is stronger in larger groups. +1 HP for Prey, +1 Attack For Predators. Up to 3.
+            pass
+
+        elif AbilityType.AbilityName == "Bleed":
+            #Bleed = Lose 1 health per level of bleed per turn. Max 3.
+            pass
+
+        elif AbilityType.AbilityName == "Intellect":
+            #Intellect = Able to use tools.
+            pass
+
+        elif AbilityType.AbilityName == "Scavenger":
+            #Scavenger = +1 HP (not over maximum) when resting on a square where an animal has died (one turn use per death on square).
+            pass
+
+        elif AbilityType.AbilityName == "Poison":
+            #Poison = Touching the animal causes toxic damage. Max 2.
+            pass
+
+        elif AbilityType.AbilityName == "Fear":
+            #Fear = Subtracts attack from opposing animal (1 per size difference).
+            pass
+
+        elif AbilityType.AbilityName == "Exhaustion":
+            #Exhaustion = Level 1: Lose half speed, rounded down. Level 2: Paralysis. Max 2.
+            pass
 
 #Create The Animals + Attack Types.
 def CreateAnimalsAndAttackTypes():

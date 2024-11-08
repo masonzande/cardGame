@@ -59,7 +59,7 @@ class Network:
         self.callbacks[messageType] = callback
 
     def listen(self):
-        # messages should be expected as a dict in form {"type": messageType, "message": message}
+        # messages should be expected as a dict in form {"type": messageType, "message": messageContent}
         while self.running:
             try:
                 # probably a high buffer size can be fine-tuned later

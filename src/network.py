@@ -20,7 +20,6 @@ user1.sendChat(chat)
 
 close connection
 user1.stop()
-user2.stop()
 '''
 class Network:
     def __init__(self, host, port):

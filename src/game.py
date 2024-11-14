@@ -1,7 +1,9 @@
 import pygame as pg
 from engine import Engine
-from graphics import clear, Batcher2D, Shader, VERTEX_DEFAULT, FRAGMENT_DEFAULT
+from graphics import clear, Batcher, Shader, VERTEX_DEFAULT, FRAGMENT_DEFAULT, create_ortho_projection
 from OpenGL.GL import *
+
+from graphics.vertices import VertexPosition2Color4
 
 class CardGame(Engine):
     def __init__(self):
@@ -12,8 +14,10 @@ class CardGame(Engine):
         pg.display.set_caption("Card Game")
         self.dummy = 0
         self.b = True
-        self.batcher = Batcher2D()
+        self.batcher = Batcher[VertexPosition2Color4]()
         self.shader = Shader(VERTEX_DEFAULT, FRAGMENT_DEFAULT)
+        winx, winy = pg.display.get_window_size()
+        self.shader.set_uniform('mvp', create_ortho_projection(0, winx, 0, winy))
 
     def load(self):
         pass
@@ -35,9 +39,7 @@ class CardGame(Engine):
         clear(0.2, 0.0, 0.0)
         # Drawing logic goes here
         self.batcher.begin(self.shader)
-        self.batcher.draw_rect(pg.Vector2(0, self.dummy), pg.Vector2(12, 32))
-        self.batcher.draw_rect(pg.Vector2(68, 132), pg.Vector2(256, 87))
-        self.batcher.draw_rect(pg.Vector2(-1, -1), pg.Vector2(3, 3))
+        self.batcher.draw_indexed([VertexPosition2Color4(pg.Vector2(0, 0), pg.Color('white')), VertexPosition2Color4(pg.Vector2(32, 0), pg.Color('white')), VertexPosition2Color4(pg.Vector2(32, 32), pg.Color('white'))], [0, 1, 2])
         self.batcher.flush()
     def unload(self):
         self.dummy = 0

@@ -8,6 +8,9 @@ import OpenGL.arrays.vbo
 import pygame as pg
 import numpy as np
 
+import graphics
+import graphics.vertices
+
 VERTEX_DEFAULT = """
 #version 330
 layout(location=0) in vec4 position;
@@ -30,14 +33,29 @@ void main() {
     outputColor = f_color;
 }
 """
+# TODO: Finish this
+STRING_TO_GL_TYPE = {
+    "mat4": GL.GL_FLOAT_MAT4
+}
+
+class RichUniform:
+    gl_type: int | float
+    value: object
+    def __init__(self, type, val = None):
+        self.gl_type = type
+        self.value = val
 
 class Shader:
     vertex_source: str
     fragment_source: str
     compiled_shader: shaders.ShaderProgram
+    uniforms: dict[str, RichUniform]
+
     def __init__(self, vertex_source, fragment_source):
         self.vertex_source = vertex_source
         self.fragment_source = fragment_source
+        self.uniforms = {}
+        self.parse_shader_typings()
 
     def get_compiled(self):
         try:
@@ -47,6 +65,29 @@ class Shader:
             fragment_shader = shaders.compileShader(self.fragment_source, GL.GL_FRAGMENT_SHADER)
             self.compiled_shader = shaders.compileProgram(vertex_shader, fragment_shader)
             return self.compiled_shader
+        
+    def parse_shader_typings(self):
+        v_lines = self.vertex_source.splitlines()
+        for line in v_lines:
+            if line.startswith("uniform"):
+                 args = line.split(' ')
+                 type = STRING_TO_GL_TYPE[args[1]]
+                 name = args[2][0:-1]
+                 self.uniforms[name] = RichUniform(type)
+
+    def set_uniform(self, name: str, value):
+        # TODO: Type checking
+        self.uniforms[name].value = value
+
+    def use(self):
+        GL.glUseProgram(self.get_compiled())
+        for uniform_name in self.uniforms.keys():
+            location = GL.glGetUniformLocation(self.compiled_shader, uniform_name)
+            type = self.uniforms[uniform_name].gl_type
+            # TODO: Expand this to support more uniform types
+            if type == GL.GL_FLOAT_MAT4:
+                GL.glUniformMatrix4fv(location, 1, GL.GL_FALSE, self.uniforms[uniform_name].value)
+
 
 def clear(r: float, g: float, b: float, a: float = 1):
     GL.glClearColor(r, g, b, a)
@@ -77,52 +118,43 @@ def create_ortho_projection(left: float, right: float, top: float, bottom: float
     return p
 
 # For the sake of this project, everything will be assumed to be GL_TRIANGLES, to reduce the number of abstraction layers to the underlying OpenGL
-class Batcher2D[T]:
+
+# TODO: Move type parameter into shader and parse it at shader compile time.
+class Batcher[T: graphics.vertices.AbstractVertex]:
     vertices: list[T]
-    indices: np.ndarray[np.int32]
-    program: shaders.ShaderProgram
-    mvp_mat: np.matrix
+    indices: list[int]
+    program: Shader
 
     def __init__(self):
-        self.vertices = np.ndarray((0, 2), dtype=np.float32)
-        self.indices = np.ndarray((0), dtype=np.int32)
-        winx, winy = pg.display.get_window_size()
-        self.mvp_mat = create_ortho_projection(0, winx, 0, winy)
+        self.vertices = []
+        self.indices = []
     
     def begin(self, program: Shader):
-        self.program = program.get_compiled()
+        self.program = program
 
-    def draw_rect(self, pos: pg.Vector2, size: pg.Vector2, color = pg.color.Color('white')):
-        posx, posy = pos        # Deconstruct Vectors
-        sizx, sizy = size
-        vertices = np.array([   # Convert vectors to a strictly typed 2d array
-            [posx, posy],
-            [posx + sizx, posy],
-            [posx + sizx, posy + sizy],
-            [posx, posy + sizy],
-        ], dtype=np.float32)
-        indices = np.array([0, 1, 2, 0, 2, 3], dtype=np.int32) # Strictly type the index buffer
-        indices += self.vertices.shape[0]
-        self.vertices = np.concatenate((self.vertices, vertices), axis=0, dtype=np.float32)
-        self.indices = np.concatenate((self.indices, indices), axis=0, dtype=np.int32)
+    def draw_indexed(self, vertices: list[T], indices: list[int]):
+        indices = [index + len(self.vertices) for index in indices]
+        self.vertices += vertices
+        self.indices += indices
 
     def flush(self):
-        GL.glUseProgram(self.program)
-        mvp_location = GL.glGetUniformLocation(self.program, 'mvp')
-        GL.glUniformMatrix4fv(mvp_location, 1, GL.GL_FALSE, self.mvp_mat)
+        self.program.use()
         
-        vertex_buffer = OpenGL.arrays.vbo.VBO(self.vertices)
-        index_buffer = OpenGL.arrays.vbo.VBO(self.indices, target = GL.GL_ELEMENT_ARRAY_BUFFER)
+        vertices = np.array(self.vertices)
+        indices = np.array(self.indices, dtype=np.int32)
+
+        vertex_buffer = OpenGL.arrays.vbo.VBO(vertices)
+        index_buffer = OpenGL.arrays.vbo.VBO(indices, target = GL.GL_ELEMENT_ARRAY_BUFFER)
 
         vertex_buffer.bind()
         index_buffer.bind()
         GL.glEnableVertexAttribArray(0)
         GL.glVertexAttribPointer(0, 2, GL.GL_FLOAT, False, 0, None)
 
-        GL.glDrawElements(GL.GL_TRIANGLES, self.indices.shape[0], GL.GL_UNSIGNED_INT, None)
+        GL.glDrawElements(GL.GL_TRIANGLES, len(self.indices), GL.GL_UNSIGNED_INT, None)
 
-        self.vertices = np.ndarray((0, 2), dtype=np.float32)
-        self.indices = np.ndarray((0), dtype=np.int32)
+        self.vertices = []
+        self.indices = []
 
 if __name__ == "__main__":
     pass

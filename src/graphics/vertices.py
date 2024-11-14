@@ -4,12 +4,22 @@ import numpy as np
 import pygame as pg
 import OpenGL.GL as GL
 
+class VertexAttribute:
+    gl_type: int | float
+    use_c: int
+    def __init__(self, type, use_count):
+        self.gl_type = type
+        self.use_c = use_count
+
 class AbstractVertex:
     def position(self) -> np.ndarray[np.float32]:
         raise NotImplementedError("Implement in super class.")
     def color(self) -> np.ndarray[np.float32]:
         raise NotImplementedError("Implement in super class.")
     
+    def get_attributes() -> list[VertexAttribute]:
+        raise NotImplementedError("Implement in super class.")
+
     # TODO: Add a system here for constructing a vertex array object to be loaded and used by the main batcher as needed. This should make the batcher type agnostic.
     def construct_vbos(vertices: list["AbstractVertex"]) -> tuple[list[VBO], int]:
         raise NotImplementedError("Implement in super class.")
@@ -25,6 +35,12 @@ class VertexPosition2Color4(AbstractVertex):
     def color(self) -> np.ndarray[np.float32]:
         return np.array([self.col.r, self.col.g, self.col.b, self.col.a])
     
+    def get_attributes():
+        return [
+            VertexAttribute(GL.GL_FLOAT, 2),
+            VertexAttribute(GL.GL_FLOAT, 4)
+        ]
+
     def construct_vbos(vertices: list["VertexPosition2Color4"]):
         positions = np.array([vertex.position() for vertex in vertices])
         colors = np.array([vertex.color() for vertex in vertices])
@@ -34,9 +50,11 @@ class VertexPosition2Color4(AbstractVertex):
     
 class VertexArrayObject[T: AbstractVertex]:
     vbos: list[VBO]
+    attrib: list[VertexAttribute]
     v_count: int
     def __init__(self, vertices: list[T]):
         self.vbos, self.v_count = T.construct_vbos(vertices)
+        self.attrib = T.get_attributes()
 
     def bind(self):
         for i in range(0, len(self.vbos)):

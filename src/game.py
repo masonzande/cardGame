@@ -6,7 +6,7 @@ from OpenGL.GL import *
 class CardGame(Engine):
     def __init__(self):
         super().__init__()
-    
+
     def init(self):
         # Prefer this to logic in __init__, as this logic is called before load but after engine setup
         pg.display.set_caption("Card Game")
@@ -18,7 +18,7 @@ class CardGame(Engine):
     def load(self):
         pass
 
-    def update(self, clock):
+    def update(self, clock: pg.time.Clock):
         # Main Game Logic goes here!
         for event in self.event_queue:
             if event.type == pg.QUIT:
@@ -29,15 +29,15 @@ class CardGame(Engine):
                 if event.key == pg.K_RETURN:
                     print("\n")
             # print(pg.event.event_name(event.type))
-        self.dummy = 0
-    
+        #self.dummy += 0.25 * clock.get_time() / 1000
+
     def draw(self):
         clear(0.2, 0.0, 0.0)
         # Drawing logic goes here
         self.batcher.begin(self.shader)
-        self.batcher.draw_rect(pg.Vector2(0, 0), pg.Vector2(0.5, 0.5))
-        self.batcher.draw_rect(pg.Vector2(-0.4, 0.2), pg.Vector2(1, 0.1))
-        self.batcher.draw_rect(pg.Vector2(-1, -1), pg.Vector2(0.6, 0.8))
+        self.batcher.draw_rect(pg.Vector2(0, self.dummy), pg.Vector2(12, 32))
+        self.batcher.draw_rect(pg.Vector2(68, 132), pg.Vector2(256, 87))
+        self.batcher.draw_rect(pg.Vector2(-1, -1), pg.Vector2(3, 3))
         self.batcher.flush()
     def unload(self):
         self.dummy = 0

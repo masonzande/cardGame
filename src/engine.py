@@ -1,5 +1,6 @@
 import pygame as pg     # Using PyGame primarily for windowing and other framework style tasks
 from OpenGL.GL import glGetString, GL_VERSION
+import OpenGL.GL as GL
 
 class Engine:
     def __init__(self):
@@ -10,8 +11,12 @@ class Engine:
         self.event_queue = None
         self.init()
         self.load()
+        GL.glMatrixMode(GL.GL_PROJECTION)
+        GL.glLoadIdentity()
+        width, height = pg.display.get_window_size()
+        GL.glOrtho(0.0, width, height, 0.0, 0.0, 1.0)
         self.tickLoop()
-    
+        
     def tickLoop(self):
         running = True
         while running:
@@ -29,7 +34,7 @@ class Engine:
     def init(self):
         raise NotImplementedError("Implement 'init' in super class.")
 
-    def update(self, clock):
+    def update(self, clock: pg.time.Clock):
         raise NotImplementedError("Implement 'update' in super class.")
 
     def draw(self):

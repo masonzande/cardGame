@@ -1,6 +1,8 @@
 from OpenGL.GL import shaders
 import OpenGL.GL as GL
 
+from loader import ILoadable
+
 VERTEX_DEFAULT = """
 #version 330
 layout(location=0) in vec2 position;
@@ -35,7 +37,7 @@ class RichUniform:
         self.gl_type = type
         self.value = val
 
-class Shader:
+class Shader(ILoadable):
     vertex_source: str
     fragment_source: str
     compiled_shader: shaders.ShaderProgram
@@ -77,3 +79,6 @@ class Shader:
             # TODO: Expand this to support more uniform types
             if type == GL.GL_FLOAT_MAT4:
                 GL.glUniformMatrix4fv(location, 1, GL.GL_FALSE, self.uniforms[uniform_name].value)
+
+    def load_from_file(path) -> "Shader":
+        return Shader("", "")

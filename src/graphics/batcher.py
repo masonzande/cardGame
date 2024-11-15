@@ -60,4 +60,3 @@ class ShapeBatcher(Batcher[vertices.VertexPosition3Color4]):
 
     def flush(self):
         return super().flush()
-    

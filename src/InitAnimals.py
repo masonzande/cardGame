@@ -9,17 +9,17 @@ class Animals:
 
         #Animal Name/Rarity/Health/Armor.
         Animal.AnimalName = AnimalName #String Name of The Animal. Unique.
-        Animal.Rarity = Rarity #String Rarity of The Animal. (Common/Rare/Epic/Legendary)
+        Animal.Rarity = Rarity #String Rarity of The Animal. (Common/Rare/Epic/Legendary).
         Animal.Health = Health #Integer. The Health of an Animal. Reaching 0 Means The Card is Removed From The Battlefield.
         Animal.Armor = Armor #Integer. Damage Done Affects Armor First. Health Cannot be Damaged When Armor Has Not Broken.
-        Animals.AnimalList.append(Animal) #The Animals Class Contains a List of Every Animal
+        Animals.AnimalList.append(Animal) #The Animals Class Contains a List of Every Animal.
 
         #Animal Movement.
         Animal.MovementTypes = MovementTypes #Dictionary of String Movement Types For This Animal Mapped to Integer Movement Radii.
 
         #Animal Attacks/Abilities.
         Animal.AttackTypes = AttackTypes #{AttackType: Damage, AttackType: Damage}. {ClassObject: Damage}.
-        Animal.AbilityTypes = AbilityTypes #{Condition: Ability}.
+        Animal.AbilityTypes = AbilityTypes #{Condition: AbilityObjects}. "None" is Active at All Times.
 
     #Animal Attacks a Defender. Object Method.
     def Attack(Animal, Defender, Damage, Defenders, AttackType):
@@ -76,10 +76,99 @@ class AttackTypes:
         AttackType.AttackName = AttackName  #String Name of The Attack. Unique.
         AttackType.AttackRadius = AttackRadius #Integer. Number of Squares That The Attack Can Reach Without Being Hindered.
         AttackType.SplashDamage = SplashDamage #(Boolean, Damage). Whether or Not The Attack Has Splash Damage, The Damage to Add to Splashed Targets.
-        AttackTypes.AttackTypeList.append(AttackType) #The AttackTypes Class Contains a List of Every AttackType
+        AttackTypes.AttackTypeList.append(AttackType) #The AttackTypes Class Contains a List of Every AttackType.
+
+#Class For Every Ability Type in The Game.
+class AbilityTypes:
+
+    AbilityTypeList = [] #List of Every AbilityType.
+
+    #Define an Ability Type Object.
+    def __init__(AbilityType, AbilityName, SubEffects = []):
+
+        AbilityType.AbilityName = AbilityName #String Name of The Ability. Unique.
+        AbilityType.SubEffects = SubEffects #List of String Effects From This Ability.
+        AbilityTypes.AbilityTypeList.append(AbilityType) #The AbilityTypes Class Contains a List of Every AbilityType.
+
+    #Define The Effects of All Abilities (by Ability Name).
+    def Effects(AbilityType):
+
+        #Check Which Ability This Ability is. Perform The Ability's Effects.
+        if AbilityType.AbilityName == "Venom":
+            #Venom = Being bitten by the animal causes toxic damage. Max 2.
+            pass
+
+        elif AbilityType.AbilityName == "Paralysis":
+            #Paralysis = Immobilization of animal. Chance 1-3 turns of no movement (50% chance of paralysis during that time).
+            pass
+
+        elif AbilityType.AbilityName == "ColdBlooded":
+            #ColdBlooded = Gains 1 HP per turn in sun (not over maximum), -1 HP per turn in wildfire, drought. Decreased speed in blizzard, tundra.
+            pass
+
+        elif AbilityType.AbilityName == "Camoflauge":
+            #Camoflauge = Unable to be seen easily. Visibility and attackability of animal is within one "space" distance. Enemy player knows that the card exists on the battlefield.
+            pass
+
+        elif AbilityType.AbilityName == "Night Vision":
+            #Night Vision = Decreased loss of vision in the dark.
+            pass
+
+        elif AbilityType.AbilityName == "Flinch":
+            #Flinch = Skip turn (Affects Lower Size Animals).
+            pass
+
+        elif AbilityType.AbilityName == "Rations":
+            #Rations = +1 HP per turn (not over maximum).
+            pass
+
+        elif AbilityType.AbilityName == "Grouping":
+            #Grouping = Animal is stronger in larger groups. +1 HP for Prey, +1 Attack For Predators. Up to 3.
+            pass
+
+        elif AbilityType.AbilityName == "Bleed":
+            #Bleed = Lose 1 health per level of bleed per turn. Max 3.
+            pass
+
+        elif AbilityType.AbilityName == "Intellect":
+            #Intellect = Able to use tools.
+            pass
+
+        elif AbilityType.AbilityName == "Scavenger":
+            #Scavenger = +1 HP (not over maximum) when resting on a square where an animal has died (one turn use per death on square).
+            pass
+
+        elif AbilityType.AbilityName == "Poison":
+            #Poison = Touching the animal causes toxic damage. Max 2.
+            pass
+
+        elif AbilityType.AbilityName == "Fear":
+            #Fear = Subtracts attack from opposing animal (1 per size difference).
+            pass
+
+        elif AbilityType.AbilityName == "Exhaustion":
+            #Exhaustion = Level 1: Lose half speed, rounded down. Level 2: Paralysis. Max 2.
+            pass
 
 #Create The Animals + Attack Types.
 def CreateAnimalsAndAttackTypes():
+
+    #Create AbilityTypes: "AbilityName", ["SubEffects"]
+    AbilityTypes("Venom")
+    AbilityTypes("Paralysis")
+    AbilityTypes("ColdBlooded", ["+1 in Wildfire, Drought"])
+    AbilityTypes("Camoflauge", ["Reduced", "Removed", "SelfReduced"])
+    AbilityTypes("Night Vision", ["SelfReduced"])
+    AbilityTypes("Flinch")
+    AbilityTypes("Rations")
+    AbilityTypes("Grouping")
+    AbilityTypes("Bleed")
+    AbilityTypes("Intellect")
+    AbilityTypes("Scavenger")
+    AbilityTypes("Poison")
+    AbilityTypes("Fear", ["All", "Larger", "Smaller", "Immune"])
+    AbilityTypes("Exhaustion", ["Halved"])
+
 
     #Create AttackTypes: "AttackName", AttackRadius, [SplashBool, SplashDamage (Added to Damage, Minimum 1)]
     AttackTypes("Bite", 1, (False, 0))
@@ -95,14 +184,14 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Rattlesnake (Legendary).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
-        AttackTypes.AttackTypeList[0]: (1, "Venom", "Paralysis")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[0]: (1, AbilityTypes.AbilityTypeList[0], AbilityTypes.AbilityTypeList[1])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("ColdBlooded", "Camoflauge"),
-        "Rattle": ("Fear All", "Lower Camoflauge"),
-        "Smell": ("Night Vision")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[2], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]),
+        "Rattle": (AbilityTypes.AbilityTypeList[12].SubEffects[0], AbilityTypes.AbilityTypeList[3].SubEffects[2]),
+        "Smell": (AbilityTypes.AbilityTypeList[4])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -113,12 +202,12 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Camel (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
-        AttackTypes.AttackTypeList[1]: (2, "Flinch")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[1]: (2, AbilityTypes.AbilityTypeList[5])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("Night Vision", "Rations")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[6], AbilityTypes.AbilityTypeList[13])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -129,13 +218,13 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Scorpion (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
-        AttackTypes.AttackTypeList[2]: (1, "Venom")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[2]: (1, AbilityTypes.AbilityTypeList[0])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("Night Vision", "ColdBlooded"),
-        "OnSight": ("Fear Larger")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[2], AbilityTypes.AbilityTypeList[13]),
+        "OnSight": (AbilityTypes.AbilityTypeList[12].SubEffects[1])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -146,12 +235,12 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Silver Ant (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
         AttackTypes.AttackTypeList[0]: tuple([1])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("Grouping", "ColdBlooded (+1 in Wildfire, Drought)", "Exhaustion Halved", "Scavenger")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[2].SubEffects[0], AbilityTypes.AbilityTypeList[13].SubEffects[0], AbilityTypes.AbilityTypeList[10])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -162,15 +251,15 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Wolf (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
-        AttackTypes.AttackTypeList[0]: (2, "Bleed"),
-        AttackTypes.AttackTypeList[3]: (1, "Bleed")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[0]: (2, AbilityTypes.AbilityTypeList[8]),
+        AttackTypes.AttackTypeList[3]: (1, AbilityTypes.AbilityTypeList[8])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("Grouping", "Night Vision"),
-        "OnSight": ("Fear All"),
-        "Smell": ("Reduces Camoflauge")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]),
+        "OnSight": (AbilityTypes.AbilityTypeList[12].SubEffects[0]),
+        "Smell": (AbilityTypes.AbilityTypeList[3].SubEffects[0])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -181,15 +270,15 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Grizzly Bear (Legendary).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
-        AttackTypes.AttackTypeList[0]: (3, "Bleed"),
-        AttackTypes.AttackTypeList[3]: (2, "Bleed")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[0]: (3, AbilityTypes.AbilityTypeList[8]),
+        AttackTypes.AttackTypeList[3]: (2, AbilityTypes.AbilityTypeList[8])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("Immune to Fear", "Night Vision"),
-        "OnSight": ("Fear All"),
-        "Smell": ("Reduces Camoflauge")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[12].SubEffects[3], AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]),
+        "OnSight": (AbilityTypes.AbilityTypeList[12].SubEffects[0]),
+        "Smell": (AbilityTypes.AbilityTypeList[3].SubEffects[0])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -200,14 +289,14 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Black Bear (Epic).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
-        AttackTypes.AttackTypeList[0]: (2, "Bleed"),
-        AttackTypes.AttackTypeList[3]: (2, "Bleed")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[0]: (2, AbilityTypes.AbilityTypeList[8]),
+        AttackTypes.AttackTypeList[3]: (2, AbilityTypes.AbilityTypeList[8])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("Night Vision"),
-        "Smell": ("Reduces Camoflauge")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]),
+        "Smell": (AbilityTypes.AbilityTypeList[3].SubEffects[0])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -219,13 +308,13 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Deer (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
-        AttackTypes.AttackTypeList[1]: (1, "Flinch"),
-        AttackTypes.AttackTypeList[4]: (2, "Bleed")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[1]: (1, AbilityTypes.AbilityTypeList[5]),
+        AttackTypes.AttackTypeList[4]: (2, AbilityTypes.AbilityTypeList[8])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("Night Vision")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -237,12 +326,12 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Rabbit (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
-        AttackTypes.AttackTypeList[1]: (1, "Flinch")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[1]: (1, AbilityTypes.AbilityTypeList[5])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ()
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[13])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -254,13 +343,13 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Moose (Epic).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
-        AttackTypes.AttackTypeList[1]: (2, "Flinch"),
-        AttackTypes.AttackTypeList[4]: (3, "Bleed")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[1]: (2, AbilityTypes.AbilityTypeList[5]),
+        AttackTypes.AttackTypeList[4]: (3, AbilityTypes.AbilityTypeList[8])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("Night Vision")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -272,12 +361,12 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Eagle (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
         AttackTypes.AttackTypeList[3]: tuple([2]),
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ()
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[13])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -289,12 +378,12 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Hawk (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
         AttackTypes.AttackTypeList[3]: tuple([2]),
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ()
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[13])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -306,14 +395,14 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Shark (Epic).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
-        AttackTypes.AttackTypeList[0]: (3, "Bleed"),
-        AttackTypes.AttackTypeList[5]: (2, "Flinch")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[0]: (3, AbilityTypes.AbilityTypeList[8]),
+        AttackTypes.AttackTypeList[5]: (2, AbilityTypes.AbilityTypeList[5])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("Night Vision"),
-        "OnSight": ("Fear Smaller")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]),
+        "OnSight": (AbilityTypes.AbilityTypeList[12].SubEffects[2])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -324,13 +413,13 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Dolphin (Epic).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
-        AttackTypes.AttackTypeList[5]: (1, "Flinch")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[5]: (1, AbilityTypes.AbilityTypeList[5])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("Intellect", "Grouping", "Night Vision"),
-        "Echo Location": ("Removes Camoflauge")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]),
+        "Echo Location": (AbilityTypes.AbilityTypeList[3].SubEffects[1])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -341,15 +430,15 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Orca (Legendary).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
-        AttackTypes.AttackTypeList[0]: (3, "Bleed"),
-        AttackTypes.AttackTypeList[5]: (3, "Flinch")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[0]: (3, AbilityTypes.AbilityTypeList[8]),
+        AttackTypes.AttackTypeList[5]: (3, AbilityTypes.AbilityTypeList[5])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("Intellect", "Grouping"),
-        "OnSight": ("Fear All"),
-        "Echo Location": ("Night Vision", "Removes Camoflauge")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[13]),
+        "OnSight": (AbilityTypes.AbilityTypeList[12].SubEffects[0]),
+        "Echo Location": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3].SubEffects[1])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -360,11 +449,11 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Plankton (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("Grouping", "Rations")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[6], AbilityTypes.AbilityTypeList[13])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -375,13 +464,13 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Octopus (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
         AttackTypes.AttackTypeList[6]: tuple([1]),
-        AttackTypes.AttackTypeList[7]: (0, "Paralysis")
+        AttackTypes.AttackTypeList[7]: (0, AbilityTypes.AbilityTypeList[1])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("Night Vision", "Intellect", "Camoflauge")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -392,12 +481,12 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Crab (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
         AttackTypes.AttackTypeList[3]: tuple([2])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("Night Vision Reduced", "Camoflauge")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[4].SubEffects[0], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -409,14 +498,14 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Lion (Legendary).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
-        AttackTypes.AttackTypeList[0]: (3, "Bleed"),
-        AttackTypes.AttackTypeList[3]: (2, "Bleed")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[0]: (3, AbilityTypes.AbilityTypeList[8]),
+        AttackTypes.AttackTypeList[3]: (2, AbilityTypes.AbilityTypeList[8])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("Night Vision", "Grouping"),
-        "OnSight": ("Fear All")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[13]),
+        "OnSight": (AbilityTypes.AbilityTypeList[12].SubEffects[0])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -427,12 +516,12 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Giraffe (Legendary).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
-        AttackTypes.AttackTypeList[1]: (3, "Flinch")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[1]: (3, AbilityTypes.AbilityTypeList[5])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ()
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[13])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -443,14 +532,14 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Elephant (Legendary).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
-        AttackTypes.AttackTypeList[8]: (3, "Paralysis"),
-        AttackTypes.AttackTypeList[7]: (0, "Paralysis"),
-        AttackTypes.AttackTypeList[1]: (2, "Flinch")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[8]: (3, AbilityTypes.AbilityTypeList[1]),
+        AttackTypes.AttackTypeList[7]: (0, AbilityTypes.AbilityTypeList[1]),
+        AttackTypes.AttackTypeList[1]: (2, AbilityTypes.AbilityTypeList[5])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ()
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[13])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -461,12 +550,12 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Zebra (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
-        AttackTypes.AttackTypeList[1]: (1, "Flinch")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[1]: (1, AbilityTypes.AbilityTypeList[5])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("Night Vision", "Grouping")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[13])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -477,13 +566,13 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Hyena (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
-        AttackTypes.AttackTypeList[0]: (2, "Bleed"),
-        AttackTypes.AttackTypeList[3]: (1, "Bleed")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[0]: (2, AbilityTypes.AbilityTypeList[8]),
+        AttackTypes.AttackTypeList[3]: (1, AbilityTypes.AbilityTypeList[8])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("Night Vision", "Grouping", "Scavenger", "Camoflauge")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[10], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -494,13 +583,13 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Gazelle (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
-        AttackTypes.AttackTypeList[1]: (1, "Flinch"),
-        AttackTypes.AttackTypeList[4]: (2, "Bleed")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[1]: (1, AbilityTypes.AbilityTypeList[5]),
+        AttackTypes.AttackTypeList[4]: (2, AbilityTypes.AbilityTypeList[8])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("Grouping", "Camoflauge")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -512,14 +601,14 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Bison (Epic).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
-        AttackTypes.AttackTypeList[1]: (2, "Flinch"),
-        AttackTypes.AttackTypeList[8]: (3, "Flinch")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[1]: (2, AbilityTypes.AbilityTypeList[5]),
+        AttackTypes.AttackTypeList[8]: (3, AbilityTypes.AbilityTypeList[5])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("Grouping"),
-        "Grouping": ("Stomp Paralysis")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[13]),
+        "Grouping": ("AttackTypes.AttackTypeList[1] : AbilityTypes.AbilityTypeList[1]")
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -530,13 +619,12 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Vulture (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
         AttackTypes.AttackTypeList[3]: tuple([2])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("Scavenger", "Night Vision Reduced"),
-        "Grouping": ("Stomp Paralysis")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[10], AbilityTypes.AbilityTypeList[4].SubEffects[0], AbilityTypes.AbilityTypeList[13])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -548,12 +636,12 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Monkey (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
         AttackTypes.AttackTypeList[6]: tuple([1])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("Intellect")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[13])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -565,13 +653,13 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Ape (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
         AttackTypes.AttackTypeList[6]: tuple([2]),
-        AttackTypes.AttackTypeList[7]: (0, "Paralysis")
+        AttackTypes.AttackTypeList[7]: (0, AbilityTypes.AbilityTypeList[1])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("Intellect")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[13])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -582,15 +670,15 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Alligator (Epic).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
-        AttackTypes.AttackTypeList[0]: (3, "Bleed"),
-        AttackTypes.AttackTypeList[9]: (4, "Bleed"),
-        AttackTypes.AttackTypeList[5]: (2, "Flinch")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[0]: (3, AbilityTypes.AbilityTypeList[8]),
+        AttackTypes.AttackTypeList[9]: (4, AbilityTypes.AbilityTypeList[8]),
+        AttackTypes.AttackTypeList[5]: (2, AbilityTypes.AbilityTypeList[5])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("Night Vision", "Camoflauge"),
-        "OnSight": ("Fear All")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]),
+        "OnSight": (AbilityTypes.AbilityTypeList[12].SubEffects[0])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -602,15 +690,15 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Crocodile (Epic).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
-        AttackTypes.AttackTypeList[0]: (3, "Bleed"),
-        AttackTypes.AttackTypeList[9]: (4, "Bleed"),
-        AttackTypes.AttackTypeList[5]: (2, "Flinch")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[0]: (3, AbilityTypes.AbilityTypeList[8]),
+        AttackTypes.AttackTypeList[9]: (4, AbilityTypes.AbilityTypeList[8]),
+        AttackTypes.AttackTypeList[5]: (2, AbilityTypes.AbilityTypeList[5])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("Night Vision", "Camoflauge"),
-        "OnSight": ("Fear All")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]),
+        "OnSight": (AbilityTypes.AbilityTypeList[12].SubEffects[0])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -622,12 +710,12 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Poison Frog (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": (),
-        "Hurt": ("Poison")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[13]),
+        "Hurt": (AbilityTypes.AbilityTypeList[11])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -639,14 +727,14 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Polar Bear (Legendary).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
-        AttackTypes.AttackTypeList[0]: (4, "Bleed"),
-        AttackTypes.AttackTypeList[3]: (3, "Bleed")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[0]: (4, AbilityTypes.AbilityTypeList[8]),
+        AttackTypes.AttackTypeList[3]: (3, AbilityTypes.AbilityTypeList[8])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("Night Vision", "Camoflauge"),
-        "OnSight": ("Fear All")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]),
+        "OnSight": (AbilityTypes.AbilityTypeList[12].SubEffects[0])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -658,14 +746,14 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Arctic Fox (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
         AttackTypes.AttackTypeList[0]: tuple([2]),
         AttackTypes.AttackTypeList[3]: tuple([1])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("Night Vision", "Camoflauge"),
-        "Bark": ("Fear Smaller")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]),
+        "Bark": (AbilityTypes.AbilityTypeList[12].SubEffects[2])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -676,12 +764,12 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Penguin (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
         AttackTypes.AttackTypeList[0]: tuple([1])
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("Night Vision")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius
@@ -693,12 +781,12 @@ def CreateAnimalsAndAttackTypes():
 
 
     #Create Seal (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, "Abilities")
-        AttackTypes.AttackTypeList[8]: (1, "Paralysis"),
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[8]: (1, AbilityTypes.AbilityTypeList[1]),
     }
 
-    AnimalAbilities = { #"Activation": ("Abilities")
-        "None": ("Night Vision", "Camoflauge")
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13])
     }
 
     AnimalMovements = { #"MovementType": MovementRadius

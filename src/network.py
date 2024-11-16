@@ -31,7 +31,7 @@ class Network:
         self.running = False
         self.callbacks: Dict[str, Callable] = {}
 
-    # unsure if this will be necessary depending on main game loop implementation. will remove once tested
+    # unsure if this will be necessary depending on main game loop implementation. will remove once able to be tested
     def start(self):
         self.running = True
         self.listenThread = threading.Thread(target=self.listen)
@@ -82,4 +82,4 @@ class Network:
     def sendChat(self, chat):
         self.sendMessage({"type": "chat", "message": chat})
 
-    # add any other communication type methods if necessary
+    # will add any other communication type methods as necessary

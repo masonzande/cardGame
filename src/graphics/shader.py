@@ -1,5 +1,6 @@
 from OpenGL.GL import shaders
 import OpenGL.GL as GL
+import pygame as pg
 
 from loader import ILoadable
 
@@ -27,7 +28,8 @@ void main() {
 """
 # TODO: Finish this
 STRING_TO_GL_TYPE = {
-    "mat4": GL.GL_FLOAT_MAT4
+    "mat4": GL.GL_FLOAT_MAT4,
+    'sampler2D': GL.GL_SAMPLER_2D
 }
 
 class RichUniform:
@@ -66,6 +68,13 @@ class Shader(ILoadable):
                  type = STRING_TO_GL_TYPE[args[1]]
                  name = args[2][0:-1]
                  self.uniforms[name] = RichUniform(type)
+        f_lines = self.fragment_source.splitlines()
+        for line in f_lines:
+            if line.startswith("uniform"):
+                 args = line.split(' ')
+                 type = STRING_TO_GL_TYPE[args[1]]
+                 name = args[2][0:-1]
+                 self.uniforms[name] = RichUniform(type)
 
     def set_uniform(self, name: str, value):
         # TODO: Type checking
@@ -81,4 +90,12 @@ class Shader(ILoadable):
                 GL.glUniformMatrix4fv(location, 1, GL.GL_FALSE, self.uniforms[uniform_name].value)
 
     def load_from_file(path) -> "Shader":
-        return Shader("", "")
+        try:
+            with open(path, mode='r') as file:
+                text = file.read().split("// --SL--")
+                return Shader(text[0], text[1])
+        except Exception() as e:
+            raise e
+            
+        
+        

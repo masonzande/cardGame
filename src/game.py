@@ -1,10 +1,12 @@
 import pygame as pg
 from engine import Engine
 from graphics import clear, create_ortho_projection
-from graphics.batcher import ShapeBatcher
+from graphics.batcher import ShapeBatcher, SpriteBatcher
 from graphics.shader import Shader, VERTEX_DEFAULT, FRAGMENT_DEFAULT
+from graphics.sprite import Sprite
 from graphics.vertices import VertexPosition2Color4
 from OpenGL.GL import *
+from loader import ContentLoader
 
 
 class CardGame(Engine):
@@ -16,13 +18,15 @@ class CardGame(Engine):
         pg.display.set_caption("Card Game")
         self.dummy = 0
         self.b = True
-        self.batcher = ShapeBatcher()
-        self.shader = Shader(VERTEX_DEFAULT, FRAGMENT_DEFAULT)
+        self.batcher = SpriteBatcher()
+        self.content = ContentLoader()
+        
+    def load(self):
+        self.shader = self.content.load_custom("./shaders/basic_vp3t2.sl", Shader)
         winx, winy = pg.display.get_window_size()
         self.shader.set_uniform('mvp', create_ortho_projection(0, winx, 0, winy))
-
-    def load(self):
-        pass
+        self.texture0 = self.content.load_custom("./card_portraits/Legendary - Giraffe.jpg", Sprite)
+        self.texture1 = self.content.load_custom("./card_portraits/Common - Deer.png", Sprite)
 
     def update(self, clock: pg.time.Clock):
         # Main Game Logic goes here!
@@ -41,18 +45,14 @@ class CardGame(Engine):
         clear(0.0, 0.0, 0.0)
         # Drawing logic goes here
         self.batcher.begin(self.shader)
-        self.batcher.draw_rect(pg.Vector2(32, 32), pg.Vector2(32, 64), 0, pg.Color("coral"))
-        self.batcher.draw_rect(pg.Vector2(256, self.dummy), pg.Vector2(32, 32), 0, pg.Color("red"))
-        self.batcher.draw_rect(pg.Vector2(300, 0), pg.Vector2(32, 32), 0, pg.Color("green"))
+        self.batcher.draw(self.texture0, pg.Vector2(32, 32), pg.Vector2(256, 128+64), 0)
+        self.batcher.draw(self.texture1, pg.Vector2(92, 63), pg.Vector2(256, 256), 0)
         self.batcher.flush()
 
     def unload(self):
         self.dummy = 0
 
 # TODO | Next steps for windowing:
-# - Implement a texture vertex type
-#       - Requires a vertex type, a shader, and a spritebatcher
-# - Loading textures and shaders from files
 # - Camera and Gridworld setup
 # - Two-click or drag and drop moveable elements
 

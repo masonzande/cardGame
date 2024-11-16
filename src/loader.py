@@ -7,7 +7,7 @@ class ILoadable():
 class ContentLoader:
     content_root: str
 
-    def __init__(self, root: str="assets"):
+    def __init__(self, root: str="./assets"):
         self.content_root = root
     
     def load_custom[T: ILoadable](self, file_name: str, type: type[T]) -> T:

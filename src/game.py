@@ -22,6 +22,7 @@ class CardGame(Engine):
         self.batcher = SpriteBatcher()
         self.content = ContentLoader()
         self.target = RenderTarget(800, 600)
+        self.target.gl_load()
         
     def load(self):
         self.shader = self.content.load_custom("./shaders/basic_vp3t2.sl", Shader)

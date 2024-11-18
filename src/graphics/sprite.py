@@ -39,19 +39,26 @@ class Texture:
         self.texture_id = Texture._id_index
         Texture._id_index += 1
         
-    def gl_load(self, format: _im_formats = "RGBA", data: bytes = None) -> bool:
+    def gl_load(self, format: int = GL.GL_RGBA, internal_format: int = GL.GL_RGBA, dtype: int = GL.GL_UNSIGNED_BYTE, data: bytes = None) -> bool:
         if self._gl_loaded:
             return True
         
-        gl_format = _im_format_to_gl_format[format]
-
         self._gl_location = GL.glGenTextures(1)
         GL.glBindTexture(GL.GL_TEXTURE_2D, self._gl_location)
-        GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, gl_format, self.width, self.height, 0, gl_format, GL.GL_UNSIGNED_BYTE, data)
+        GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, internal_format, self.width, self.height, 0, format, dtype, data)
+        GL.glBindTexture(GL.GL_TEXTURE_2D, 0)
 
-    def bind(self, format: _im_formats = "RGBA", min_filter = GL.GL_LINEAR, max_filter = GL.GL_LINEAR, wrap_s = GL.GL_REPEAT, wrap_t = GL.GL_REPEAT):
+    def bind(self, 
+             format: int = GL.GL_RGBA,
+             internal_format: int = GL.GL_RGBA,
+             dtype: int = GL.GL_UNSIGNED_BYTE, 
+             min_filter = GL.GL_LINEAR, 
+             max_filter = GL.GL_LINEAR, 
+             wrap_s = GL.GL_REPEAT, 
+             wrap_t = GL.GL_REPEAT
+            ):
         if not self._gl_loaded:
-            self.gl_load(format)
+            self.gl_load(format=format, internal_format=internal_format, dtype=dtype)
         GL.glBindTexture(GL.GL_TEXTURE_2D, self._gl_location)
         GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, wrap_s)
         GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, wrap_t)
@@ -70,7 +77,8 @@ class Sprite(Texture, ILoadable):
         return pg.image.tobytes(self.surface, format)
     
     def gl_load(self, format: _im_formats = "RGBA") -> bool:
-        return super().gl_load(format, self.im_data(format))
+        gl_format = _im_format_to_gl_format[format]
+        return super().gl_load(gl_format, gl_format, GL.GL_UNSIGNED_BYTE, self.im_data(format))
 
     def bind(self, format: _im_formats = "RGBA", min_filter = GL.GL_LINEAR, max_filter = GL.GL_LINEAR, wrap_s = GL.GL_REPEAT, wrap_t = GL.GL_REPEAT):
         return super().bind(format, min_filter, max_filter, wrap_s, wrap_t)

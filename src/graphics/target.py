@@ -23,12 +23,12 @@ class RenderTarget:
         if self._gl_loaded:
             return True
         
-        GL.glGenFramebuffers(1, self._gl_location)
+        self._gl_location = GL.glGenFramebuffers(1)
         GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, self._gl_location)
 
         self._internal_texture.gl_load()
         GL.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_TEXTURE_2D, self._internal_texture._gl_location, 0)
-        self._internal_depth_stencil.gl_load(format="DEPTH_STENCIL")
+        self._internal_depth_stencil.gl_load(format=GL.GL_DEPTH_STENCIL, internal_format=GL.GL_DEPTH24_STENCIL8, dtype=GL.GL_UNSIGNED_INT_24_8)
         GL.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_STENCIL_ATTACHMENT, GL.GL_TEXTURE_2D, self._internal_depth_stencil._gl_location, 0)
 
         if GL.glCheckFramebufferStatus(GL.GL_FRAMEBUFFER) != GL.GL_FRAMEBUFFER_COMPLETE:

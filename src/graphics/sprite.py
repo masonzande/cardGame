@@ -4,6 +4,8 @@ import OpenGL.GL as GL
 
 from loader import ILoadable
 
+import freetype as FT
+
 _pg_im_formats = Literal[
     "P", "RGB", "RGBX", "RGBA", "ARGB", "BGRA", "RGBA_PREMULT", "ARGB_PREMULT"
 ]
@@ -69,3 +71,76 @@ class Sprite(ILoadable):
             return Sprite(surface)
         except Exception() as e:
             raise e
+
+class _SpriteChar:
+    _gl_id: int
+    width: int
+    height: int
+    bearing_x: int
+    bearing_y: int
+    advance: int
+
+    def __init__(self, tex_id, width, height, bearing_x, bearing_y, advance):
+        self._gl_id = tex_id
+        self.width = width
+        self.height = height
+        self.bearing_x = bearing_x
+        self.bearing_y = bearing_y
+        self.advance = advance
+
+class SpriteFont(ILoadable):
+    width: int
+    height : int
+    sprite_id: int
+
+    _gl_loaded: bool
+    _gl_location: int
+
+    font_face: FT.Face
+
+    chars: list[_SpriteChar]
+
+    def __init__(self, font_face: FT.Face):
+        self.font_face = font_face
+        self.font_face.set_char_size(0, 12)
+        self.chars = [None for _ in range(128)]
+
+    def set_font_size(self, size: int):
+        self.font_face.set_char_size(0, size)
+
+    def generate_font(self):
+        GL.glPixelStorei(GL.GL_UNPACK_ALIGNMENT, 1)
+        for c in range(128):
+            self.font_face.load_char(chr(c))
+            glyph: FT.GlyphSlot = self.font_face.glyph
+            bitmap: FT.Bitmap = glyph.bitmap
+            
+            width = bitmap.width
+            height = bitmap.rows
+            data = bitmap.buffer
+            bearing_x = glyph.bitmap_left
+            bearing_y = glyph.bitmap_top
+
+            tex_id = None
+            GL.glGenTextures(1, tex_id)
+            GL.glBindTexture(GL.GL_TEXTURE_2D, tex_id)
+            GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RED, width, height, 0, GL.GL_RED, GL.GL_UNSIGNED_BYTE, bitmap.buffer)
+            GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP_TO_EDGE)
+            GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP_TO_EDGE)
+            GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR)
+            GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR)
+
+            self.chars[c] = _SpriteChar(tex_id, width, height, bearing_x, bearing_y, glyph.advance.x)
+
+    def determine_string_width(self, string: str) -> int:
+        width = 0
+        for char in string:
+            self.font_face.load_char(chr(char))
+            glyph: FT.GlyphSlot = self.font_face.glyph
+            width += glyph.advance.x
+        return width
+
+    def load_from_file(path):
+        face = FT.Face(path)
+        return SpriteFont(face)
+        

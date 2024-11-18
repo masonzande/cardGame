@@ -53,6 +53,9 @@ class CardGame(Engine):
         self.dummy = 0
 
 # TODO | Next steps for windowing:
+# - Text Rendering
+#     - Font loading and texture generation already handled
+#     - Need to add a render target system and a text batcher for handling actually drawing text
 # - Camera and Gridworld setup
 # - Two-click or drag and drop moveable elements
 

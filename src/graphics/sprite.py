@@ -6,11 +6,11 @@ from loader import ILoadable
 
 import freetype as FT
 
-_pg_im_formats = Literal[
-    "P", "RGB", "RGBX", "RGBA", "ARGB", "BGRA", "RGBA_PREMULT", "ARGB_PREMULT"
+_im_formats = Literal[
+    "P", "RGB", "RGBX", "RGBA", "ARGB", "BGRA", "RGBA_PREMULT", "ARGB_PREMULT", "DEPTH_STENCIL"
 ]
 
-_im_format_to_gl_format: dict[_pg_im_formats, int] = {
+_im_format_to_gl_format: dict[_im_formats, int] = {
     "P": GL.GL_R,
     "RGB": GL.GL_RGB,
     "RGBA": GL.GL_RGBA,
@@ -18,44 +18,38 @@ _im_format_to_gl_format: dict[_pg_im_formats, int] = {
     "ARGB": None,
     "BGRA": GL.GL_BGRA,
     "RGBA_PREMULT": None,
-    "ARGB_PREMULT": None
+    "ARGB_PREMULT": None,
+    "DEPTH_STENCIL": GL.GL_DEPTH24_STENCIL8
 }
 
-class Sprite(ILoadable):
+class Texture:
     _id_index = 0
-
-    surface: pg.Surface
     width: int
-    height : int
-    sprite_id: int
+    height: int
 
     _gl_loaded: bool
     _gl_location: int
 
-    def __init__(self, surface: pg.Surface):
-        self.surface = surface
-        self.width = self.surface.get_width()
-        self.height = self.surface.get_height()
-        self.sprite_id = Sprite._id_index
-        Sprite._id_index += 1
+    texture_id: int
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
         self._gl_loaded = False
         self._gl_location = 0
-
-    
-    def im_data(self, format: _pg_im_formats) -> bytes:
-        return pg.image.tobytes(self.surface, format)
-    
-    def gl_load(self, format: _pg_im_formats = "RGBA") -> bool:
+        self.texture_id = Texture._id_index
+        Texture._id_index += 1
+        
+    def gl_load(self, format: _im_formats = "RGBA", data: bytes = None) -> bool:
         if self._gl_loaded:
             return True
         
         gl_format = _im_format_to_gl_format[format]
 
-        GL.glGenTextures(1, self._gl_location)
+        self._gl_location = GL.glGenTextures(1)
         GL.glBindTexture(GL.GL_TEXTURE_2D, self._gl_location)
-        GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, gl_format, self.width, self.height, 0, gl_format, GL.GL_UNSIGNED_BYTE, self.im_data(format)) # TODO: Finish this function call
+        GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, gl_format, self.width, self.height, 0, gl_format, GL.GL_UNSIGNED_BYTE, data)
 
-    def bind(self, format: _pg_im_formats = "RGBA", min_filter = GL.GL_LINEAR, max_filter = GL.GL_LINEAR, wrap_s = GL.GL_REPEAT, wrap_t = GL.GL_REPEAT):
+    def bind(self, format: _im_formats = "RGBA", min_filter = GL.GL_LINEAR, max_filter = GL.GL_LINEAR, wrap_s = GL.GL_REPEAT, wrap_t = GL.GL_REPEAT):
         if not self._gl_loaded:
             self.gl_load(format)
         GL.glBindTexture(GL.GL_TEXTURE_2D, self._gl_location)
@@ -64,6 +58,22 @@ class Sprite(ILoadable):
         GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, min_filter)
         GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, max_filter)
         GL.glActiveTexture(GL.GL_TEXTURE0)
+
+class Sprite(Texture, ILoadable):
+    surface: pg.Surface
+
+    def __init__(self, surface: pg.Surface):
+        self.surface = surface
+        super().__init__(self.surface.get_width(), self.surface.get_height())
+    
+    def im_data(self, format: _im_formats) -> bytes:
+        return pg.image.tobytes(self.surface, format)
+    
+    def gl_load(self, format: _im_formats = "RGBA") -> bool:
+        return super().gl_load(format, self.im_data(format))
+
+    def bind(self, format: _im_formats = "RGBA", min_filter = GL.GL_LINEAR, max_filter = GL.GL_LINEAR, wrap_s = GL.GL_REPEAT, wrap_t = GL.GL_REPEAT):
+        return super().bind(format, min_filter, max_filter, wrap_s, wrap_t)
 
     def load_from_file(path) -> "Sprite":
         try:
@@ -91,7 +101,6 @@ class _SpriteChar:
 class SpriteFont(ILoadable):
     width: int
     height : int
-    sprite_id: int
 
     _gl_loaded: bool
     _gl_location: int
@@ -117,11 +126,10 @@ class SpriteFont(ILoadable):
             
             width = bitmap.width
             height = bitmap.rows
-            data = bitmap.buffer
             bearing_x = glyph.bitmap_left
             bearing_y = glyph.bitmap_top
 
-            tex_id = None
+            tex_id = 0
             GL.glGenTextures(1, tex_id)
             GL.glBindTexture(GL.GL_TEXTURE_2D, tex_id)
             GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RED, width, height, 0, GL.GL_RED, GL.GL_UNSIGNED_BYTE, bitmap.buffer)

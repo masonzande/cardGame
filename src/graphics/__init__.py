@@ -1,5 +1,6 @@
 import OpenGL.GL as _GL
 import numpy as _np
+import graphics.target as _target
 
 def clear(r: float, g: float, b: float, a: float = 1):
     _GL.glClearColor(r, g, b, a)
@@ -28,6 +29,15 @@ def create_ortho_projection(left: float, right: float, top: float, bottom: float
     ], dtype=_np.float32)
     p = scale @ translation
     return p
+
+def bind_buffer(buffer: _target.RenderTarget):
+    if buffer:
+        if not buffer._gl_loaded:
+            buffer.gl_load()
+        _GL.glBindFramebuffer(_GL.GL_FRAMEBUFFER, buffer._gl_location)
+    else:
+        _GL.glBindFramebuffer(_GL.GL_FRAMEBUFFER, 0)
+    
 
 if __name__ == "__main__":
     pass

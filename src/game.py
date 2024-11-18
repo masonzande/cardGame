@@ -1,12 +1,13 @@
 import pygame as pg
 from engine import Engine
-from graphics import clear, create_ortho_projection
+from graphics import clear, create_ortho_projection, bind_buffer
 from graphics.batcher import ShapeBatcher, SpriteBatcher
 from graphics.shader import Shader, VERTEX_DEFAULT, FRAGMENT_DEFAULT
 from graphics.sprite import Sprite
 from graphics.vertices import VertexPosition2Color4
 from OpenGL.GL import *
 from loader import ContentLoader
+from graphics.target import RenderTarget
 
 
 class CardGame(Engine):
@@ -20,6 +21,7 @@ class CardGame(Engine):
         self.b = True
         self.batcher = SpriteBatcher()
         self.content = ContentLoader()
+        self.target = RenderTarget(800, 600)
         
     def load(self):
         self.shader = self.content.load_custom("./shaders/basic_vp3t2.sl", Shader)
@@ -46,8 +48,11 @@ class CardGame(Engine):
         # Drawing logic goes here
         self.batcher.begin(self.shader)
         self.batcher.draw(self.texture0, pg.Vector2(32, 32), pg.Vector2(256, 128+64), 0)
+        self.batcher.flush()
+        bind_buffer(self.target)
         self.batcher.draw(self.texture1, pg.Vector2(92, 63), pg.Vector2(256, 256), 0)
         self.batcher.flush()
+        bind_buffer(None)
 
     def unload(self):
         self.dummy = 0

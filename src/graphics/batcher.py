@@ -1,4 +1,5 @@
 import graphics
+from graphics import target
 import graphics.vertices as vertices
 import graphics.shader as shader
 import graphics.sprite as sprite
@@ -88,15 +89,18 @@ class SpriteBatcher(Batcher[vertices.VertexPosition3Texture2]):
         return super().begin(program)
     
     def draw_indexed(self, vertices, indices, batch_id):
-        indices = [index + len(self.vertices) for index in indices]
+        indices = [index + len(self.batches[batch_id].vertices) for index in indices]
         self.batches[batch_id].vertices += vertices
         self.batches[batch_id].indices += indices
     
-    def draw(self, texture: sprite.Sprite, pos: pg.Vector2, size: pg.Vector2, depth: float):
+    def draw(self, texture: sprite.Texture | target.RenderTarget, pos: pg.Vector2, size: pg.Vector2, depth: float):
+        if isinstance(texture, target.RenderTarget):
+            texture = texture.get_texture()
+        
         try:
-            self.batches[texture.sprite_id]
+            self.batches[texture.texture_id]
         except KeyError:
-            self.batches[texture.sprite_id] = SpriteBatch(texture)
+            self.batches[texture.texture_id] = SpriteBatch(texture)
 
         INDICES = [0, 1, 2, 0, 2, 3]
         verts = [
@@ -105,7 +109,7 @@ class SpriteBatcher(Batcher[vertices.VertexPosition3Texture2]):
             vertices.VertexPosition3Texture2(pg.Vector3(pos.x + size.x, pos.y + size.y, depth), pg.Vector2(1, 1)),
             vertices.VertexPosition3Texture2(pg.Vector3(pos.x, pos.y + size.y, depth), pg.Vector2(0, 1)),
         ]
-        self.draw_indexed(verts, INDICES, texture.sprite_id)
+        self.draw_indexed(verts, INDICES, texture.texture_id)
 
     def flush(self):
         self.program.use()

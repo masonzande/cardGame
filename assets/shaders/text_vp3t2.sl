@@ -1,6 +1,6 @@
-#version 330 core
-layout(location = 0) in vec3 position;
-layout(location = 1) in vec2 f_tex_coord;
+#version 330
+layout(location=0) in vec3 position;
+layout(location=1) in vec2 f_tex_coord;
 
 out vec2 tex_coord;
 

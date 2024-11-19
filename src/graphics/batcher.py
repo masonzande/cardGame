@@ -122,7 +122,7 @@ class SpriteBatcher(Batcher[vertices.VertexPosition3Texture2]):
         
         str_dim = font.string_dims(message)
         self._font_program.set_uniform("text_color", type_convert.pg_color_to_numpy_array(color))
-        self._font_program.set_uniform("mvp", graphics.create_ortho_projection(0, str_dim[0], str_dim[1], 0))
+        self._font_program.set_uniform("mvp", graphics.create_ortho_projection(0, str_dim[0], 0, str_dim[1]))
         self._font_program.use()
         GL.glActiveTexture(GL.GL_TEXTURE0)
 
@@ -142,10 +142,10 @@ class SpriteBatcher(Batcher[vertices.VertexPosition3Texture2]):
             height = char.height
 
             verts = [
-                vertices.VertexPosition3Texture2(pg.Vector3(xpos, ypos + height, 0), pg.Vector2(0, 0)),
                 vertices.VertexPosition3Texture2(pg.Vector3(xpos, ypos, 0), pg.Vector2(0, 1)),
                 vertices.VertexPosition3Texture2(pg.Vector3(xpos + width, ypos, 0), pg.Vector2(1, 1)),
-                vertices.VertexPosition3Texture2(pg.Vector3(xpos + width, ypos + height, 0), pg.Vector2(1, 0))
+                vertices.VertexPosition3Texture2(pg.Vector3(xpos + width, ypos - height, 0), pg.Vector2(1, 0)),
+                vertices.VertexPosition3Texture2(pg.Vector3(xpos, ypos - height, 0), pg.Vector2(0, 0)),
             ]
 
             indices = np.array([0, 1, 2, 0, 2, 3], dtype=np.uint32)
@@ -158,8 +158,7 @@ class SpriteBatcher(Batcher[vertices.VertexPosition3Texture2]):
             GL.glBindTexture(GL.GL_TEXTURE_2D, char._gl_id)
             
             GL.glDrawElements(GL.GL_TRIANGLES, len(indices), GL.GL_UNSIGNED_INT, None)
-
-            x += (char.advance << 6)
+            x += (char.advance >> 6)
         
         graphics.bind_buffer(reset)
         self.draw(rt, pos, pg.Vector2(str_dim[0], str_dim[1]), depth)

@@ -89,6 +89,8 @@ class Shader(ILoadable):
             # TODO: Expand this to support more uniform types
             if type == GL.GL_FLOAT_MAT4:
                 GL.glUniformMatrix4fv(location, 1, GL.GL_FALSE, self.uniforms[uniform_name].value)
+            elif type == GL.GL_FLOAT_VEC4:
+                GL.glUniform4f(location, self.uniforms[uniform_name].value[0], self.uniforms[uniform_name].value[1], self.uniforms[uniform_name].value[2], self.uniforms[uniform_name].value[3])
 
     def load_from_file(path) -> "Shader":
         try:

@@ -96,7 +96,7 @@ class Sprite(Texture, ILoadable):
         except Exception() as e:
             raise e
 
-class _SpriteChar:
+class _SpriteChar(TextureLike):
     _gl_id: int
     width: int
     height: int
@@ -111,6 +111,10 @@ class _SpriteChar:
         self.bearing_x = bearing_x
         self.bearing_y = bearing_y
         self.advance = advance
+        super().__init__()
+
+    def bind(self):
+        GL.glBindTexture(GL.GL_TEXTURE_2D, self._gl_id)
 
 class SpriteFont(TextureLike, ILoadable):
     width: int
@@ -124,12 +128,12 @@ class SpriteFont(TextureLike, ILoadable):
 
     def __init__(self, font_face: FT.Face):
         self.font_face = font_face
-        self.font_face.set_char_size(0, 12)
+        self.font_face.set_pixel_sizes(0, 12)
         self.chars = [None for _ in range(128)]
         super().__init__()
 
     def set_font_size(self, size: int):
-        self.font_face.set_char_size(0, size)
+        self.font_face.set_pixel_sizes(0, size)
 
     def generate_font(self):
         GL.glPixelStorei(GL.GL_UNPACK_ALIGNMENT, 1)
@@ -144,7 +148,7 @@ class SpriteFont(TextureLike, ILoadable):
             bearing_y = glyph.bitmap_top
 
             tex_id = 0
-            GL.glGenTextures(1, tex_id)
+            tex_id = GL.glGenTextures(1)
             GL.glBindTexture(GL.GL_TEXTURE_2D, tex_id)
             GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RED, width, height, 0, GL.GL_RED, GL.GL_UNSIGNED_BYTE, bitmap.buffer)
             GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP_TO_EDGE)
@@ -161,7 +165,7 @@ class SpriteFont(TextureLike, ILoadable):
         for char in string:
             self.font_face.load_char(ord(char))
             glyph: FT.GlyphSlot = self.font_face.glyph
-            width += glyph.advance.x << 6
+            width += glyph.advance.x >> 6
             top = glyph.bitmap.rows if glyph.bitmap.rows > top else top
             bottom = glyph.bitmap.rows - glyph.bitmap_top if glyph.bitmap.rows - glyph.bitmap_top < bottom else bottom
             

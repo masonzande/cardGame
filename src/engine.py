@@ -11,10 +11,6 @@ class Engine:
         self.event_queue = None
         self.init()
         self.load()
-        GL.glMatrixMode(GL.GL_PROJECTION)
-        GL.glLoadIdentity()
-        width, height = pg.display.get_window_size()
-        GL.glOrtho(0.0, width, height, 0.0, 0.0, 1.0)
         self.tickLoop()
         
     def tickLoop(self):

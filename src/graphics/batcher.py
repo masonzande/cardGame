@@ -4,6 +4,8 @@ import graphics.vertices as vertices
 import graphics.shader as shader
 import graphics.sprite as sprite
 
+import type_convert
+
 import numpy as np
 import pygame as pg
 
@@ -69,21 +71,22 @@ class ShapeBatcher(Batcher[vertices.VertexPosition3Color4]):
 class SpriteBatch():
     vertices: list[graphics.vertices.VertexPosition3Texture2]
     indices: list[int]
-    texture: sprite.Sprite
-    def __init__(self, texture: sprite.Sprite):
+    texture: sprite.Texture
+    def __init__(self, texture: sprite.Texture):
         self.vertices = []
         self.indices = []
         self.texture = texture
-        
 
 class SpriteBatcher(Batcher[vertices.VertexPosition3Texture2]):
+    _font_program: shader.Shader
     batches: dict[int, SpriteBatch]
 
     def __init__(self):
         self.batches = {}
         super().__init__()
 
-    def begin(self, program):
+    def begin(self, program, font_program: shader.Shader = None):
+        self._font_program = font_program
         GL.glEnable(GL.GL_BLEND)
         GL.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
         return super().begin(program)
@@ -110,6 +113,48 @@ class SpriteBatcher(Batcher[vertices.VertexPosition3Texture2]):
             vertices.VertexPosition3Texture2(pg.Vector3(pos.x, pos.y + size.y, depth), pg.Vector2(0, 1)),
         ]
         self.draw_indexed(verts, INDICES, texture.texture_id)
+
+    def draw_string(self, font: sprite.SpriteFont, message: str, pos: pg.Vector2, depth: float = 0, color: pg.Color = pg.Color(255, 255, 255, 255)):
+        if self._font_program == None:
+            print("BATCH ERR: Font Program was not initialized. Printing message to console.")
+            print(message)
+            return
+        self._font_program.set_uniform("text_color", type_convert.pg_color_to_numpy_array(color))
+        self._font_program.set_uniform("mvp", np.identity(4, dtype=np.float32))
+        self._font_program.use()
+        GL.glActiveTexture(GL.GL_TEXTURE0)
+
+        rt = target.RenderTarget() ## TODO: Need a way to get width and height for this RT. Should make it fit the text size ideally.
+
+        x = pos.x
+        y = pos.y
+        for c in message:
+            char: sprite._SpriteChar = font.chars[chr(c)]
+            xpos = x + char.bearing_x
+            ypos = y - (char.height - char.bearing_y)
+
+            width = char.width
+            height = char.height
+
+            verts = [
+                vertices.VertexPosition3Texture2(pg.Vector3(xpos, ypos + height, 0), pg.Vector2(0, 0)),
+                vertices.VertexPosition3Texture2(pg.Vector3(xpos, ypos, 0), pg.Vector2(0, 1)),
+                vertices.VertexPosition3Texture2(pg.Vector3(xpos + width, ypos, 0), pg.Vector2(1, 1)),
+                vertices.VertexPosition3Texture2(pg.Vector3(xpos + width, ypos + height, 0), pg.Vector2(1, 0))
+            ]
+
+            indices = [0, 1, 2, 0, 2, 3]
+
+            vertex_buf = vertices.VertexArrayObject(verts)
+            vertex_buf.bind()
+            index_buf = OpenGL.arrays.vbo.VBO(indices, target = GL.GL_ELEMENT_ARRAY_BUFFER)
+            index_buf.bind()
+
+            GL.glBindTexture(GL.GL_TEXTURE_2D, char._gl_id)
+            
+            GL.glDrawElements(GL.GL_TRIANGLES, len(indices), GL.GL_UNSIGNED_INT, None)
+
+            x += (char.advance >> 6)
 
     def flush(self):
         self.program.use()

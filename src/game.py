@@ -45,15 +45,20 @@ class CardGame(Engine):
         self.dummy += 32 * clock.get_time() / 1000
 
     def draw(self):
-        clear(0.0, 0.0, 0.0)
         # Drawing logic goes here
+        bind_buffer(self.target)
+        clear(0.0, 0.0, 0.0)
         self.batcher.begin(self.shader)
         self.batcher.draw(self.texture0, pg.Vector2(32, 32), pg.Vector2(256, 128+64), 0)
-        self.batcher.flush()
-        bind_buffer(self.target)
         self.batcher.draw(self.texture1, pg.Vector2(92, 63), pg.Vector2(256, 256), 0)
         self.batcher.flush()
+
         bind_buffer(None)
+        clear(0.0, 0.0, 0.0)
+        self.batcher.begin(self.shader)
+        self.batcher.draw(self.target, pg.Vector2(32, 32), pg.Vector2(256, 128+64), 0.5)
+        self.batcher.draw(self.target, pg.Vector2(287, 67), pg.Vector2(256, 128+64), 0.5)
+        self.batcher.flush()
 
     def unload(self):
         self.dummy = 0

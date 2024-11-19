@@ -22,26 +22,30 @@ _im_format_to_gl_format: dict[_im_formats, int] = {
     "DEPTH_STENCIL": GL.GL_DEPTH24_STENCIL8
 }
 
-class Texture:
+class TextureLike:
     _id_index = 0
+    texture_id: int
+    def __init__(self):
+        self._id_index = TextureLike._id_index
+        TextureLike._id_index += 1
+
+class Texture(TextureLike):
     width: int
     height: int
 
     _gl_loaded: bool
     _gl_location: int
-
-    texture_id: int
     def __init__(self, width, height):
         self.width = width
         self.height = height
         self._gl_loaded = False
         self._gl_location = 0
-        self.texture_id = Texture._id_index
-        Texture._id_index += 1
+        super().__init__(self)
         
     def gl_load(self, format: int = GL.GL_RGBA, internal_format: int = GL.GL_RGBA, dtype: int = GL.GL_UNSIGNED_BYTE, data: bytes = None) -> bool:
         if self._gl_loaded:
             return True
+        self._gl_loaded = True
         
         self._gl_location = GL.glGenTextures(1)
         GL.glBindTexture(GL.GL_TEXTURE_2D, self._gl_location)
@@ -76,12 +80,14 @@ class Sprite(Texture, ILoadable):
     def im_data(self, format: _im_formats) -> bytes:
         return pg.image.tobytes(self.surface, format)
     
-    def gl_load(self, format: _im_formats = "RGBA") -> bool:
+    def gl_load(self, format: _im_formats = "RGBA", internal_format = None, dtype: int = GL.GL_UNSIGNED_BYTE) -> bool:
         gl_format = _im_format_to_gl_format[format]
-        return super().gl_load(gl_format, gl_format, GL.GL_UNSIGNED_BYTE, self.im_data(format))
+        if internal_format == None:
+            internal_format = gl_format
+        return super().gl_load(gl_format, internal_format, dtype, self.im_data(format))
 
     def bind(self, format: _im_formats = "RGBA", min_filter = GL.GL_LINEAR, max_filter = GL.GL_LINEAR, wrap_s = GL.GL_REPEAT, wrap_t = GL.GL_REPEAT):
-        return super().bind(format, min_filter, max_filter, wrap_s, wrap_t)
+        return super().bind(format=format, min_filter=min_filter, max_filter=max_filter, wrap_s=wrap_s, wrap_t=wrap_t)
 
     def load_from_file(path) -> "Sprite":
         try:
@@ -106,7 +112,7 @@ class _SpriteChar:
         self.bearing_y = bearing_y
         self.advance = advance
 
-class SpriteFont(ILoadable):
+class SpriteFont(TextureLike, ILoadable):
     width: int
     height : int
 
@@ -114,13 +120,13 @@ class SpriteFont(ILoadable):
     _gl_location: int
 
     font_face: FT.Face
-
     chars: list[_SpriteChar]
 
     def __init__(self, font_face: FT.Face):
         self.font_face = font_face
         self.font_face.set_char_size(0, 12)
         self.chars = [None for _ in range(128)]
+        super().__init__(self)
 
     def set_font_size(self, size: int):
         self.font_face.set_char_size(0, size)

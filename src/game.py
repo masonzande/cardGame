@@ -3,7 +3,7 @@ from engine import Engine
 from graphics import clear, create_ortho_projection, bind_buffer
 from graphics.batcher import ShapeBatcher, SpriteBatcher
 from graphics.shader import Shader, VERTEX_DEFAULT, FRAGMENT_DEFAULT
-from graphics.sprite import Sprite
+from graphics.sprite import Sprite, SpriteFont
 from graphics.vertices import VertexPosition2Color4
 from OpenGL.GL import *
 from loader import ContentLoader
@@ -26,10 +26,13 @@ class CardGame(Engine):
         
     def load(self):
         self.shader = self.content.load_custom("./shaders/basic_vp3t2.sl", Shader)
+        self.font_shader = self.content.load_custom("./shaders/text_vp3t2.sl", Shader)
         winx, winy = pg.display.get_window_size()
         self.shader.set_uniform('mvp', create_ortho_projection(0, winx, 0, winy))
         self.texture0 = self.content.load_custom("./card_portraits/Legendary - Giraffe.jpg", Sprite)
         self.texture1 = self.content.load_custom("./card_portraits/Common - Deer.png", Sprite)
+        self.font0 = self.content.load_custom("./fonts/OpenSans-Regular.ttf", SpriteFont)
+        self.font0.generate_font()
 
     def update(self, clock: pg.time.Clock):
         # Main Game Logic goes here!
@@ -55,9 +58,10 @@ class CardGame(Engine):
 
         bind_buffer(None)
         clear(0.0, 0.0, 0.0)
-        self.batcher.begin(self.shader)
+        self.batcher.begin(self.shader, font_program=self.font_shader)
         self.batcher.draw(self.target, pg.Vector2(32, 32), pg.Vector2(256, 128+64), 0.5)
         self.batcher.draw(self.target, pg.Vector2(287, 67), pg.Vector2(256, 128+64), 0.5)
+        self.batcher.draw_string(self.font0, "Hello!", pg.Vector2(0, 0), 0)
         self.batcher.flush()
 
     def unload(self):

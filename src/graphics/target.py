@@ -38,6 +38,7 @@ class RenderTarget:
 
         GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0)
 
+
     def get_texture(self) -> sprite.Texture:
         return self._internal_texture
         

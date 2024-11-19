@@ -119,17 +119,22 @@ class SpriteBatcher(Batcher[vertices.VertexPosition3Texture2]):
             print("BATCH ERR: Font Program was not initialized. Printing message to console.")
             print(message)
             return
+        
+        str_dim = font.string_dims(message)
         self._font_program.set_uniform("text_color", type_convert.pg_color_to_numpy_array(color))
-        self._font_program.set_uniform("mvp", np.identity(4, dtype=np.float32))
+        self._font_program.set_uniform("mvp", graphics.create_ortho_projection(0, str_dim[0], str_dim[1], 0))
         self._font_program.use()
         GL.glActiveTexture(GL.GL_TEXTURE0)
 
-        rt = target.RenderTarget() ## TODO: Need a way to get width and height for this RT. Should make it fit the text size ideally.
+        rt = target.RenderTarget(str_dim[0], str_dim[1])
 
-        x = pos.x
-        y = pos.y
+        reset = graphics.active_target
+        graphics.bind_buffer(rt)
+
+        x = 0
+        y = str_dim[2]
         for c in message:
-            char: sprite._SpriteChar = font.chars[chr(c)]
+            char: sprite._SpriteChar = font.chars[ord(c)]
             xpos = x + char.bearing_x
             ypos = y - (char.height - char.bearing_y)
 
@@ -143,7 +148,7 @@ class SpriteBatcher(Batcher[vertices.VertexPosition3Texture2]):
                 vertices.VertexPosition3Texture2(pg.Vector3(xpos + width, ypos + height, 0), pg.Vector2(1, 0))
             ]
 
-            indices = [0, 1, 2, 0, 2, 3]
+            indices = np.array([0, 1, 2, 0, 2, 3], dtype=np.uint32)
 
             vertex_buf = vertices.VertexArrayObject(verts)
             vertex_buf.bind()
@@ -154,7 +159,10 @@ class SpriteBatcher(Batcher[vertices.VertexPosition3Texture2]):
             
             GL.glDrawElements(GL.GL_TRIANGLES, len(indices), GL.GL_UNSIGNED_INT, None)
 
-            x += (char.advance >> 6)
+            x += (char.advance << 6)
+        
+        graphics.bind_buffer(reset)
+        self.draw(rt, pos, pg.Vector2(str_dim[0], str_dim[1]), depth)
 
     def flush(self):
         self.program.use()

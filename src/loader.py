@@ -18,6 +18,6 @@ class ContentLoader:
         try:
             return type.load_from_file(file_location)
         except:
-            print(f"[ERR]: Loading file {file_name} into type {type.__str__()} failed.")
+            print(f"[ERR]: Loading file {file_name} into type {type} failed.")
             raise TypeError()
         

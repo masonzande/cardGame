@@ -26,7 +26,7 @@ class TextureLike:
     _id_index = 0
     texture_id: int
     def __init__(self):
-        self._id_index = TextureLike._id_index
+        self.texture_id = TextureLike._id_index
         TextureLike._id_index += 1
 
 class Texture(TextureLike):
@@ -40,7 +40,7 @@ class Texture(TextureLike):
         self.height = height
         self._gl_loaded = False
         self._gl_location = 0
-        super().__init__(self)
+        super().__init__()
         
     def gl_load(self, format: int = GL.GL_RGBA, internal_format: int = GL.GL_RGBA, dtype: int = GL.GL_UNSIGNED_BYTE, data: bytes = None) -> bool:
         if self._gl_loaded:
@@ -126,7 +126,7 @@ class SpriteFont(TextureLike, ILoadable):
         self.font_face = font_face
         self.font_face.set_char_size(0, 12)
         self.chars = [None for _ in range(128)]
-        super().__init__(self)
+        super().__init__()
 
     def set_font_size(self, size: int):
         self.font_face.set_char_size(0, size)
@@ -134,7 +134,7 @@ class SpriteFont(TextureLike, ILoadable):
     def generate_font(self):
         GL.glPixelStorei(GL.GL_UNPACK_ALIGNMENT, 1)
         for c in range(128):
-            self.font_face.load_char(chr(c))
+            self.font_face.load_char(c)
             glyph: FT.GlyphSlot = self.font_face.glyph
             bitmap: FT.Bitmap = glyph.bitmap
             
@@ -154,15 +154,19 @@ class SpriteFont(TextureLike, ILoadable):
 
             self.chars[c] = _SpriteChar(tex_id, width, height, bearing_x, bearing_y, glyph.advance.x)
 
-    def determine_string_width(self, string: str) -> int:
+    def string_dims(self, string: str) -> tuple[int, int, int]:
         width = 0
+        bottom = 0
+        top = 0
         for char in string:
-            self.font_face.load_char(chr(char))
+            self.font_face.load_char(ord(char))
             glyph: FT.GlyphSlot = self.font_face.glyph
-            width += glyph.advance.x
-        return width
+            width += glyph.advance.x << 6
+            top = glyph.bitmap.rows if glyph.bitmap.rows > top else top
+            bottom = glyph.bitmap.rows - glyph.bitmap_top if glyph.bitmap.rows - glyph.bitmap_top < bottom else bottom
+            
+        return width, top - bottom, top
 
     def load_from_file(path):
         face = FT.Face(path)
         return SpriteFont(face)
-        

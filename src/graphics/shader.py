@@ -29,7 +29,8 @@ void main() {
 # TODO: Finish this
 STRING_TO_GL_TYPE = {
     "mat4": GL.GL_FLOAT_MAT4,
-    'sampler2D': GL.GL_SAMPLER_2D
+    'sampler2D': GL.GL_SAMPLER_2D,
+    "vec4": GL.GL_FLOAT_VEC4
 }
 
 class RichUniform:

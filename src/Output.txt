@@ -1,0 +1,5219 @@
+Animals Initialized.
+Environment = Rainforest, Weather = Wildfire, DayNight = Day.
+Grid Created.
+
+Pre-Battle Effects Applied.
+Being a Predator, Orca's Attack Increased by 1 After One Group Member Joined The Battlefield.
+Being a Predator, Orca's Attack Increased by 1 After One Group Member Joined The Battlefield.
+Bison's Stomp Attack Now Has Paralysis Instead of Flinch After One Group Member Joined The Battlefield.
+Bison's Stomp Attack Now Has Paralysis Instead of Flinch After One Group Member Joined The Battlefield.
+
+Statistics of All Animals:
+
+	Rattlesnake:
+		Health: 10
+		Armor: 0
+
+	Rattlesnake:
+		Health: 10
+		Armor: 0
+
+	Camel:
+		Health: 20
+		Armor: 0
+
+	Scorpion:
+		Health: 8
+		Armor: 1
+
+	Silver Ant:
+		Health: 5
+		Armor: 2
+
+	Wolf:
+		Health: 12
+		Armor: 0
+
+	Grizzly Bear:
+		Health: 20
+		Armor: 1
+
+	Black Bear:
+		Health: 17
+		Armor: 0
+
+	Deer:
+		Health: 10
+		Armor: 0
+
+	Rabbit:
+		Health: 6
+		Armor: 0
+
+	Moose:
+		Health: 15
+		Armor: 3
+
+	Eagle:
+		Health: 6
+		Armor: 0
+
+	Hawk:
+		Health: 7
+		Armor: 0
+
+	Shark:
+		Health: 14
+		Armor: 4
+
+	Dolphin:
+		Health: 12
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Plankton:
+		Health: 2
+		Armor: 0
+
+	Octopus:
+		Health: 9
+		Armor: 1
+
+	Crab:
+		Health: 3
+		Armor: 6
+
+	Lion:
+		Health: 16
+		Armor: 0
+
+	Giraffe:
+		Health: 25
+		Armor: 0
+
+	Elephant:
+		Health: 20
+		Armor: 4
+
+	Zebra:
+		Health: 12
+		Armor: 0
+
+	Hyena:
+		Health: 12
+		Armor: 0
+
+	Gazelle:
+		Health: 10
+		Armor: 0
+
+	Bison:
+		Health: 15
+		Armor: 2
+
+	Bison:
+		Health: 15
+		Armor: 2
+
+	Vulture:
+		Health: 8
+		Armor: 0
+
+	Monkey:
+		Health: 9
+		Armor: 0
+
+	Ape:
+		Health: 13
+		Armor: 1
+
+	Alligator:
+		Health: 17
+		Armor: 6
+
+	Crocodile:
+		Health: 21
+		Armor: 2
+
+	Poison Frog:
+		Health: 7
+		Armor: 0
+
+	Polar Bear:
+		Health: 20
+		Armor: 5
+
+	Arctic Fox:
+		Health: 8
+		Armor: 0
+
+	Penguin:
+		Health: 8
+		Armor: 0
+
+	Seal:
+		Health: 12
+		Armor: 1
+
+Turn 1:
+
+Rattlesnake's Turn.
+Rattlesnake is Cold Blooded, Losing 1 Health From The Environmental Condition Wildfire.
+Rattlesnake Used Rattle.
+Rattlesnake's Camoflauge is Reduced to a Visual Radius of 3.
+Rattlesnake's Camoflauge is Increased to a Visual Radius of 1.
+
+Rattlesnake's Turn.
+Rattlesnake is Cold Blooded, Losing 1 Health From The Environmental Condition Wildfire.
+Rattlesnake Used Smell.
+
+Camel's Turn.
+Camel 2xWalked From (2, 2) to (5, 2).
+Exhaustion Level 1 Applied to Camel.
+Camel's Movement Reduced to 1/2.
+
+Scorpion's Turn.
+Scorpion is Cold Blooded, Losing 1 Health From The Environmental Condition Wildfire.
+
+Silver Ant's Turn.
+Silver Ant 2xWalked From (4, 4) to (11, 4).
+Exhaustion Level 1 Applied to Silver Ant.
+Silver Ant's Movement Reduced to 3/4.
+
+Wolf's Turn.
+Wolf 2xWalked From (5, 5) to (5, 1).
+Exhaustion Level 1 Applied to Wolf.
+Wolf's Movement Reduced to 1/2.
+Wolf Used Smell.
+Rattlesnake's Camoflauge is Reduced to a Visual Radius of 3.
+Camel Was Attacked by Wolf Using The Attack Bite.
+Bleed Level 1 Applied to Camel.
+
+Grizzly Bear's Turn.
+Grizzly Bear 2xWalked From (6, 6) to (0, 6).
+Exhaustion Level 1 Applied to Grizzly Bear.
+Grizzly Bear's Movement Reduced to 1/2.
+Grizzly Bear Used Smell.
+
+Black Bear's Turn.
+Black Bear Climbed From (7, 7) to (6, 7).
+Black Bear Used Smell.
+
+Deer's Turn.
+
+Rabbit's Turn.
+
+Moose's Turn.
+Moose Walked From (10, 10) to (10, 9).
+Rabbit Was Attacked by Moose Using The Attack Stomp.
+Flinch Applied to Rabbit.
+
+Eagle's Turn.
+Eagle 2xWalked From (11, 11) to (11, 13).
+Exhaustion Level 1 Applied to Eagle.
+Eagle's Movement Reduced to 1/2.
+
+Hawk's Turn.
+
+Shark's Turn.
+
+Dolphin's Turn.
+Dolphin Used Echo Location.
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Plankton's Turn.
+
+Octopus's Turn.
+
+Crab's Turn.
+Crab Walked From (19, 19) to (19, 20).
+Lion Was Attacked by Crab Using The Attack Claw.
+
+Lion's Turn.
+Crab Was Attacked by Lion Using The Attack Claw.
+Bleed Level 1 Applied to Crab.
+
+Giraffe's Turn.
+
+Elephant's Turn.
+
+Zebra's Turn.
+
+Hyena's Turn.
+Hyena Walked From (24, 24) to (22, 24).
+
+Gazelle's Turn.
+Gazelle Walked From (25, 25) to (25, 27).
+
+Bison's Turn.
+
+Bison's Turn.
+
+Vulture's Turn.
+Vulture Walked From (28, 28) to (27, 28).
+Bison Was Attacked by Vulture Using The Attack Claw.
+
+Monkey's Turn.
+Monkey Climbed From (29, 29) to (28, 29).
+
+Ape's Turn.
+
+Alligator's Turn.
+
+Crocodile's Turn.
+
+Poison Frog's Turn.
+Poison Frog Walked From (33, 33) to (33, 34).
+
+Polar Bear's Turn.
+Poison Frog Was Attacked by Polar Bear Using The Attack Bite.
+Poison Level 1 Applied to Polar Bear.
+Bleed Level 1 Applied to Poison Frog.
+Poison Damaged Polar Bear by 1.
+Poison in Polar Bear is Reversed to Level 0.
+
+Arctic Fox's Turn.
+Arctic Fox Walked From (35, 35) to (35, 37).
+Arctic Fox Used Bark.
+
+Penguin's Turn.
+
+Seal's Turn.
+
+Statistics of All Animals:
+
+	Rattlesnake:
+		Health: 9
+		Armor: 0
+
+	Scorpion:
+		Health: 7
+		Armor: 1
+
+	Silver Ant:
+		Health: 5
+		Armor: 2
+
+	Camel:
+		Health: 18
+		Armor: 0
+
+	Rattlesnake:
+		Health: 9
+		Armor: 0
+
+	Wolf:
+		Health: 12
+		Armor: 0
+
+	Grizzly Bear:
+		Health: 20
+		Armor: 1
+
+	Black Bear:
+		Health: 17
+		Armor: 0
+
+	Deer:
+		Health: 10
+		Armor: 0
+
+	Rabbit:
+		Health: 4
+		Armor: 0
+
+	Moose:
+		Health: 15
+		Armor: 3
+
+	Eagle:
+		Health: 6
+		Armor: 0
+
+	Hawk:
+		Health: 7
+		Armor: 0
+
+	Shark:
+		Health: 14
+		Armor: 4
+
+	Dolphin:
+		Health: 12
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Plankton:
+		Health: 2
+		Armor: 0
+
+	Octopus:
+		Health: 9
+		Armor: 1
+
+	Crab:
+		Health: 3
+		Armor: 4
+
+	Lion:
+		Health: 14
+		Armor: 0
+
+	Giraffe:
+		Health: 25
+		Armor: 0
+
+	Elephant:
+		Health: 20
+		Armor: 4
+
+	Zebra:
+		Health: 12
+		Armor: 0
+
+	Hyena:
+		Health: 12
+		Armor: 0
+
+	Gazelle:
+		Health: 10
+		Armor: 0
+
+	Bison:
+		Health: 15
+		Armor: 2
+
+	Bison:
+		Health: 15
+		Armor: 0
+
+	Vulture:
+		Health: 8
+		Armor: 0
+
+	Monkey:
+		Health: 9
+		Armor: 0
+
+	Ape:
+		Health: 13
+		Armor: 1
+
+	Alligator:
+		Health: 17
+		Armor: 6
+
+	Crocodile:
+		Health: 21
+		Armor: 2
+
+	Poison Frog:
+		Health: 3
+		Armor: 0
+
+	Polar Bear:
+		Health: 19
+		Armor: 5
+
+	Arctic Fox:
+		Health: 8
+		Armor: 0
+
+	Penguin:
+		Health: 8
+		Armor: 0
+
+	Seal:
+		Health: 12
+		Armor: 1
+
+Turn 2:
+
+Rattlesnake's Turn.
+Rattlesnake is Cold Blooded, Losing 1 Health From The Environmental Condition Wildfire.
+Rattlesnake Used Smell.
+
+Scorpion's Turn.
+Scorpion is Cold Blooded, Losing 1 Health From The Environmental Condition Wildfire.
+
+Silver Ant's Turn.
+Silver Ant's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Camel's Turn.
+Camel Used Camel's Rations, Gaining 1 Health.
+Camel Walked From (5, 2) to (4, 2).
+Camel's Exhaustion Decreased to Level 0. No Negative Effects.
+Bleed Damaged Camel by 1.
+Bleed in Camel is Reversed to Level 0.
+
+Rattlesnake's Turn.
+Rattlesnake is Cold Blooded, Losing 1 Health From The Environmental Condition Wildfire.
+Rattlesnake 2xSlithered From (1, 1) to (7, 1).
+Exhaustion Level 1 Applied to Rattlesnake.
+Rattlesnake's Movement Reduced to 1/2.
+Rattlesnake Used Rattle.
+Rattlesnake's Camoflauge is Reduced to a Visual Radius of 5.
+Rattlesnake's Camoflauge is Increased to a Visual Radius of 3.
+Rattlesnake's Camoflauge is Increased to a Visual Radius of 1.
+
+Wolf's Turn.
+Wolf Used Smell.
+Rattlesnake's Camoflauge is Reduced to a Visual Radius of 3.
+Wolf's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Grizzly Bear's Turn.
+Grizzly Bear Used Smell.
+Grizzly Bear's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Black Bear's Turn.
+Black Bear Used Smell.
+
+Deer's Turn.
+
+Rabbit's Turn.
+Due to Rabbit Being Flinched, Rabbit's Turn Was Skipped.
+Flinch Removed From Rabbit.
+
+Moose's Turn.
+Rabbit Was Attacked by Moose Using The Attack Horns.
+Bleed Level 1 Applied to Rabbit.
+
+Eagle's Turn.
+Eagle 2xFlew From (11, 13) to (11, 9).
+Exhaustion Level 2 Applied to Eagle.
+Exhaustion Paralysis Applied.
+Exhaustion Paralysis Applied to Eagle For 1 Turn.
+Moose Was Attacked by Eagle Using The Attack Claw.
+
+Hawk's Turn.
+
+Shark's Turn.
+
+Dolphin's Turn.
+Dolphin Used Echo Location.
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Plankton's Turn.
+
+Octopus's Turn.
+
+Crab's Turn.
+Lion Was Attacked by Crab Using The Attack Claw.
+Bleed Damaged Crab by 1.
+Bleed in Crab is Reversed to Level 0.
+
+Lion's Turn.
+Lion Walked From (20, 20) to (21, 20).
+Giraffe Was Attacked by Lion Using The Attack Bite.
+Bleed Level 1 Applied to Giraffe.
+
+Giraffe's Turn.
+Lion Was Attacked by Giraffe Using The Attack Stomp.
+Flinch Applied to Lion.
+Bleed Damaged Giraffe by 1.
+Bleed in Giraffe is Reversed to Level 0.
+
+Elephant's Turn.
+Elephant Walked From (22, 22) to (24, 22).
+
+Zebra's Turn.
+Zebra 2xWalked From (23, 23) to (27, 23).
+Exhaustion Level 1 Applied to Zebra.
+Zebra's Movement Reduced to 1/2.
+
+Hyena's Turn.
+
+Gazelle's Turn.
+Gazelle Walked From (25, 27) to (25, 28).
+Vulture Was Attacked by Gazelle Using The Attack Horns.
+Bleed Level 1 Applied to Vulture.
+
+Bison's Turn.
+Bison Walked From (26, 26) to (23, 26).
+
+Bison's Turn.
+Vulture Was Attacked by Bison Using The Attack Body Slam.
+Flinch Applied to Vulture.
+
+Vulture's Turn.
+Due to Vulture Being Flinched, Vulture's Turn Was Skipped.
+Flinch Removed From Vulture.
+Bleed Damaged Vulture by 1.
+Bleed in Vulture is Reversed to Level 0.
+
+Monkey's Turn.
+Monkey Walked From (28, 29) to (30, 29).
+Ape Was Attacked by Monkey Using The Attack Punch.
+
+Ape's Turn.
+Ape 2xWalked From (30, 30) to (34, 30).
+Exhaustion Level 1 Applied to Ape.
+Ape's Movement Reduced to 1/2.
+
+Alligator's Turn.
+Alligator 2xWalked From (31, 31) to (31, 28).
+Exhaustion Level 1 Applied to Alligator.
+Alligator's Movement Reduced to 1/2.
+
+Crocodile's Turn.
+
+Poison Frog's Turn.
+Bleed Damaged Poison Frog by 1.
+Bleed in Poison Frog is Reversed to Level 0.
+
+Polar Bear's Turn.
+Polar Bear Walked From (34, 34) to (32, 34).
+Poison Frog Was Attacked by Polar Bear Using The Attack Claw.
+Poison Level 1 Applied to Polar Bear.
+Poison Damaged Polar Bear by 1.
+Poison in Polar Bear is Reversed to Level 0.
+Poison Frog is Dead.
+
+Arctic Fox's Turn.
+Arctic Fox Walked From (35, 37) to (33, 37).
+Arctic Fox Used Bark.
+
+Penguin's Turn.
+Penguin Walked From (36, 36) to (36, 35).
+
+Seal's Turn.
+
+Statistics of All Animals:
+
+	Rattlesnake:
+		Health: 8
+		Armor: 0
+
+	Scorpion:
+		Health: 6
+		Armor: 1
+
+	Silver Ant:
+		Health: 5
+		Armor: 2
+
+	Camel:
+		Health: 18
+		Armor: 0
+
+	Rattlesnake:
+		Health: 8
+		Armor: 0
+
+	Wolf:
+		Health: 12
+		Armor: 0
+
+	Grizzly Bear:
+		Health: 20
+		Armor: 1
+
+	Black Bear:
+		Health: 17
+		Armor: 0
+
+	Deer:
+		Health: 10
+		Armor: 0
+
+	Rabbit:
+		Health: 1
+		Armor: 0
+
+	Moose:
+		Health: 15
+		Armor: 1
+
+	Eagle:
+		Health: 6
+		Armor: 0
+
+	Hawk:
+		Health: 7
+		Armor: 0
+
+	Shark:
+		Health: 14
+		Armor: 4
+
+	Dolphin:
+		Health: 12
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Plankton:
+		Health: 2
+		Armor: 0
+
+	Octopus:
+		Health: 9
+		Armor: 1
+
+	Crab:
+		Health: 2
+		Armor: 4
+
+	Lion:
+		Health: 9
+		Armor: 0
+
+	Giraffe:
+		Health: 21
+		Armor: 0
+
+	Elephant:
+		Health: 20
+		Armor: 4
+
+	Zebra:
+		Health: 12
+		Armor: 0
+
+	Hyena:
+		Health: 12
+		Armor: 0
+
+	Gazelle:
+		Health: 10
+		Armor: 0
+
+	Bison:
+		Health: 15
+		Armor: 2
+
+	Vulture:
+		Health: 2
+		Armor: 0
+
+	Bison:
+		Health: 15
+		Armor: 0
+
+	Monkey:
+		Health: 9
+		Armor: 0
+
+	Ape:
+		Health: 13
+		Armor: 0
+
+	Alligator:
+		Health: 17
+		Armor: 6
+
+	Crocodile:
+		Health: 21
+		Armor: 2
+
+	Polar Bear:
+		Health: 18
+		Armor: 5
+
+	Arctic Fox:
+		Health: 8
+		Armor: 0
+
+	Penguin:
+		Health: 8
+		Armor: 0
+
+	Seal:
+		Health: 12
+		Armor: 1
+
+Turn 3:
+
+Rattlesnake's Turn.
+Rattlesnake is Cold Blooded, Losing 1 Health From The Environmental Condition Wildfire.
+Rattlesnake 2xSlithered From (0, 0) to (6, 0).
+Exhaustion Level 1 Applied to Rattlesnake.
+Rattlesnake's Movement Reduced to 1/2.
+Rattlesnake Used Smell.
+
+Scorpion's Turn.
+Scorpion is Cold Blooded, Losing 1 Health From The Environmental Condition Wildfire.
+Scorpion Walked From (3, 3) to (3, 1).
+
+Silver Ant's Turn.
+
+Camel's Turn.
+Camel Used Camel's Rations, Gaining 1 Health.
+Camel Walked From (4, 2) to (4, 1).
+Scorpion Was Attacked by Camel Using The Attack Stomp.
+Flinch Applied to Scorpion.
+
+Rattlesnake's Turn.
+Rattlesnake is Cold Blooded, Losing 1 Health From The Environmental Condition Wildfire.
+Rattlesnake Used Smell.
+Rattlesnake's Camoflauge is Increased to a Visual Radius of 1.
+Rattlesnake's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Wolf's Turn.
+Wolf Walked From (5, 1) to (5, 3).
+Wolf Used Smell.
+
+Grizzly Bear's Turn.
+Grizzly Bear Used Smell.
+
+Black Bear's Turn.
+Black Bear Walked From (6, 7) to (8, 7).
+Black Bear Used Smell.
+Deer Was Attacked by Black Bear Using The Attack Bite.
+Bleed Level 1 Applied to Deer.
+
+Deer's Turn.
+Deer Walked From (8, 8) to (9, 8).
+Rabbit Was Attacked by Deer Using The Attack Horns.
+Bleed Damaged Deer by 1.
+Bleed in Deer is Reversed to Level 0.
+Rabbit is Dead.
+
+Moose's Turn.
+Rabbit Was Attacked by Moose Using The Attack Horns.
+Eagle Was Attacked by Moose Using The Attack Horns.
+Bleed Level 1 Applied to Eagle.
+Rabbit is Dead.
+
+Eagle's Turn.
+Due to Eagle's Paralysis, Eagle's Turn Was Skipped.
+Eagle's Exhaustion Decreased to Level 1. Exhaustion Paralysis Removed.
+Exhaustion Paralysis For Eagle is in Effect For 0 More Turns.
+Bleed Damaged Eagle by 1.
+Bleed in Eagle is Reversed to Level 0.
+
+Hawk's Turn.
+Hawk 2xWalked From (12, 12) to (14, 12).
+Exhaustion Level 1 Applied to Hawk.
+Hawk's Movement Reduced to 1/2.
+
+Shark's Turn.
+
+Dolphin's Turn.
+Dolphin Used Echo Location.
+Hawk Was Attacked by Dolphin Using The Attack Tail Slam.
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Plankton's Turn.
+
+Octopus's Turn.
+
+Crab's Turn.
+Crab Walked From (19, 20) to (20, 20).
+Lion Was Attacked by Crab Using The Attack Claw.
+
+Lion's Turn.
+Due to Lion Being Flinched, Lion's Turn Was Skipped.
+Flinch Removed From Lion.
+
+Giraffe's Turn.
+Giraffe 2xWalked From (21, 21) to (21, 24).
+Exhaustion Level 1 Applied to Giraffe.
+Giraffe's Movement Reduced to 1/2.
+Hyena Was Attacked by Giraffe Using The Attack Stomp.
+Flinch Applied to Hyena.
+
+Elephant's Turn.
+
+Zebra's Turn.
+Zebra Walked From (27, 23) to (28, 23).
+Zebra's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Hyena's Turn.
+Due to Hyena Being Flinched, Hyena's Turn Was Skipped.
+Flinch Removed From Hyena.
+
+Gazelle's Turn.
+Vulture Was Attacked by Gazelle Using The Attack Horns.
+Vulture is Dead.
+
+Bison's Turn.
+
+Bison's Turn.
+Vulture Was Attacked by Bison Using The Attack Stomp.
+Vulture is Dead.
+
+Monkey's Turn.
+Monkey Climbed From (30, 29) to (28, 29).
+
+Ape's Turn.
+Ape 2xWalked From (34, 30) to (36, 30).
+Exhaustion Level 2 Applied to Ape.
+Exhaustion Paralysis Applied.
+Exhaustion Paralysis Applied to Ape For 1 Turn.
+
+Alligator's Turn.
+Alligator 2xWalked From (31, 28) to (31, 30).
+Exhaustion Level 2 Applied to Alligator.
+Exhaustion Paralysis Applied.
+Exhaustion Paralysis Applied to Alligator For 1 Turn.
+
+Crocodile's Turn.
+
+Polar Bear's Turn.
+Polar Bear Walked From (32, 34) to (29, 34).
+
+Arctic Fox's Turn.
+Arctic Fox Walked From (33, 37) to (33, 35).
+Arctic Fox Used Bark.
+Poison Frog Was Attacked by Arctic Fox Using The Attack Claw.
+Poison Level 1 Applied to Arctic Fox.
+Poison Damaged Arctic Fox by 1.
+Poison in Arctic Fox is Reversed to Level 0.
+Poison Frog is Dead.
+
+Penguin's Turn.
+
+Seal's Turn.
+
+Statistics of All Animals:
+
+	Rattlesnake:
+		Health: 7
+		Armor: 0
+
+	Silver Ant:
+		Health: 5
+		Armor: 2
+
+	Camel:
+		Health: 19
+		Armor: 0
+
+	Scorpion:
+		Health: 5
+		Armor: 0
+
+	Rattlesnake:
+		Health: 7
+		Armor: 0
+
+	Wolf:
+		Health: 12
+		Armor: 0
+
+	Grizzly Bear:
+		Health: 20
+		Armor: 1
+
+	Black Bear:
+		Health: 17
+		Armor: 0
+
+	Deer:
+		Health: 7
+		Armor: 0
+
+	Eagle:
+		Health: 2
+		Armor: 0
+
+	Moose:
+		Health: 15
+		Armor: 1
+
+	Shark:
+		Health: 14
+		Armor: 4
+
+	Hawk:
+		Health: 6
+		Armor: 0
+
+	Dolphin:
+		Health: 12
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Plankton:
+		Health: 2
+		Armor: 0
+
+	Octopus:
+		Health: 9
+		Armor: 1
+
+	Lion:
+		Health: 7
+		Armor: 0
+
+	Crab:
+		Health: 2
+		Armor: 4
+
+	Hyena:
+		Health: 9
+		Armor: 0
+
+	Giraffe:
+		Health: 21
+		Armor: 0
+
+	Elephant:
+		Health: 20
+		Armor: 4
+
+	Zebra:
+		Health: 12
+		Armor: 0
+
+	Gazelle:
+		Health: 10
+		Armor: 0
+
+	Bison:
+		Health: 15
+		Armor: 2
+
+	Bison:
+		Health: 15
+		Armor: 0
+
+	Monkey:
+		Health: 9
+		Armor: 0
+
+	Ape:
+		Health: 13
+		Armor: 0
+
+	Alligator:
+		Health: 17
+		Armor: 6
+
+	Crocodile:
+		Health: 21
+		Armor: 2
+
+	Polar Bear:
+		Health: 18
+		Armor: 5
+
+	Arctic Fox:
+		Health: 7
+		Armor: 0
+
+	Penguin:
+		Health: 8
+		Armor: 0
+
+	Seal:
+		Health: 12
+		Armor: 1
+
+Turn 4:
+
+Rattlesnake's Turn.
+Rattlesnake is Cold Blooded, Losing 1 Health From The Environmental Condition Wildfire.
+Rattlesnake Slithered From (6, 0) to (7, 0).
+Rattlesnake Used Smell.
+Rattlesnake Was Attacked by Rattlesnake Using The Attack Bite.
+Venom Level 1 Applied to Rattlesnake.
+Rattlesnake's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Silver Ant's Turn.
+Silver Ant Walked From (11, 4) to (11, 1).
+
+Camel's Turn.
+Camel Used Camel's Rations, Gaining 1 Health.
+Camel 2xWalked From (4, 1) to (4, 4).
+Exhaustion Level 1 Applied to Camel.
+Camel's Movement Reduced to 1/2.
+
+Scorpion's Turn.
+Scorpion is Cold Blooded, Losing 1 Health From The Environmental Condition Wildfire.
+Due to Scorpion Being Flinched, Scorpion's Turn Was Skipped.
+Flinch Removed From Scorpion.
+
+Rattlesnake's Turn.
+Rattlesnake is Cold Blooded, Losing 1 Health From The Environmental Condition Wildfire.
+Rattlesnake Used Smell.
+Rattlesnake Was Attacked by Rattlesnake Using The Attack Bite.
+Venom Level 1 Applied to Rattlesnake.
+Venom Damaged Rattlesnake by 1.
+Venom in Rattlesnake is Reversed to Level 0.
+
+Wolf's Turn.
+Wolf Used Smell.
+
+Grizzly Bear's Turn.
+Grizzly Bear Walked From (0, 6) to (0, 5).
+Grizzly Bear Used Smell.
+
+Black Bear's Turn.
+Black Bear Used Smell.
+
+Deer's Turn.
+Rabbit Was Attacked by Deer Using The Attack Stomp.
+Rabbit is Dead.
+
+Eagle's Turn.
+Eagle 2xFlew From (11, 9) to (11, 5).
+Exhaustion Level 2 Applied to Eagle.
+Exhaustion Paralysis Applied.
+Exhaustion Paralysis Applied to Eagle For 1 Turn.
+
+Moose's Turn.
+Rabbit Was Attacked by Moose Using The Attack Horns.
+Rabbit is Dead.
+
+Shark's Turn.
+
+Hawk's Turn.
+Hawk 2xFlew From (14, 12) to (16, 12).
+Exhaustion Level 2 Applied to Hawk.
+Exhaustion Paralysis Applied.
+Exhaustion Paralysis Applied to Hawk For 1 Turn.
+
+Dolphin's Turn.
+Dolphin Used Echo Location.
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Plankton's Turn.
+
+Octopus's Turn.
+
+Lion's Turn.
+Lion Walked From (21, 20) to (21, 17).
+
+Crab's Turn.
+
+Hyena's Turn.
+Hyena Walked From (22, 24) to (20, 24).
+Giraffe Was Attacked by Hyena Using The Attack Claw.
+Bleed Level 1 Applied to Giraffe.
+
+Giraffe's Turn.
+Hyena Was Attacked by Giraffe Using The Attack Stomp.
+Flinch Applied to Hyena.
+Giraffe's Exhaustion Decreased to Level 0. No Negative Effects.
+Bleed Damaged Giraffe by 1.
+Bleed in Giraffe is Reversed to Level 0.
+
+Elephant's Turn.
+
+Zebra's Turn.
+
+Gazelle's Turn.
+Gazelle Walked From (25, 28) to (25, 31).
+
+Bison's Turn.
+
+Bison's Turn.
+Vulture Was Attacked by Bison Using The Attack Body Slam.
+Vulture is Dead.
+
+Monkey's Turn.
+Monkey Walked From (28, 29) to (28, 28).
+Vulture Was Attacked by Monkey Using The Attack Punch.
+Vulture is Dead.
+
+Ape's Turn.
+Due to Ape's Paralysis, Ape Cannot Move This Turn.
+Ape's Exhaustion Decreased to Level 1. Exhaustion Paralysis Removed.
+Exhaustion Paralysis For Ape is in Effect For 0 More Turns.
+
+Alligator's Turn.
+Due to Alligator's Paralysis, Alligator's Turn Was Skipped.
+Alligator's Exhaustion Decreased to Level 1. Exhaustion Paralysis Removed.
+Exhaustion Paralysis For Alligator is in Effect For 0 More Turns.
+
+Crocodile's Turn.
+
+Polar Bear's Turn.
+Polar Bear Walked From (29, 34) to (30, 34).
+
+Arctic Fox's Turn.
+Arctic Fox Used Bark.
+Poison Frog Was Attacked by Arctic Fox Using The Attack Claw.
+Poison Level 1 Applied to Arctic Fox.
+Poison Damaged Arctic Fox by 1.
+Poison in Arctic Fox is Reversed to Level 0.
+Poison Frog is Dead.
+
+Penguin's Turn.
+
+Seal's Turn.
+
+Statistics of All Animals:
+
+	Alligator:
+		Health: 17
+		Armor: 6
+
+	Camel:
+		Health: 20
+		Armor: 0
+
+	Silver Ant:
+		Health: 5
+		Armor: 2
+
+	Scorpion:
+		Health: 4
+		Armor: 0
+
+	Rattlesnake:
+		Health: 5
+		Armor: 0
+
+	Rattlesnake:
+		Health: 4
+		Armor: 0
+
+	Wolf:
+		Health: 12
+		Armor: 0
+
+	Grizzly Bear:
+		Health: 20
+		Armor: 1
+
+	Black Bear:
+		Health: 17
+		Armor: 0
+
+	Deer:
+		Health: 7
+		Armor: 0
+
+	Eagle:
+		Health: 2
+		Armor: 0
+
+	Moose:
+		Health: 15
+		Armor: 1
+
+	Shark:
+		Health: 14
+		Armor: 4
+
+	Dolphin:
+		Health: 12
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Hawk:
+		Health: 6
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Plankton:
+		Health: 2
+		Armor: 0
+
+	Octopus:
+		Health: 9
+		Armor: 1
+
+	Lion:
+		Health: 7
+		Armor: 0
+
+	Crab:
+		Health: 2
+		Armor: 4
+
+	Hyena:
+		Health: 6
+		Armor: 0
+
+	Giraffe:
+		Health: 19
+		Armor: 0
+
+	Elephant:
+		Health: 20
+		Armor: 4
+
+	Zebra:
+		Health: 12
+		Armor: 0
+
+	Gazelle:
+		Health: 10
+		Armor: 0
+
+	Bison:
+		Health: 15
+		Armor: 2
+
+	Bison:
+		Health: 15
+		Armor: 0
+
+	Monkey:
+		Health: 9
+		Armor: 0
+
+	Ape:
+		Health: 13
+		Armor: 0
+
+	Crocodile:
+		Health: 21
+		Armor: 2
+
+	Polar Bear:
+		Health: 18
+		Armor: 5
+
+	Arctic Fox:
+		Health: 6
+		Armor: 0
+
+	Penguin:
+		Health: 8
+		Armor: 0
+
+	Seal:
+		Health: 12
+		Armor: 1
+
+Turn 5:
+
+Alligator's Turn.
+Alligator's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Camel's Turn.
+Camel's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Silver Ant's Turn.
+Silver Ant Walked From (11, 1) to (5, 1).
+
+Scorpion's Turn.
+Scorpion is Cold Blooded, Losing 1 Health From The Environmental Condition Wildfire.
+Scorpion Walked From (3, 1) to (3, 3).
+
+Rattlesnake's Turn.
+Rattlesnake is Cold Blooded, Losing 1 Health From The Environmental Condition Wildfire.
+Rattlesnake Slithered From (7, 0) to (7, 3).
+Rattlesnake Used Smell.
+Venom Damaged Rattlesnake by 1.
+Venom in Rattlesnake is Reversed to Level 0.
+
+Rattlesnake's Turn.
+Rattlesnake is Cold Blooded, Losing 1 Health From The Environmental Condition Wildfire.
+Rattlesnake 2xSlithered From (7, 1) to (7, 7).
+Exhaustion Level 1 Applied to Rattlesnake.
+Rattlesnake's Movement Reduced to 1/2.
+Rattlesnake Used Rattle.
+Rattlesnake's Camoflauge is Reduced to a Visual Radius of 3.
+Black Bear Was Attacked by Rattlesnake Using The Attack Bite.
+Venom Level 1 Applied to Black Bear.
+Rattlesnake's Camoflauge is Increased to a Visual Radius of 1.
+
+Wolf's Turn.
+Wolf Used Smell.
+Rattlesnake's Camoflauge is Reduced to a Visual Radius of 3.
+
+Grizzly Bear's Turn.
+Grizzly Bear Used Smell.
+
+Black Bear's Turn.
+Black Bear Walked From (8, 7) to (8, 4).
+Black Bear Used Smell.
+Venom Damaged Black Bear by 1.
+Venom in Black Bear is Reversed to Level 0.
+
+Deer's Turn.
+Rabbit Was Attacked by Deer Using The Attack Horns.
+Rabbit is Dead.
+
+Eagle's Turn.
+Due to Eagle's Paralysis, Eagle's Turn Was Skipped.
+Eagle's Exhaustion Decreased to Level 1. Exhaustion Paralysis Removed.
+Exhaustion Paralysis For Eagle is in Effect For 0 More Turns.
+
+Moose's Turn.
+Moose Walked From (10, 9) to (13, 9).
+
+Shark's Turn.
+
+Dolphin's Turn.
+Dolphin Used Echo Location.
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Hawk's Turn.
+Due to Hawk's Paralysis, Hawk Cannot Move This Turn.
+Hawk's Exhaustion Decreased to Level 1. Exhaustion Paralysis Removed.
+Exhaustion Paralysis For Hawk is in Effect For 0 More Turns.
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Plankton's Turn.
+
+Octopus's Turn.
+
+Lion's Turn.
+
+Crab's Turn.
+Crab Walked From (20, 20) to (21, 20).
+
+Hyena's Turn.
+Due to Hyena Being Flinched, Hyena's Turn Was Skipped.
+Flinch Removed From Hyena.
+
+Giraffe's Turn.
+Giraffe Walked From (21, 24) to (23, 24).
+
+Elephant's Turn.
+Elephant 2xWalked From (24, 22) to (24, 19).
+Exhaustion Level 1 Applied to Elephant.
+Elephant's Movement Reduced to 1/2.
+
+Zebra's Turn.
+Zebra 2xWalked From (28, 23) to (28, 19).
+Exhaustion Level 1 Applied to Zebra.
+Zebra's Movement Reduced to 1/2.
+
+Gazelle's Turn.
+Gazelle 2xWalked From (25, 31) to (25, 25).
+Exhaustion Level 1 Applied to Gazelle.
+Gazelle's Movement Reduced to 1/2.
+
+Bison's Turn.
+Bison 2xWalked From (23, 26) to (23, 30).
+Exhaustion Level 1 Applied to Bison.
+Bison's Movement Reduced to 1/2.
+
+Bison's Turn.
+Bison 2xWalked From (27, 27) to (32, 27).
+Exhaustion Level 1 Applied to Bison.
+Bison's Movement Reduced to 1/2.
+
+Monkey's Turn.
+Monkey Walked From (28, 28) to (26, 28).
+Vulture Was Attacked by Monkey Using The Attack Punch.
+Vulture is Dead.
+
+Ape's Turn.
+Ape's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Crocodile's Turn.
+Crocodile 2xWalked From (32, 32) to (35, 32).
+Exhaustion Level 1 Applied to Crocodile.
+Crocodile's Movement Reduced to 1/2.
+
+Polar Bear's Turn.
+Polar Bear 2xWalked From (30, 34) to (34, 34).
+Exhaustion Level 1 Applied to Polar Bear.
+Polar Bear's Movement Reduced to 1/2.
+Poison Frog Was Attacked by Polar Bear Using The Attack Bite.
+Poison Level 1 Applied to Polar Bear.
+Poison Damaged Polar Bear by 1.
+Poison in Polar Bear is Reversed to Level 0.
+Poison Frog is Dead.
+
+Arctic Fox's Turn.
+Arctic Fox Walked From (33, 35) to (31, 35).
+Arctic Fox Used Bark.
+
+Penguin's Turn.
+
+Seal's Turn.
+
+Statistics of All Animals:
+
+	Eagle:
+		Health: 2
+		Armor: 0
+
+	Hyena:
+		Health: 6
+		Armor: 0
+
+	Alligator:
+		Health: 17
+		Armor: 6
+
+	Rattlesnake:
+		Health: 3
+		Armor: 0
+
+	Silver Ant:
+		Health: 5
+		Armor: 2
+
+	Scorpion:
+		Health: 3
+		Armor: 0
+
+	Rattlesnake:
+		Health: 3
+		Armor: 0
+
+	Wolf:
+		Health: 12
+		Armor: 0
+
+	Grizzly Bear:
+		Health: 20
+		Armor: 1
+
+	Camel:
+		Health: 20
+		Armor: 0
+
+	Black Bear:
+		Health: 15
+		Armor: 0
+
+	Deer:
+		Health: 7
+		Armor: 0
+
+	Moose:
+		Health: 15
+		Armor: 1
+
+	Shark:
+		Health: 14
+		Armor: 4
+
+	Dolphin:
+		Health: 12
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Hawk:
+		Health: 6
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Plankton:
+		Health: 2
+		Armor: 0
+
+	Octopus:
+		Health: 9
+		Armor: 1
+
+	Lion:
+		Health: 7
+		Armor: 0
+
+	Crab:
+		Health: 2
+		Armor: 4
+
+	Giraffe:
+		Health: 19
+		Armor: 0
+
+	Elephant:
+		Health: 20
+		Armor: 4
+
+	Zebra:
+		Health: 12
+		Armor: 0
+
+	Gazelle:
+		Health: 10
+		Armor: 0
+
+	Bison:
+		Health: 15
+		Armor: 2
+
+	Bison:
+		Health: 15
+		Armor: 0
+
+	Monkey:
+		Health: 9
+		Armor: 0
+
+	Ape:
+		Health: 13
+		Armor: 0
+
+	Crocodile:
+		Health: 21
+		Armor: 2
+
+	Polar Bear:
+		Health: 17
+		Armor: 5
+
+	Arctic Fox:
+		Health: 6
+		Armor: 0
+
+	Penguin:
+		Health: 8
+		Armor: 0
+
+	Seal:
+		Health: 12
+		Armor: 1
+
+Turn 6:
+
+Eagle's Turn.
+Eagle's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Hyena's Turn.
+Hyena 2xWalked From (20, 24) to (15, 24).
+Exhaustion Level 1 Applied to Hyena.
+Hyena's Movement Reduced to 1/2.
+
+Alligator's Turn.
+Alligator Walked From (31, 30) to (31, 32).
+
+Rattlesnake's Turn.
+Rattlesnake is Cold Blooded, Losing 1 Health From The Environmental Condition Wildfire.
+Rattlesnake Slithered From (7, 7) to (6, 7).
+Rattlesnake Used Smell.
+Rattlesnake's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Silver Ant's Turn.
+Silver Ant Walked From (5, 1) to (1, 1).
+
+Scorpion's Turn.
+Scorpion is Cold Blooded, Losing 1 Health From The Environmental Condition Wildfire.
+Scorpion 2xWalked From (3, 3) to (3, 6).
+Exhaustion Level 1 Applied to Scorpion.
+Scorpion's Movement Reduced to 1/2.
+
+Rattlesnake's Turn.
+Rattlesnake is Cold Blooded, Losing 1 Health From The Environmental Condition Wildfire.
+Rattlesnake Used Smell.
+Rattlesnake's Camoflauge is Increased to a Visual Radius of 1.
+
+Wolf's Turn.
+Wolf Walked From (5, 3) to (5, 6).
+Wolf Used Smell.
+
+Grizzly Bear's Turn.
+Grizzly Bear Used Smell.
+
+Camel's Turn.
+
+Black Bear's Turn.
+Black Bear Used Smell.
+
+Deer's Turn.
+Rabbit Was Attacked by Deer Using The Attack Stomp.
+Rabbit is Dead.
+
+Moose's Turn.
+Moose Walked From (13, 9) to (13, 10).
+
+Shark's Turn.
+
+Dolphin's Turn.
+Dolphin Used Echo Location.
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Hawk's Turn.
+Hawk's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Plankton's Turn.
+
+Octopus's Turn.
+
+Lion's Turn.
+
+Crab's Turn.
+
+Giraffe's Turn.
+Giraffe Walked From (23, 24) to (22, 24).
+
+Elephant's Turn.
+Elephant's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Zebra's Turn.
+Zebra Walked From (28, 19) to (29, 19).
+Zebra's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Gazelle's Turn.
+Gazelle's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Bison's Turn.
+Bison Walked From (23, 30) to (22, 30).
+Bison's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Bison's Turn.
+Bison 2xWalked From (32, 27) to (34, 27).
+Exhaustion Level 2 Applied to Bison.
+Exhaustion Paralysis Applied.
+Exhaustion Paralysis Applied to Bison For 1 Turn.
+
+Monkey's Turn.
+Monkey Climbed From (26, 28) to (26, 27).
+
+Ape's Turn.
+
+Crocodile's Turn.
+Crocodile Walked From (35, 32) to (36, 32).
+Ape Was Attacked by Crocodile Using The Attack Tail Slam.
+Crocodile's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Polar Bear's Turn.
+Poison Frog Was Attacked by Polar Bear Using The Attack Claw.
+Poison Level 1 Applied to Polar Bear.
+Polar Bear's Exhaustion Decreased to Level 0. No Negative Effects.
+Poison Damaged Polar Bear by 1.
+Poison in Polar Bear is Reversed to Level 0.
+Poison Frog is Dead.
+
+Arctic Fox's Turn.
+Arctic Fox Used Bark.
+
+Penguin's Turn.
+Penguin Walked From (36, 35) to (35, 35).
+
+Seal's Turn.
+
+Statistics of All Animals:
+
+	Eagle:
+		Health: 2
+		Armor: 0
+
+	Hyena:
+		Health: 6
+		Armor: 0
+
+	Alligator:
+		Health: 17
+		Armor: 6
+
+	Rattlesnake:
+		Health: 2
+		Armor: 0
+
+	Silver Ant:
+		Health: 5
+		Armor: 2
+
+	Rattlesnake:
+		Health: 2
+		Armor: 0
+
+	Scorpion:
+		Health: 2
+		Armor: 0
+
+	Wolf:
+		Health: 12
+		Armor: 0
+
+	Grizzly Bear:
+		Health: 20
+		Armor: 1
+
+	Camel:
+		Health: 20
+		Armor: 0
+
+	Black Bear:
+		Health: 15
+		Armor: 0
+
+	Deer:
+		Health: 7
+		Armor: 0
+
+	Moose:
+		Health: 15
+		Armor: 1
+
+	Shark:
+		Health: 14
+		Armor: 4
+
+	Dolphin:
+		Health: 12
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Hawk:
+		Health: 6
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Plankton:
+		Health: 2
+		Armor: 0
+
+	Octopus:
+		Health: 9
+		Armor: 1
+
+	Lion:
+		Health: 7
+		Armor: 0
+
+	Crab:
+		Health: 2
+		Armor: 4
+
+	Giraffe:
+		Health: 19
+		Armor: 0
+
+	Elephant:
+		Health: 20
+		Armor: 4
+
+	Zebra:
+		Health: 12
+		Armor: 0
+
+	Gazelle:
+		Health: 10
+		Armor: 0
+
+	Bison:
+		Health: 15
+		Armor: 2
+
+	Bison:
+		Health: 15
+		Armor: 0
+
+	Monkey:
+		Health: 9
+		Armor: 0
+
+	Ape:
+		Health: 11
+		Armor: 0
+
+	Crocodile:
+		Health: 21
+		Armor: 2
+
+	Polar Bear:
+		Health: 16
+		Armor: 5
+
+	Arctic Fox:
+		Health: 6
+		Armor: 0
+
+	Penguin:
+		Health: 8
+		Armor: 0
+
+	Seal:
+		Health: 12
+		Armor: 1
+
+Turn 7:
+
+Eagle's Turn.
+Eagle Flew From (11, 5) to (15, 5).
+
+Hyena's Turn.
+Hyena's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Alligator's Turn.
+
+Rattlesnake's Turn.
+Rattlesnake is Cold Blooded, Losing 1 Health From The Environmental Condition Wildfire.
+Rattlesnake 2xSlithered From (6, 7) to (6, 2).
+Exhaustion Level 1 Applied to Rattlesnake.
+Rattlesnake's Movement Reduced to 1/2.
+Rattlesnake Used Rattle.
+Rattlesnake's Camoflauge is Reduced to a Visual Radius of 3.
+Rattlesnake's Camoflauge is Increased to a Visual Radius of 1.
+
+Silver Ant's Turn.
+
+Rattlesnake's Turn.
+Rattlesnake is Cold Blooded, Losing 1 Health From The Environmental Condition Wildfire.
+Rattlesnake 2xSlithered From (7, 3) to (11, 3).
+Exhaustion Level 1 Applied to Rattlesnake.
+Rattlesnake's Movement Reduced to 1/2.
+Rattlesnake Used Smell.
+
+Scorpion's Turn.
+Scorpion is Cold Blooded, Losing 1 Health From The Environmental Condition Wildfire.
+Scorpion's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Wolf's Turn.
+Wolf Used Smell.
+
+Grizzly Bear's Turn.
+Grizzly Bear Walked From (0, 5) to (0, 8).
+Grizzly Bear Used Smell.
+
+Camel's Turn.
+
+Black Bear's Turn.
+Black Bear 2xWalked From (8, 4) to (2, 4).
+Exhaustion Level 1 Applied to Black Bear.
+Black Bear's Movement Reduced to 1/2.
+Black Bear Used Smell.
+
+Deer's Turn.
+Rabbit Was Attacked by Deer Using The Attack Horns.
+Rabbit is Dead.
+
+Moose's Turn.
+
+Shark's Turn.
+
+Dolphin's Turn.
+Dolphin Used Echo Location.
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Hawk's Turn.
+Hawk Walked From (16, 12) to (16, 11).
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Plankton's Turn.
+
+Octopus's Turn.
+
+Lion's Turn.
+
+Crab's Turn.
+Crab 2xWalked From (21, 20) to (24, 20).
+Exhaustion Level 1 Applied to Crab.
+Crab's Movement Reduced to 1/2.
+Elephant Was Attacked by Crab Using The Attack Claw.
+
+Giraffe's Turn.
+
+Elephant's Turn.
+Crab Was Attacked by Elephant Using The Attack Grab.
+Paralysis Applied to Crab For 3 Turns.
+
+Zebra's Turn.
+
+Gazelle's Turn.
+Gazelle Jumped From (25, 25) to (23, 25).
+
+Bison's Turn.
+Bison Walked From (22, 30) to (23, 30).
+
+Bison's Turn.
+Due to Bison's Paralysis, Bison Cannot Move This Turn.
+Bison's Exhaustion Decreased to Level 1. Exhaustion Paralysis Removed.
+Exhaustion Paralysis For Bison is in Effect For 0 More Turns.
+
+Monkey's Turn.
+
+Ape's Turn.
+Ape 2xWalked From (36, 30) to (33, 30).
+Exhaustion Level 1 Applied to Ape.
+Ape's Movement Reduced to 1/2.
+
+Crocodile's Turn.
+
+Polar Bear's Turn.
+Polar Bear Walked From (34, 34) to (37, 34).
+
+Arctic Fox's Turn.
+Arctic Fox Used Bark.
+
+Penguin's Turn.
+Penguin Walked From (35, 35) to (35, 36).
+
+Seal's Turn.
+
+Statistics of All Animals:
+
+	Eagle:
+		Health: 2
+		Armor: 0
+
+	Hyena:
+		Health: 6
+		Armor: 0
+
+	Alligator:
+		Health: 17
+		Armor: 6
+
+	Rattlesnake:
+		Health: 1
+		Armor: 0
+
+	Silver Ant:
+		Health: 5
+		Armor: 2
+
+	Rattlesnake:
+		Health: 1
+		Armor: 0
+
+	Scorpion:
+		Health: 1
+		Armor: 0
+
+	Wolf:
+		Health: 12
+		Armor: 0
+
+	Grizzly Bear:
+		Health: 20
+		Armor: 1
+
+	Camel:
+		Health: 20
+		Armor: 0
+
+	Black Bear:
+		Health: 15
+		Armor: 0
+
+	Deer:
+		Health: 7
+		Armor: 0
+
+	Moose:
+		Health: 15
+		Armor: 1
+
+	Shark:
+		Health: 14
+		Armor: 4
+
+	Dolphin:
+		Health: 12
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Hawk:
+		Health: 6
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Plankton:
+		Health: 2
+		Armor: 0
+
+	Octopus:
+		Health: 9
+		Armor: 1
+
+	Lion:
+		Health: 7
+		Armor: 0
+
+	Giraffe:
+		Health: 19
+		Armor: 0
+
+	Crab:
+		Health: 2
+		Armor: 4
+
+	Elephant:
+		Health: 20
+		Armor: 2
+
+	Zebra:
+		Health: 12
+		Armor: 0
+
+	Gazelle:
+		Health: 10
+		Armor: 0
+
+	Bison:
+		Health: 15
+		Armor: 2
+
+	Bison:
+		Health: 15
+		Armor: 0
+
+	Monkey:
+		Health: 9
+		Armor: 0
+
+	Ape:
+		Health: 11
+		Armor: 0
+
+	Crocodile:
+		Health: 21
+		Armor: 2
+
+	Polar Bear:
+		Health: 16
+		Armor: 5
+
+	Arctic Fox:
+		Health: 6
+		Armor: 0
+
+	Penguin:
+		Health: 8
+		Armor: 0
+
+	Seal:
+		Health: 12
+		Armor: 1
+
+Turn 8:
+
+Eagle's Turn.
+
+Hyena's Turn.
+Hyena 2xWalked From (15, 24) to (15, 20).
+Exhaustion Level 1 Applied to Hyena.
+Hyena's Movement Reduced to 1/2.
+
+Alligator's Turn.
+
+Rattlesnake's Turn.
+Rattlesnake is Cold Blooded, Losing 1 Health From The Environmental Condition Wildfire.
+Rattlesnake 2xSlithered From (6, 2) to (6, 0).
+Exhaustion Level 2 Applied to Rattlesnake.
+Exhaustion Paralysis Applied.
+Exhaustion Paralysis Applied to Rattlesnake For 1 Turn.
+Rattlesnake Used Smell.
+Rattlesnake is Dead.
+
+Silver Ant's Turn.
+Silver Ant 2xWalked From (1, 1) to (1, 8).
+Exhaustion Level 1 Applied to Silver Ant.
+Silver Ant's Movement Reduced to 3/4.
+Grizzly Bear Was Attacked by Silver Ant Using The Attack Bite.
+
+Rattlesnake's Turn.
+Rattlesnake is Cold Blooded, Losing 1 Health From The Environmental Condition Wildfire.
+Rattlesnake Used Rattle.
+Rattlesnake's Camoflauge is Reduced to a Visual Radius of 3.
+Rattlesnake's Camoflauge is Increased to a Visual Radius of 1.
+Rattlesnake's Exhaustion Decreased to Level 0. No Negative Effects.
+Rattlesnake is Dead.
+
+Scorpion's Turn.
+Scorpion is Cold Blooded, Losing 1 Health From The Environmental Condition Wildfire.
+Scorpion is Dead.
+
+Wolf's Turn.
+Wolf Used Smell.
+Scorpion is Dead.
+
+Grizzly Bear's Turn.
+Grizzly Bear 2xWalked From (0, 8) to (6, 8).
+Exhaustion Level 1 Applied to Grizzly Bear.
+Grizzly Bear's Movement Reduced to 1/2.
+Grizzly Bear Used Smell.
+
+Camel's Turn.
+Camel Walked From (4, 4) to (5, 4).
+
+Black Bear's Turn.
+Black Bear Walked From (2, 4) to (2, 5).
+Black Bear Used Smell.
+Black Bear's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Deer's Turn.
+Rabbit Was Attacked by Deer Using The Attack Horns.
+Rabbit is Dead.
+
+Moose's Turn.
+
+Shark's Turn.
+
+Dolphin's Turn.
+Dolphin Used Echo Location.
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Hawk's Turn.
+Hawk 2xFlew From (16, 11) to (16, 7).
+Exhaustion Level 1 Applied to Hawk.
+Hawk's Movement Reduced to 1/2.
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Plankton's Turn.
+
+Octopus's Turn.
+
+Lion's Turn.
+Lion 2xWalked From (21, 17) to (21, 23).
+Exhaustion Level 1 Applied to Lion.
+Lion's Movement Reduced to 1/2.
+
+Giraffe's Turn.
+Giraffe Walked From (22, 24) to (23, 24).
+Gazelle Was Attacked by Giraffe Using The Attack Stomp.
+Flinch Applied to Gazelle.
+
+Crab's Turn.
+Due to Crab's Paralysis, Crab's Turn Was Skipped.
+Paralysis For Crab is in Effect For 2 More Turns.
+Crab's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Elephant's Turn.
+Crab Was Attacked by Elephant Using The Attack Grab.
+Paralysis Applied to Crab For 3 Turns.
+
+Zebra's Turn.
+Zebra Walked From (29, 19) to (31, 19).
+
+Gazelle's Turn.
+Due to Gazelle Being Flinched, Gazelle's Turn Was Skipped.
+Flinch Removed From Gazelle.
+
+Bison's Turn.
+
+Bison's Turn.
+Bison's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Monkey's Turn.
+
+Ape's Turn.
+Ape's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Crocodile's Turn.
+Crocodile Walked From (36, 32) to (36, 34).
+Polar Bear Was Attacked by Crocodile Using The Attack Bite.
+Bleed Level 1 Applied to Polar Bear.
+
+Polar Bear's Turn.
+Polar Bear Walked From (37, 34) to (37, 35).
+Bleed Damaged Polar Bear by 1.
+Bleed in Polar Bear is Reversed to Level 0.
+
+Arctic Fox's Turn.
+Arctic Fox 2xWalked From (31, 35) to (31, 31).
+Exhaustion Level 1 Applied to Arctic Fox.
+Arctic Fox's Movement Reduced to 1/2.
+Arctic Fox Used Bark.
+Alligator Was Attacked by Arctic Fox Using The Attack Bite.
+
+Penguin's Turn.
+Penguin Walked From (35, 36) to (34, 36).
+
+Seal's Turn.
+
+Statistics of All Animals:
+
+	Eagle:
+		Health: 2
+		Armor: 0
+
+	Hyena:
+		Health: 6
+		Armor: 0
+
+	Wolf:
+		Health: 12
+		Armor: 0
+
+	Silver Ant:
+		Health: 5
+		Armor: 2
+
+	Grizzly Bear:
+		Health: 20
+		Armor: 0
+
+	Camel:
+		Health: 20
+		Armor: 0
+
+	Black Bear:
+		Health: 15
+		Armor: 0
+
+	Deer:
+		Health: 7
+		Armor: 0
+
+	Moose:
+		Health: 15
+		Armor: 1
+
+	Shark:
+		Health: 14
+		Armor: 4
+
+	Dolphin:
+		Health: 12
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Hawk:
+		Health: 6
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Plankton:
+		Health: 2
+		Armor: 0
+
+	Octopus:
+		Health: 9
+		Armor: 1
+
+	Lion:
+		Health: 7
+		Armor: 0
+
+	Gazelle:
+		Health: 7
+		Armor: 0
+
+	Giraffe:
+		Health: 19
+		Armor: 0
+
+	Crab:
+		Health: 2
+		Armor: 4
+
+	Elephant:
+		Health: 20
+		Armor: 2
+
+	Zebra:
+		Health: 12
+		Armor: 0
+
+	Bison:
+		Health: 15
+		Armor: 2
+
+	Bison:
+		Health: 15
+		Armor: 0
+
+	Monkey:
+		Health: 9
+		Armor: 0
+
+	Ape:
+		Health: 11
+		Armor: 0
+
+	Crocodile:
+		Health: 21
+		Armor: 2
+
+	Polar Bear:
+		Health: 15
+		Armor: 2
+
+	Alligator:
+		Health: 17
+		Armor: 4
+
+	Arctic Fox:
+		Health: 6
+		Armor: 0
+
+	Penguin:
+		Health: 8
+		Armor: 0
+
+	Seal:
+		Health: 12
+		Armor: 1
+
+Turn 9:
+
+Eagle's Turn.
+
+Hyena's Turn.
+Hyena 2xWalked From (15, 20) to (13, 20).
+Exhaustion Level 2 Applied to Hyena.
+Exhaustion Paralysis Applied.
+Exhaustion Paralysis Applied to Hyena For 1 Turn.
+
+Wolf's Turn.
+Wolf Walked From (5, 6) to (5, 5).
+Wolf Used Smell.
+Camel Was Attacked by Wolf Using The Attack Claw.
+Bleed Level 1 Applied to Camel.
+
+Silver Ant's Turn.
+Silver Ant 2xWalked From (1, 8) to (8, 8).
+Exhaustion Level 2 Applied to Silver Ant.
+Exhaustion Paralysis Applied.
+Exhaustion Paralysis Applied to Silver Ant For 1 Turn.
+Deer Was Attacked by Silver Ant Using The Attack Bite.
+
+Grizzly Bear's Turn.
+Grizzly Bear Walked From (6, 8) to (6, 9).
+Grizzly Bear Used Smell.
+Grizzly Bear's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Camel's Turn.
+Camel Used Camel's Rations, Gaining 1 Health.
+Camel 2xWalked From (5, 4) to (9, 4).
+Exhaustion Level 1 Applied to Camel.
+Camel's Movement Reduced to 1/2.
+Bleed Damaged Camel by 1.
+Bleed in Camel is Reversed to Level 0.
+
+Black Bear's Turn.
+Black Bear Used Smell.
+
+Deer's Turn.
+Silver Ant Was Attacked by Deer Using The Attack Horns.
+Bleed Level 1 Applied to Silver Ant.
+Rabbit Was Attacked by Deer Using The Attack Horns.
+Rabbit is Dead.
+
+Moose's Turn.
+
+Shark's Turn.
+
+Dolphin's Turn.
+Dolphin Used Echo Location.
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Hawk's Turn.
+Hawk 2xFlew From (16, 7) to (14, 7).
+Exhaustion Level 2 Applied to Hawk.
+Exhaustion Paralysis Applied.
+Exhaustion Paralysis Applied to Hawk For 1 Turn.
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Plankton's Turn.
+
+Octopus's Turn.
+
+Lion's Turn.
+Lion's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Gazelle's Turn.
+Giraffe Was Attacked by Gazelle Using The Attack Stomp.
+
+Giraffe's Turn.
+Giraffe Walked From (23, 24) to (23, 26).
+Gazelle Was Attacked by Giraffe Using The Attack Stomp.
+Flinch Applied to Gazelle.
+
+Crab's Turn.
+Due to Crab's Paralysis, Crab Cannot Move This Turn.
+Elephant Was Attacked by Crab Using The Attack Claw.
+Paralysis For Crab is in Effect For 2 More Turns.
+
+Elephant's Turn.
+Crab Was Attacked by Elephant Using The Attack Grab.
+Paralysis Applied to Crab For 2 Turns.
+
+Zebra's Turn.
+
+Bison's Turn.
+Bison 2xWalked From (23, 30) to (23, 24).
+Exhaustion Level 1 Applied to Bison.
+Bison's Movement Reduced to 1/2.
+Gazelle Was Attacked by Bison Using The Attack Body Slam.
+Flinch Applied to Gazelle.
+Giraffe Was Attacked by Bison Using The Attack Body Slam.
+
+Bison's Turn.
+Bison 2xWalked From (34, 27) to (34, 31).
+Exhaustion Level 1 Applied to Bison.
+Bison's Movement Reduced to 1/2.
+
+Monkey's Turn.
+
+Ape's Turn.
+
+Crocodile's Turn.
+
+Polar Bear's Turn.
+Polar Bear Walked From (37, 35) to (37, 33).
+
+Alligator's Turn.
+Alligator 2xWalked From (31, 32) to (31, 28).
+Exhaustion Level 1 Applied to Alligator.
+Alligator's Movement Reduced to 1/2.
+
+Arctic Fox's Turn.
+Arctic Fox Used Bark.
+Arctic Fox's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Penguin's Turn.
+Penguin 2xWalked From (34, 36) to (32, 36).
+Exhaustion Level 1 Applied to Penguin.
+Penguin's Movement Reduced to 1/2.
+
+Seal's Turn.
+
+Statistics of All Animals:
+
+	Eagle:
+		Health: 2
+		Armor: 0
+
+	Hyena:
+		Health: 6
+		Armor: 0
+
+	Wolf:
+		Health: 12
+		Armor: 0
+
+	Grizzly Bear:
+		Health: 20
+		Armor: 0
+
+	Camel:
+		Health: 19
+		Armor: 0
+
+	Black Bear:
+		Health: 15
+		Armor: 0
+
+	Silver Ant:
+		Health: 5
+		Armor: 0
+
+	Deer:
+		Health: 6
+		Armor: 0
+
+	Moose:
+		Health: 15
+		Armor: 1
+
+	Shark:
+		Health: 14
+		Armor: 4
+
+	Dolphin:
+		Health: 12
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Hawk:
+		Health: 6
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Plankton:
+		Health: 2
+		Armor: 0
+
+	Octopus:
+		Health: 9
+		Armor: 1
+
+	Lion:
+		Health: 7
+		Armor: 0
+
+	Crab:
+		Health: 2
+		Armor: 4
+
+	Elephant:
+		Health: 20
+		Armor: 0
+
+	Zebra:
+		Health: 12
+		Armor: 0
+
+	Giraffe:
+		Health: 15
+		Armor: 0
+
+	Gazelle:
+		Health: 1
+		Armor: 0
+
+	Bison:
+		Health: 15
+		Armor: 2
+
+	Bison:
+		Health: 15
+		Armor: 0
+
+	Monkey:
+		Health: 9
+		Armor: 0
+
+	Ape:
+		Health: 11
+		Armor: 0
+
+	Crocodile:
+		Health: 21
+		Armor: 2
+
+	Polar Bear:
+		Health: 15
+		Armor: 2
+
+	Alligator:
+		Health: 17
+		Armor: 4
+
+	Arctic Fox:
+		Health: 6
+		Armor: 0
+
+	Penguin:
+		Health: 8
+		Armor: 0
+
+	Seal:
+		Health: 12
+		Armor: 1
+
+Turn 10:
+
+Eagle's Turn.
+Eagle Walked From (15, 5) to (14, 5).
+
+Hyena's Turn.
+Due to Hyena's Paralysis, Hyena's Turn Was Skipped.
+Hyena's Exhaustion Decreased to Level 1. Exhaustion Paralysis Removed.
+Exhaustion Paralysis For Hyena is in Effect For 0 More Turns.
+
+Wolf's Turn.
+Wolf Used Smell.
+
+Grizzly Bear's Turn.
+Grizzly Bear Walked From (6, 9) to (6, 11).
+Grizzly Bear Used Smell.
+
+Camel's Turn.
+Camel Used Camel's Rations, Gaining 1 Health.
+Camel Walked From (9, 4) to (9, 3).
+Camel's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Black Bear's Turn.
+Black Bear Walked From (2, 5) to (3, 5).
+Black Bear Used Smell.
+Scorpion Was Attacked by Black Bear Using The Attack Claw.
+Scorpion is Dead.
+
+Silver Ant's Turn.
+Due to Silver Ant's Paralysis, Silver Ant Cannot Move This Turn.
+Deer Was Attacked by Silver Ant Using The Attack Bite.
+Silver Ant's Exhaustion Decreased to Level 1. Exhaustion Paralysis Removed.
+Exhaustion Paralysis For Silver Ant is in Effect For 0 More Turns.
+Bleed Damaged Silver Ant by 1.
+Bleed in Silver Ant is Reversed to Level 0.
+
+Deer's Turn.
+Deer Walked From (9, 8) to (9, 10).
+Rabbit Was Attacked by Deer Using The Attack Horns.
+Rabbit is Dead.
+
+Moose's Turn.
+Moose Walked From (13, 10) to (11, 10).
+Deer Was Attacked by Moose Using The Attack Horns.
+Bleed Level 1 Applied to Deer.
+
+Shark's Turn.
+
+Dolphin's Turn.
+Dolphin Used Echo Location.
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Hawk's Turn.
+Due to Hawk's Paralysis, Hawk Cannot Move This Turn.
+Hawk's Exhaustion Decreased to Level 1. Exhaustion Paralysis Removed.
+Exhaustion Paralysis For Hawk is in Effect For 0 More Turns.
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Plankton's Turn.
+
+Octopus's Turn.
+
+Lion's Turn.
+Lion 2xWalked From (21, 23) to (21, 28).
+Exhaustion Level 1 Applied to Lion.
+Lion's Movement Reduced to 1/2.
+
+Crab's Turn.
+Due to Crab's Paralysis, Crab's Turn Was Skipped.
+Paralysis For Crab is in Effect For 1 More Turn.
+
+Elephant's Turn.
+Elephant Walked From (24, 19) to (26, 19).
+
+Zebra's Turn.
+Zebra Walked From (31, 19) to (31, 20).
+
+Giraffe's Turn.
+Gazelle Was Attacked by Giraffe Using The Attack Stomp.
+Gazelle is Dead.
+
+Bison's Turn.
+Gazelle Was Attacked by Bison Using The Attack Body Slam.
+Giraffe Was Attacked by Bison Using The Attack Body Slam.
+Bison's Exhaustion Decreased to Level 0. No Negative Effects.
+Gazelle is Dead.
+
+Bison's Turn.
+Bison's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Monkey's Turn.
+Monkey Walked From (26, 27) to (26, 25).
+
+Ape's Turn.
+
+Crocodile's Turn.
+
+Polar Bear's Turn.
+
+Alligator's Turn.
+Alligator 2xWalked From (31, 28) to (31, 30).
+Exhaustion Level 2 Applied to Alligator.
+Exhaustion Paralysis Applied.
+Exhaustion Paralysis Applied to Alligator For 1 Turn.
+Arctic Fox Was Attacked by Alligator Using The Attack Bite Spin.
+Bleed Level 1 Applied to Arctic Fox.
+
+Arctic Fox's Turn.
+Arctic Fox Used Bark.
+Alligator Was Attacked by Arctic Fox Using The Attack Bite.
+Bleed Damaged Arctic Fox by 1.
+Bleed in Arctic Fox is Reversed to Level 0.
+
+Penguin's Turn.
+Penguin's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Seal's Turn.
+
+Statistics of All Animals:
+
+	Hyena:
+		Health: 6
+		Armor: 0
+
+	Crab:
+		Health: 2
+		Armor: 4
+
+	Eagle:
+		Health: 2
+		Armor: 0
+
+	Wolf:
+		Health: 12
+		Armor: 0
+
+	Grizzly Bear:
+		Health: 20
+		Armor: 0
+
+	Camel:
+		Health: 20
+		Armor: 0
+
+	Black Bear:
+		Health: 15
+		Armor: 0
+
+	Silver Ant:
+		Health: 4
+		Armor: 0
+
+	Deer:
+		Health: 2
+		Armor: 0
+
+	Moose:
+		Health: 15
+		Armor: 1
+
+	Shark:
+		Health: 14
+		Armor: 4
+
+	Dolphin:
+		Health: 12
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Hawk:
+		Health: 6
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Plankton:
+		Health: 2
+		Armor: 0
+
+	Octopus:
+		Health: 9
+		Armor: 1
+
+	Lion:
+		Health: 7
+		Armor: 0
+
+	Elephant:
+		Health: 20
+		Armor: 0
+
+	Zebra:
+		Health: 12
+		Armor: 0
+
+	Giraffe:
+		Health: 12
+		Armor: 0
+
+	Bison:
+		Health: 15
+		Armor: 2
+
+	Bison:
+		Health: 15
+		Armor: 0
+
+	Monkey:
+		Health: 9
+		Armor: 0
+
+	Ape:
+		Health: 11
+		Armor: 0
+
+	Crocodile:
+		Health: 21
+		Armor: 2
+
+	Polar Bear:
+		Health: 15
+		Armor: 2
+
+	Alligator:
+		Health: 17
+		Armor: 2
+
+	Arctic Fox:
+		Health: 1
+		Armor: 0
+
+	Penguin:
+		Health: 8
+		Armor: 0
+
+	Seal:
+		Health: 12
+		Armor: 1
+
+Turn 11:
+
+Hyena's Turn.
+Hyena Walked From (13, 20) to (13, 19).
+Hyena's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Crab's Turn.
+Due to Crab's Paralysis, Crab's Turn Was Skipped.
+Paralysis For Crab is in Effect For 0 More Turns.
+
+Eagle's Turn.
+Eagle 2xFlew From (14, 5) to (14, 12).
+Exhaustion Level 1 Applied to Eagle.
+Eagle's Movement Reduced to 1/2.
+
+Wolf's Turn.
+Wolf Used Smell.
+
+Grizzly Bear's Turn.
+Grizzly Bear Used Smell.
+
+Camel's Turn.
+Camel Walked From (9, 3) to (9, 2).
+
+Black Bear's Turn.
+Black Bear Climbed From (3, 5) to (4, 5).
+Black Bear Used Smell.
+Wolf Was Attacked by Black Bear Using The Attack Bite.
+Bleed Level 1 Applied to Wolf.
+
+Silver Ant's Turn.
+Silver Ant is Cold Blooded, Gaining 1 Health From The Environmental Condition +1 HP in Wildfire, Drought.
+Silver Ant's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Deer's Turn.
+Rabbit Was Attacked by Deer Using The Attack Horns.
+Moose Was Attacked by Deer Using The Attack Horns.
+Bleed Level 1 Applied to Moose.
+Bleed Damaged Deer by 1.
+Bleed in Deer is Reversed to Level 0.
+Rabbit is Dead.
+
+Moose's Turn.
+Moose 2xWalked From (11, 10) to (15, 10).
+Exhaustion Level 1 Applied to Moose.
+Moose's Movement Reduced to 1/2.
+Bleed Damaged Moose by 1.
+Bleed in Moose is Reversed to Level 0.
+
+Shark's Turn.
+
+Dolphin's Turn.
+Dolphin Used Echo Location.
+Eagle Was Attacked by Dolphin Using The Attack Tail Slam.
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Hawk's Turn.
+Hawk's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Plankton's Turn.
+
+Octopus's Turn.
+
+Lion's Turn.
+Lion 2xWalked From (21, 28) to (21, 30).
+Exhaustion Level 2 Applied to Lion.
+Exhaustion Paralysis Applied.
+Exhaustion Paralysis Applied to Lion For 1 Turn.
+
+Elephant's Turn.
+Elephant 2xWalked From (26, 19) to (29, 19).
+Exhaustion Level 1 Applied to Elephant.
+Elephant's Movement Reduced to 1/2.
+
+Zebra's Turn.
+
+Giraffe's Turn.
+Gazelle Was Attacked by Giraffe Using The Attack Stomp.
+Gazelle is Dead.
+
+Bison's Turn.
+Bison Walked From (23, 24) to (21, 24).
+
+Bison's Turn.
+Bison Walked From (34, 31) to (35, 31).
+
+Monkey's Turn.
+Monkey 2xWalked From (26, 25) to (26, 22).
+Exhaustion Level 1 Applied to Monkey.
+Monkey's Movement Reduced to 1/2.
+
+Ape's Turn.
+
+Crocodile's Turn.
+
+Polar Bear's Turn.
+Polar Bear 2xWalked From (37, 33) to (37, 29).
+Exhaustion Level 1 Applied to Polar Bear.
+Polar Bear's Movement Reduced to 1/2.
+
+Alligator's Turn.
+Due to Alligator's Paralysis, Alligator Cannot Move This Turn.
+Arctic Fox Was Attacked by Alligator Using The Attack Tail Slam.
+Ape Was Attacked by Alligator Using The Attack Tail Slam.
+Alligator's Exhaustion Decreased to Level 1. Exhaustion Paralysis Removed.
+Exhaustion Paralysis For Alligator is in Effect For 0 More Turns.
+Arctic Fox is Dead.
+
+Penguin's Turn.
+
+Seal's Turn.
+
+Statistics of All Animals:
+
+	Crab:
+		Health: 2
+		Armor: 4
+
+	Hyena:
+		Health: 6
+		Armor: 0
+
+	Grizzly Bear:
+		Health: 20
+		Armor: 0
+
+	Camel:
+		Health: 20
+		Armor: 0
+
+	Wolf:
+		Health: 10
+		Armor: 0
+
+	Black Bear:
+		Health: 15
+		Armor: 0
+
+	Silver Ant:
+		Health: 5
+		Armor: 0
+
+	Deer:
+		Health: 1
+		Armor: 0
+
+	Moose:
+		Health: 14
+		Armor: 0
+
+	Shark:
+		Health: 14
+		Armor: 4
+
+	Eagle:
+		Health: 1
+		Armor: 0
+
+	Dolphin:
+		Health: 12
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Hawk:
+		Health: 6
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Plankton:
+		Health: 2
+		Armor: 0
+
+	Octopus:
+		Health: 9
+		Armor: 1
+
+	Lion:
+		Health: 7
+		Armor: 0
+
+	Elephant:
+		Health: 20
+		Armor: 0
+
+	Zebra:
+		Health: 12
+		Armor: 0
+
+	Giraffe:
+		Health: 12
+		Armor: 0
+
+	Bison:
+		Health: 15
+		Armor: 2
+
+	Bison:
+		Health: 15
+		Armor: 0
+
+	Monkey:
+		Health: 9
+		Armor: 0
+
+	Crocodile:
+		Health: 21
+		Armor: 2
+
+	Polar Bear:
+		Health: 15
+		Armor: 2
+
+	Ape:
+		Health: 9
+		Armor: 0
+
+	Alligator:
+		Health: 17
+		Armor: 2
+
+	Penguin:
+		Health: 8
+		Armor: 0
+
+	Seal:
+		Health: 12
+		Armor: 1
+
+Turn 12:
+
+Crab's Turn.
+
+Hyena's Turn.
+
+Grizzly Bear's Turn.
+Grizzly Bear Walked From (6, 11) to (6, 12).
+Grizzly Bear Used Smell.
+
+Camel's Turn.
+Camel Walked From (9, 2) to (11, 2).
+Rattlesnake Was Attacked by Camel Using The Attack Stomp.
+Rattlesnake is Dead.
+
+Wolf's Turn.
+Wolf Used Smell.
+Black Bear Was Attacked by Wolf Using The Attack Bite.
+Bleed Level 1 Applied to Black Bear.
+Bleed Damaged Wolf by 1.
+Bleed in Wolf is Reversed to Level 0.
+
+Black Bear's Turn.
+Black Bear Used Smell.
+Wolf Was Attacked by Black Bear Using The Attack Claw.
+Bleed Level 1 Applied to Wolf.
+Bleed Damaged Black Bear by 1.
+Bleed in Black Bear is Reversed to Level 0.
+
+Silver Ant's Turn.
+
+Deer's Turn.
+Rabbit Was Attacked by Deer Using The Attack Horns.
+Rabbit is Dead.
+
+Moose's Turn.
+Moose's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Shark's Turn.
+
+Eagle's Turn.
+Eagle 2xFlew From (14, 12) to (11, 12).
+Exhaustion Level 2 Applied to Eagle.
+Exhaustion Paralysis Applied.
+Exhaustion Paralysis Applied to Eagle For 1 Turn.
+
+Dolphin's Turn.
+Dolphin Used Echo Location.
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Hawk's Turn.
+Hawk Walked From (14, 7) to (13, 7).
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Plankton's Turn.
+
+Octopus's Turn.
+
+Lion's Turn.
+Due to Lion's Paralysis, Lion's Turn Was Skipped.
+Lion's Exhaustion Decreased to Level 1. Exhaustion Paralysis Removed.
+Exhaustion Paralysis For Lion is in Effect For 0 More Turns.
+
+Elephant's Turn.
+Elephant 2xWalked From (29, 19) to (27, 19).
+Exhaustion Level 2 Applied to Elephant.
+Exhaustion Paralysis Applied.
+Exhaustion Paralysis Applied to Elephant For 1 Turn.
+
+Zebra's Turn.
+
+Giraffe's Turn.
+Gazelle Was Attacked by Giraffe Using The Attack Stomp.
+Gazelle is Dead.
+
+Bison's Turn.
+Bison 2xWalked From (21, 24) to (21, 19).
+Exhaustion Level 1 Applied to Bison.
+Bison's Movement Reduced to 1/2.
+
+Bison's Turn.
+Bison 2xWalked From (35, 31) to (35, 25).
+Exhaustion Level 1 Applied to Bison.
+Bison's Movement Reduced to 1/2.
+
+Monkey's Turn.
+Monkey's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Crocodile's Turn.
+Crocodile Walked From (36, 34) to (36, 36).
+
+Polar Bear's Turn.
+Polar Bear's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Ape's Turn.
+Ape Walked From (33, 30) to (33, 31).
+
+Alligator's Turn.
+Arctic Fox Was Attacked by Alligator Using The Attack Tail Slam.
+Alligator's Exhaustion Decreased to Level 0. No Negative Effects.
+Arctic Fox is Dead.
+
+Penguin's Turn.
+Penguin 2xWalked From (32, 36) to (30, 36).
+Exhaustion Level 1 Applied to Penguin.
+Penguin's Movement Reduced to 1/2.
+
+Seal's Turn.
+
+Statistics of All Animals:
+
+	Lion:
+		Health: 7
+		Armor: 0
+
+	Crab:
+		Health: 2
+		Armor: 4
+
+	Hyena:
+		Health: 6
+		Armor: 0
+
+	Grizzly Bear:
+		Health: 20
+		Armor: 0
+
+	Camel:
+		Health: 20
+		Armor: 0
+
+	Wolf:
+		Health: 7
+		Armor: 0
+
+	Black Bear:
+		Health: 12
+		Armor: 0
+
+	Silver Ant:
+		Health: 5
+		Armor: 0
+
+	Deer:
+		Health: 1
+		Armor: 0
+
+	Moose:
+		Health: 14
+		Armor: 0
+
+	Shark:
+		Health: 14
+		Armor: 4
+
+	Eagle:
+		Health: 1
+		Armor: 0
+
+	Dolphin:
+		Health: 12
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Hawk:
+		Health: 6
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Plankton:
+		Health: 2
+		Armor: 0
+
+	Octopus:
+		Health: 9
+		Armor: 1
+
+	Elephant:
+		Health: 20
+		Armor: 0
+
+	Zebra:
+		Health: 12
+		Armor: 0
+
+	Giraffe:
+		Health: 12
+		Armor: 0
+
+	Bison:
+		Health: 15
+		Armor: 2
+
+	Bison:
+		Health: 15
+		Armor: 0
+
+	Monkey:
+		Health: 9
+		Armor: 0
+
+	Crocodile:
+		Health: 21
+		Armor: 2
+
+	Polar Bear:
+		Health: 15
+		Armor: 2
+
+	Ape:
+		Health: 9
+		Armor: 0
+
+	Alligator:
+		Health: 17
+		Armor: 2
+
+	Penguin:
+		Health: 8
+		Armor: 0
+
+	Seal:
+		Health: 12
+		Armor: 1
+
+Turn 13:
+
+Lion's Turn.
+Lion 2xWalked From (21, 30) to (23, 30).
+Exhaustion Level 2 Applied to Lion.
+Exhaustion Paralysis Applied.
+Exhaustion Paralysis Applied to Lion For 1 Turn.
+
+Crab's Turn.
+
+Hyena's Turn.
+Hyena 2xWalked From (13, 19) to (13, 23).
+Exhaustion Level 1 Applied to Hyena.
+Hyena's Movement Reduced to 1/2.
+
+Grizzly Bear's Turn.
+Grizzly Bear 2xWalked From (6, 12) to (0, 12).
+Exhaustion Level 1 Applied to Grizzly Bear.
+Grizzly Bear's Movement Reduced to 1/2.
+Grizzly Bear Used Smell.
+
+Camel's Turn.
+Camel Walked From (11, 2) to (10, 2).
+
+Wolf's Turn.
+Wolf Used Smell.
+Black Bear Was Attacked by Wolf Using The Attack Bite.
+Bleed Level 1 Applied to Black Bear.
+Bleed Damaged Wolf by 1.
+Bleed in Wolf is Reversed to Level 0.
+
+Black Bear's Turn.
+Black Bear Used Smell.
+Wolf Was Attacked by Black Bear Using The Attack Claw.
+Bleed Level 1 Applied to Wolf.
+Bleed Damaged Black Bear by 1.
+Bleed in Black Bear is Reversed to Level 0.
+
+Silver Ant's Turn.
+
+Deer's Turn.
+Deer Walked From (9, 10) to (6, 10).
+
+Moose's Turn.
+Moose Walked From (15, 10) to (15, 13).
+Shark Was Attacked by Moose Using The Attack Horns.
+Bleed Level 1 Applied to Shark.
+Orca Was Attacked by Moose Using The Attack Horns.
+Bleed Level 1 Applied to Orca.
+
+Shark's Turn.
+Moose Was Attacked by Shark Using The Attack Tail Slam.
+Bleed Damaged Shark by 1.
+Bleed in Shark is Reversed to Level 0.
+
+Eagle's Turn.
+Due to Eagle's Paralysis, Eagle's Turn Was Skipped.
+Eagle's Exhaustion Decreased to Level 1. Exhaustion Paralysis Removed.
+Exhaustion Paralysis For Eagle is in Effect For 0 More Turns.
+
+Dolphin's Turn.
+Dolphin Used Echo Location.
+
+Orca's Turn.
+Orca Used Echo Location.
+Moose Was Attacked by Orca Using The Attack Tail Slam.
+Bleed Damaged Orca by 1.
+Bleed in Orca is Reversed to Level 0.
+
+Hawk's Turn.
+Hawk Flew From (13, 7) to (13, 4).
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Plankton's Turn.
+
+Octopus's Turn.
+
+Elephant's Turn.
+Due to Elephant's Paralysis, Elephant Cannot Move This Turn.
+Elephant's Exhaustion Decreased to Level 1. Exhaustion Paralysis Removed.
+Exhaustion Paralysis For Elephant is in Effect For 0 More Turns.
+
+Zebra's Turn.
+Zebra 2xWalked From (31, 20) to (31, 15).
+Exhaustion Level 1 Applied to Zebra.
+Zebra's Movement Reduced to 1/2.
+
+Giraffe's Turn.
+Gazelle Was Attacked by Giraffe Using The Attack Stomp.
+Gazelle is Dead.
+
+Bison's Turn.
+Bison Walked From (21, 19) to (21, 20).
+Bison's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Bison's Turn.
+Bison's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Monkey's Turn.
+
+Crocodile's Turn.
+
+Polar Bear's Turn.
+
+Ape's Turn.
+
+Alligator's Turn.
+Alligator Walked From (31, 30) to (31, 32).
+Arctic Fox Was Attacked by Alligator Using The Attack Tail Slam.
+Arctic Fox is Dead.
+
+Penguin's Turn.
+Penguin's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Seal's Turn.
+
+Statistics of All Animals:
+
+	Eagle:
+		Health: 1
+		Armor: 0
+
+	Lion:
+		Health: 7
+		Armor: 0
+
+	Crab:
+		Health: 2
+		Armor: 4
+
+	Hyena:
+		Health: 6
+		Armor: 0
+
+	Grizzly Bear:
+		Health: 20
+		Armor: 0
+
+	Camel:
+		Health: 20
+		Armor: 0
+
+	Wolf:
+		Health: 4
+		Armor: 0
+
+	Black Bear:
+		Health: 9
+		Armor: 0
+
+	Silver Ant:
+		Health: 5
+		Armor: 0
+
+	Deer:
+		Health: 1
+		Armor: 0
+
+	Shark:
+		Health: 13
+		Armor: 1
+
+	Dolphin:
+		Health: 12
+		Armor: 0
+
+	Moose:
+		Health: 8
+		Armor: 0
+
+	Orca:
+		Health: 19
+		Armor: 2
+
+	Hawk:
+		Health: 6
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Plankton:
+		Health: 2
+		Armor: 0
+
+	Octopus:
+		Health: 9
+		Armor: 1
+
+	Elephant:
+		Health: 20
+		Armor: 0
+
+	Zebra:
+		Health: 12
+		Armor: 0
+
+	Giraffe:
+		Health: 12
+		Armor: 0
+
+	Bison:
+		Health: 15
+		Armor: 2
+
+	Bison:
+		Health: 15
+		Armor: 0
+
+	Monkey:
+		Health: 9
+		Armor: 0
+
+	Crocodile:
+		Health: 21
+		Armor: 2
+
+	Polar Bear:
+		Health: 15
+		Armor: 2
+
+	Ape:
+		Health: 9
+		Armor: 0
+
+	Alligator:
+		Health: 17
+		Armor: 2
+
+	Penguin:
+		Health: 8
+		Armor: 0
+
+	Seal:
+		Health: 12
+		Armor: 1
+
+Turn 14:
+
+Eagle's Turn.
+Eagle 2xFlew From (11, 12) to (8, 12).
+Exhaustion Level 2 Applied to Eagle.
+Exhaustion Paralysis Applied.
+Exhaustion Paralysis Applied to Eagle For 1 Turn.
+
+Lion's Turn.
+Due to Lion's Paralysis, Lion's Turn Was Skipped.
+
+Crab's Turn.
+
+Hyena's Turn.
+Hyena 2xWalked From (13, 23) to (11, 23).
+Exhaustion Level 2 Applied to Hyena.
+Exhaustion Paralysis Applied.
+Exhaustion Paralysis Applied to Hyena For 1 Turn.
+
+Grizzly Bear's Turn.
+Grizzly Bear Used Smell.
+Grizzly Bear's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Camel's Turn.
+
+Wolf's Turn.
+Wolf Used Smell.
+Black Bear Was Attacked by Wolf Using The Attack Claw.
+Bleed Level 1 Applied to Black Bear.
+Bleed Damaged Wolf by 1.
+Bleed in Wolf is Reversed to Level 0.
+
+Black Bear's Turn.
+Black Bear Walked From (4, 5) to (7, 5).
+Black Bear Used Smell.
+Bleed Damaged Black Bear by 1.
+Bleed in Black Bear is Reversed to Level 0.
+
+Silver Ant's Turn.
+Silver Ant Walked From (8, 8) to (8, 7).
+
+Deer's Turn.
+Deer 2xWalked From (6, 10) to (6, 16).
+Exhaustion Level 1 Applied to Deer.
+Deer's Movement Reduced to 1/2.
+
+Shark's Turn.
+Moose Was Attacked by Shark Using The Attack Tail Slam.
+
+Dolphin's Turn.
+Dolphin Used Echo Location.
+
+Moose's Turn.
+Shark Was Attacked by Moose Using The Attack Horns.
+Bleed Level 1 Applied to Shark.
+Orca Was Attacked by Moose Using The Attack Horns.
+Bleed Level 1 Applied to Orca.
+
+Orca's Turn.
+Orca Used Echo Location.
+Moose Was Attacked by Orca Using The Attack Tail Slam.
+Bleed Damaged Orca by 1.
+Bleed in Orca is Reversed to Level 0.
+
+Hawk's Turn.
+Hawk Flew From (13, 4) to (14, 4).
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Plankton's Turn.
+
+Octopus's Turn.
+
+Elephant's Turn.
+Elephant's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Zebra's Turn.
+Zebra Walked From (31, 15) to (32, 15).
+Zebra's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Giraffe's Turn.
+Gazelle Was Attacked by Giraffe Using The Attack Stomp.
+Gazelle is Dead.
+
+Bison's Turn.
+Bison 2xWalked From (21, 20) to (27, 20).
+Exhaustion Level 1 Applied to Bison.
+Bison's Movement Reduced to 1/2.
+Elephant Was Attacked by Bison Using The Attack Stomp.
+
+Bison's Turn.
+
+Monkey's Turn.
+
+Crocodile's Turn.
+
+Polar Bear's Turn.
+
+Ape's Turn.
+
+Alligator's Turn.
+Alligator Walked From (31, 32) to (31, 33).
+
+Penguin's Turn.
+
+Seal's Turn.
+
+Statistics of All Animals:
+
+	Lion:
+		Health: 7
+		Armor: 0
+
+	Eagle:
+		Health: 1
+		Armor: 0
+
+	Crab:
+		Health: 2
+		Armor: 4
+
+	Hyena:
+		Health: 6
+		Armor: 0
+
+	Grizzly Bear:
+		Health: 20
+		Armor: 0
+
+	Camel:
+		Health: 20
+		Armor: 0
+
+	Wolf:
+		Health: 3
+		Armor: 0
+
+	Black Bear:
+		Health: 7
+		Armor: 0
+
+	Silver Ant:
+		Health: 5
+		Armor: 0
+
+	Deer:
+		Health: 1
+		Armor: 0
+
+	Dolphin:
+		Health: 12
+		Armor: 0
+
+	Shark:
+		Health: 13
+		Armor: 0
+
+	Moose:
+		Health: 2
+		Armor: 0
+
+	Orca:
+		Health: 18
+		Armor: 0
+
+	Hawk:
+		Health: 6
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Plankton:
+		Health: 2
+		Armor: 0
+
+	Octopus:
+		Health: 9
+		Armor: 1
+
+	Zebra:
+		Health: 12
+		Armor: 0
+
+	Giraffe:
+		Health: 12
+		Armor: 0
+
+	Elephant:
+		Health: 18
+		Armor: 0
+
+	Bison:
+		Health: 15
+		Armor: 2
+
+	Bison:
+		Health: 15
+		Armor: 0
+
+	Monkey:
+		Health: 9
+		Armor: 0
+
+	Crocodile:
+		Health: 21
+		Armor: 2
+
+	Polar Bear:
+		Health: 15
+		Armor: 2
+
+	Ape:
+		Health: 9
+		Armor: 0
+
+	Alligator:
+		Health: 17
+		Armor: 2
+
+	Penguin:
+		Health: 8
+		Armor: 0
+
+	Seal:
+		Health: 12
+		Armor: 1
+
+Turn 15:
+
+Lion's Turn.
+Due to Lion's Paralysis, Lion's Turn Was Skipped.
+Lion's Exhaustion Decreased to Level 1. Exhaustion Paralysis Removed.
+Exhaustion Paralysis For Lion is in Effect For 0 More Turns.
+
+Eagle's Turn.
+Due to Eagle's Paralysis, Eagle Cannot Move This Turn.
+Eagle's Exhaustion Decreased to Level 1. Exhaustion Paralysis Removed.
+Exhaustion Paralysis For Eagle is in Effect For 0 More Turns.
+
+Crab's Turn.
+
+Hyena's Turn.
+Due to Hyena's Paralysis, Hyena Cannot Move This Turn.
+Hyena's Exhaustion Decreased to Level 1. Exhaustion Paralysis Removed.
+Exhaustion Paralysis For Hyena is in Effect For 0 More Turns.
+
+Grizzly Bear's Turn.
+Grizzly Bear Walked From (0, 12) to (3, 12).
+Grizzly Bear Used Smell.
+Scorpion is Dead.
+
+Camel's Turn.
+Camel Walked From (10, 2) to (10, 3).
+Rattlesnake Was Attacked by Camel Using The Attack Stomp.
+Rattlesnake is Dead.
+
+Wolf's Turn.
+Wolf 2xWalked From (5, 5) to (5, 0).
+Exhaustion Level 1 Applied to Wolf.
+Wolf's Movement Reduced to 1/2.
+Wolf Used Smell.
+Rattlesnake's Camoflauge is Reduced to a Visual Radius of 3.
+Rattlesnake Was Attacked by Wolf Using The Attack Claw.
+Rattlesnake is Dead.
+
+Black Bear's Turn.
+Black Bear Walked From (7, 5) to (7, 2).
+Black Bear Used Smell.
+
+Silver Ant's Turn.
+
+Deer's Turn.
+Deer's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Dolphin's Turn.
+Dolphin Used Echo Location.
+
+Shark's Turn.
+Moose Was Attacked by Shark Using The Attack Tail Slam.
+Bleed Damaged Shark by 1.
+Bleed in Shark is Reversed to Level 0.
+Moose is Dead.
+
+Orca's Turn.
+Orca Used Echo Location.
+Moose Was Attacked by Orca Using The Attack Tail Slam.
+Moose is Dead.
+
+Hawk's Turn.
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Plankton's Turn.
+
+Octopus's Turn.
+
+Zebra's Turn.
+
+Giraffe's Turn.
+Giraffe Walked From (23, 26) to (21, 26).
+
+Elephant's Turn.
+Elephant Walked From (27, 19) to (29, 19).
+
+Bison's Turn.
+Bison 2xWalked From (27, 20) to (27, 18).
+Exhaustion Level 2 Applied to Bison.
+Exhaustion Paralysis Applied.
+Exhaustion Paralysis Applied to Bison For 1 Turn.
+
+Bison's Turn.
+Bison 2xWalked From (35, 25) to (30, 25).
+Exhaustion Level 1 Applied to Bison.
+Bison's Movement Reduced to 1/2.
+
+Monkey's Turn.
+Monkey Walked From (26, 22) to (26, 24).
+
+Crocodile's Turn.
+
+Polar Bear's Turn.
+
+Ape's Turn.
+
+Alligator's Turn.
+
+Penguin's Turn.
+Penguin 2xWalked From (30, 36) to (28, 36).
+Exhaustion Level 1 Applied to Penguin.
+Penguin's Movement Reduced to 1/2.
+
+Seal's Turn.
+
+Statistics of All Animals:
+
+	Lion:
+		Health: 7
+		Armor: 0
+
+	Crab:
+		Health: 2
+		Armor: 4
+
+	Hyena:
+		Health: 6
+		Armor: 0
+
+	Eagle:
+		Health: 1
+		Armor: 0
+
+	Grizzly Bear:
+		Health: 20
+		Armor: 0
+
+	Camel:
+		Health: 20
+		Armor: 0
+
+	Wolf:
+		Health: 3
+		Armor: 0
+
+	Black Bear:
+		Health: 7
+		Armor: 0
+
+	Silver Ant:
+		Health: 5
+		Armor: 0
+
+	Deer:
+		Health: 1
+		Armor: 0
+
+	Dolphin:
+		Health: 12
+		Armor: 0
+
+	Shark:
+		Health: 12
+		Armor: 0
+
+	Orca:
+		Health: 18
+		Armor: 0
+
+	Hawk:
+		Health: 6
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Plankton:
+		Health: 2
+		Armor: 0
+
+	Octopus:
+		Health: 9
+		Armor: 1
+
+	Zebra:
+		Health: 12
+		Armor: 0
+
+	Giraffe:
+		Health: 12
+		Armor: 0
+
+	Elephant:
+		Health: 18
+		Armor: 0
+
+	Bison:
+		Health: 15
+		Armor: 2
+
+	Bison:
+		Health: 15
+		Armor: 0
+
+	Monkey:
+		Health: 9
+		Armor: 0
+
+	Crocodile:
+		Health: 21
+		Armor: 2
+
+	Polar Bear:
+		Health: 15
+		Armor: 2
+
+	Ape:
+		Health: 9
+		Armor: 0
+
+	Alligator:
+		Health: 17
+		Armor: 2
+
+	Penguin:
+		Health: 8
+		Armor: 0
+
+	Seal:
+		Health: 12
+		Armor: 1
+
+Turn 16:
+
+Lion's Turn.
+Lion 2xWalked From (23, 30) to (23, 28).
+Exhaustion Level 2 Applied to Lion.
+Exhaustion Paralysis Applied.
+Exhaustion Paralysis Applied to Lion For 1 Turn.
+
+Crab's Turn.
+
+Hyena's Turn.
+Hyena's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Eagle's Turn.
+Eagle's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Grizzly Bear's Turn.
+Grizzly Bear Used Smell.
+Scorpion is Dead.
+
+Camel's Turn.
+Camel Walked From (10, 3) to (12, 3).
+Rattlesnake Was Attacked by Camel Using The Attack Stomp.
+Rattlesnake is Dead.
+
+Wolf's Turn.
+Wolf Used Smell.
+Rattlesnake's Camoflauge is Reduced to a Visual Radius of 5.
+Rattlesnake Was Attacked by Wolf Using The Attack Claw.
+Wolf's Exhaustion Decreased to Level 0. No Negative Effects.
+Rattlesnake is Dead.
+
+Black Bear's Turn.
+Black Bear Used Smell.
+
+Silver Ant's Turn.
+Silver Ant Walked From (8, 7) to (8, 6).
+
+Deer's Turn.
+Deer Walked From (6, 16) to (6, 13).
+
+Dolphin's Turn.
+Dolphin Used Echo Location.
+
+Shark's Turn.
+Moose Was Attacked by Shark Using The Attack Tail Slam.
+Moose is Dead.
+
+Orca's Turn.
+Orca Used Echo Location.
+Moose Was Attacked by Orca Using The Attack Tail Slam.
+Moose is Dead.
+
+Hawk's Turn.
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Plankton's Turn.
+
+Octopus's Turn.
+
+Zebra's Turn.
+
+Giraffe's Turn.
+
+Elephant's Turn.
+
+Bison's Turn.
+Due to Bison's Paralysis, Bison Cannot Move This Turn.
+Bison's Exhaustion Decreased to Level 1. Exhaustion Paralysis Removed.
+Exhaustion Paralysis For Bison is in Effect For 0 More Turns.
+
+Bison's Turn.
+Bison 2xWalked From (30, 25) to (30, 23).
+Exhaustion Level 2 Applied to Bison.
+Exhaustion Paralysis Applied.
+Exhaustion Paralysis Applied to Bison For 1 Turn.
+
+Monkey's Turn.
+Monkey Walked From (26, 24) to (27, 24).
+
+Crocodile's Turn.
+
+Polar Bear's Turn.
+Polar Bear 2xWalked From (37, 29) to (37, 34).
+Exhaustion Level 1 Applied to Polar Bear.
+Polar Bear's Movement Reduced to 1/2.
+
+Ape's Turn.
+
+Alligator's Turn.
+Alligator Walked From (31, 33) to (31, 34).
+Poison Frog Was Attacked by Alligator Using The Attack Tail Slam.
+Poison Level 1 Applied to Alligator.
+Poison Damaged Alligator by 1.
+Poison in Alligator is Reversed to Level 0.
+Poison Frog is Dead.
+
+Penguin's Turn.
+Penguin's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Seal's Turn.
+
+Statistics of All Animals:
+
+	Lion:
+		Health: 7
+		Armor: 0
+
+	Crab:
+		Health: 2
+		Armor: 4
+
+	Hyena:
+		Health: 6
+		Armor: 0
+
+	Eagle:
+		Health: 1
+		Armor: 0
+
+	Grizzly Bear:
+		Health: 20
+		Armor: 0
+
+	Camel:
+		Health: 20
+		Armor: 0
+
+	Wolf:
+		Health: 3
+		Armor: 0
+
+	Black Bear:
+		Health: 7
+		Armor: 0
+
+	Silver Ant:
+		Health: 5
+		Armor: 0
+
+	Deer:
+		Health: 1
+		Armor: 0
+
+	Dolphin:
+		Health: 12
+		Armor: 0
+
+	Shark:
+		Health: 12
+		Armor: 0
+
+	Orca:
+		Health: 18
+		Armor: 0
+
+	Hawk:
+		Health: 6
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Plankton:
+		Health: 2
+		Armor: 0
+
+	Octopus:
+		Health: 9
+		Armor: 1
+
+	Zebra:
+		Health: 12
+		Armor: 0
+
+	Giraffe:
+		Health: 12
+		Armor: 0
+
+	Elephant:
+		Health: 18
+		Armor: 0
+
+	Bison:
+		Health: 15
+		Armor: 2
+
+	Bison:
+		Health: 15
+		Armor: 0
+
+	Monkey:
+		Health: 9
+		Armor: 0
+
+	Crocodile:
+		Health: 21
+		Armor: 2
+
+	Polar Bear:
+		Health: 15
+		Armor: 2
+
+	Ape:
+		Health: 9
+		Armor: 0
+
+	Alligator:
+		Health: 16
+		Armor: 2
+
+	Penguin:
+		Health: 8
+		Armor: 0
+
+	Seal:
+		Health: 12
+		Armor: 1
+
+Turn 17:
+
+Lion's Turn.
+Due to Lion's Paralysis, Lion's Turn Was Skipped.
+Lion's Exhaustion Decreased to Level 1. Exhaustion Paralysis Removed.
+Exhaustion Paralysis For Lion is in Effect For 0 More Turns.
+
+Crab's Turn.
+
+Hyena's Turn.
+Hyena 2xWalked From (11, 23) to (7, 23).
+Exhaustion Level 1 Applied to Hyena.
+Hyena's Movement Reduced to 1/2.
+
+Eagle's Turn.
+Eagle Walked From (8, 12) to (8, 13).
+
+Grizzly Bear's Turn.
+Grizzly Bear Used Smell.
+Scorpion is Dead.
+
+Camel's Turn.
+Rattlesnake Was Attacked by Camel Using The Attack Stomp.
+Rattlesnake is Dead.
+
+Wolf's Turn.
+Wolf 2xWalked From (5, 0) to (9, 0).
+Exhaustion Level 1 Applied to Wolf.
+Wolf's Movement Reduced to 1/2.
+Wolf Used Smell.
+Rattlesnake's Camoflauge is Reduced to a Visual Radius of 7.
+Rattlesnake is Dead.
+
+Black Bear's Turn.
+Black Bear Walked From (7, 2) to (4, 2).
+Black Bear Used Smell.
+
+Silver Ant's Turn.
+
+Deer's Turn.
+Deer Walked From (6, 13) to (6, 12).
+
+Dolphin's Turn.
+Dolphin Used Echo Location.
+
+Shark's Turn.
+Moose Was Attacked by Shark Using The Attack Tail Slam.
+Moose is Dead.
+
+Orca's Turn.
+Orca Used Echo Location.
+Moose Was Attacked by Orca Using The Attack Tail Slam.
+Moose is Dead.
+
+Hawk's Turn.
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Plankton's Turn.
+
+Octopus's Turn.
+
+Zebra's Turn.
+Zebra Walked From (32, 15) to (29, 15).
+
+Giraffe's Turn.
+Giraffe Walked From (21, 26) to (21, 24).
+
+Elephant's Turn.
+
+Bison's Turn.
+Bison's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Bison's Turn.
+Due to Bison's Paralysis, Bison's Turn Was Skipped.
+Bison's Exhaustion Decreased to Level 1. Exhaustion Paralysis Removed.
+Exhaustion Paralysis For Bison is in Effect For 0 More Turns.
+
+Monkey's Turn.
+
+Crocodile's Turn.
+
+Polar Bear's Turn.
+Polar Bear's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Ape's Turn.
+Ape 2xWalked From (33, 31) to (33, 27).
+Exhaustion Level 1 Applied to Ape.
+Ape's Movement Reduced to 1/2.
+
+Alligator's Turn.
+Poison Frog Was Attacked by Alligator Using The Attack Tail Slam.
+Poison Level 1 Applied to Alligator.
+Poison Damaged Alligator by 1.
+Poison in Alligator is Reversed to Level 0.
+Poison Frog is Dead.
+
+Penguin's Turn.
+Penguin 2xWalked From (28, 36) to (28, 34).
+Exhaustion Level 1 Applied to Penguin.
+Penguin's Movement Reduced to 1/2.
+
+Seal's Turn.
+
+Statistics of All Animals:
+
+	Lion:
+		Health: 7
+		Armor: 0
+
+	Bison:
+		Health: 15
+		Armor: 0
+
+	Crab:
+		Health: 2
+		Armor: 4
+
+	Hyena:
+		Health: 6
+		Armor: 0
+
+	Eagle:
+		Health: 1
+		Armor: 0
+
+	Grizzly Bear:
+		Health: 20
+		Armor: 0
+
+	Camel:
+		Health: 20
+		Armor: 0
+
+	Wolf:
+		Health: 3
+		Armor: 0
+
+	Black Bear:
+		Health: 7
+		Armor: 0
+
+	Silver Ant:
+		Health: 5
+		Armor: 0
+
+	Deer:
+		Health: 1
+		Armor: 0
+
+	Dolphin:
+		Health: 12
+		Armor: 0
+
+	Shark:
+		Health: 12
+		Armor: 0
+
+	Orca:
+		Health: 18
+		Armor: 0
+
+	Hawk:
+		Health: 6
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Plankton:
+		Health: 2
+		Armor: 0
+
+	Octopus:
+		Health: 9
+		Armor: 1
+
+	Zebra:
+		Health: 12
+		Armor: 0
+
+	Giraffe:
+		Health: 12
+		Armor: 0
+
+	Elephant:
+		Health: 18
+		Armor: 0
+
+	Bison:
+		Health: 15
+		Armor: 2
+
+	Monkey:
+		Health: 9
+		Armor: 0
+
+	Crocodile:
+		Health: 21
+		Armor: 2
+
+	Polar Bear:
+		Health: 15
+		Armor: 2
+
+	Ape:
+		Health: 9
+		Armor: 0
+
+	Alligator:
+		Health: 15
+		Armor: 2
+
+	Penguin:
+		Health: 8
+		Armor: 0
+
+	Seal:
+		Health: 12
+		Armor: 1
+
+Turn 18:
+
+Lion's Turn.
+Lion Walked From (23, 28) to (24, 28).
+Lion's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Bison's Turn.
+Bison's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Crab's Turn.
+
+Hyena's Turn.
+Hyena Walked From (7, 23) to (8, 23).
+Hyena's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Eagle's Turn.
+Eagle Walked From (8, 13) to (8, 12).
+
+Grizzly Bear's Turn.
+Grizzly Bear 2xWalked From (3, 12) to (3, 7).
+Exhaustion Level 1 Applied to Grizzly Bear.
+Grizzly Bear's Movement Reduced to 1/2.
+Grizzly Bear Used Smell.
+Scorpion Was Attacked by Grizzly Bear Using The Attack Claw.
+Scorpion is Dead.
+
+Camel's Turn.
+Rattlesnake Was Attacked by Camel Using The Attack Stomp.
+Rattlesnake is Dead.
+
+Wolf's Turn.
+Wolf 2xWalked From (9, 0) to (9, 2).
+Exhaustion Level 2 Applied to Wolf.
+Exhaustion Paralysis Applied.
+Exhaustion Paralysis Applied to Wolf For 1 Turn.
+Wolf Used Smell.
+
+Black Bear's Turn.
+Black Bear Used Smell.
+
+Silver Ant's Turn.
+Silver Ant Walked From (8, 6) to (8, 8).
+
+Deer's Turn.
+Deer 2xWalked From (6, 12) to (1, 12).
+Exhaustion Level 1 Applied to Deer.
+Deer's Movement Reduced to 1/2.
+
+Dolphin's Turn.
+Dolphin Used Echo Location.
+
+Shark's Turn.
+Moose Was Attacked by Shark Using The Attack Tail Slam.
+Moose is Dead.
+
+Orca's Turn.
+Orca Used Echo Location.
+Moose Was Attacked by Orca Using The Attack Tail Slam.
+Moose is Dead.
+
+Hawk's Turn.
+Hawk Flew From (14, 4) to (11, 4).
+Rattlesnake Was Attacked by Hawk Using The Attack Claw.
+Rattlesnake is Dead.
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Plankton's Turn.
+
+Octopus's Turn.
+
+Zebra's Turn.
+
+Giraffe's Turn.
+
+Elephant's Turn.
+Elephant 2xWalked From (29, 19) to (33, 19).
+Exhaustion Level 1 Applied to Elephant.
+Elephant's Movement Reduced to 1/2.
+
+Bison's Turn.
+Bison 2xWalked From (27, 18) to (23, 18).
+Exhaustion Level 1 Applied to Bison.
+Bison's Movement Reduced to 1/2.
+
+Monkey's Turn.
+Monkey Walked From (27, 24) to (25, 24).
+
+Crocodile's Turn.
+Crocodile 2xWalked From (36, 36) to (36, 33).
+Exhaustion Level 1 Applied to Crocodile.
+Crocodile's Movement Reduced to 1/2.
+
+Polar Bear's Turn.
+
+Ape's Turn.
+Ape 2xWalked From (33, 27) to (35, 27).
+Exhaustion Level 2 Applied to Ape.
+Exhaustion Paralysis Applied.
+Exhaustion Paralysis Applied to Ape For 1 Turn.
+
+Alligator's Turn.
+Alligator Walked From (31, 34) to (31, 32).
+Arctic Fox Was Attacked by Alligator Using The Attack Tail Slam.
+Arctic Fox is Dead.
+
+Penguin's Turn.
+Penguin's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Seal's Turn.
+
+Statistics of All Animals:
+
+	Lion:
+		Health: 7
+		Armor: 0
+
+	Bison:
+		Health: 15
+		Armor: 0
+
+	Crab:
+		Health: 2
+		Armor: 4
+
+	Hyena:
+		Health: 6
+		Armor: 0
+
+	Eagle:
+		Health: 1
+		Armor: 0
+
+	Grizzly Bear:
+		Health: 20
+		Armor: 0
+
+	Camel:
+		Health: 20
+		Armor: 0
+
+	Wolf:
+		Health: 3
+		Armor: 0
+
+	Black Bear:
+		Health: 7
+		Armor: 0
+
+	Silver Ant:
+		Health: 5
+		Armor: 0
+
+	Deer:
+		Health: 1
+		Armor: 0
+
+	Dolphin:
+		Health: 12
+		Armor: 0
+
+	Shark:
+		Health: 12
+		Armor: 0
+
+	Orca:
+		Health: 18
+		Armor: 0
+
+	Hawk:
+		Health: 6
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Plankton:
+		Health: 2
+		Armor: 0
+
+	Octopus:
+		Health: 9
+		Armor: 1
+
+	Zebra:
+		Health: 12
+		Armor: 0
+
+	Giraffe:
+		Health: 12
+		Armor: 0
+
+	Elephant:
+		Health: 18
+		Armor: 0
+
+	Bison:
+		Health: 15
+		Armor: 2
+
+	Monkey:
+		Health: 9
+		Armor: 0
+
+	Crocodile:
+		Health: 21
+		Armor: 2
+
+	Polar Bear:
+		Health: 15
+		Armor: 2
+
+	Ape:
+		Health: 9
+		Armor: 0
+
+	Alligator:
+		Health: 15
+		Armor: 2
+
+	Penguin:
+		Health: 8
+		Armor: 0
+
+	Seal:
+		Health: 12
+		Armor: 1
+
+Turn 19:
+
+Lion's Turn.
+
+Bison's Turn.
+Bison 2xWalked From (30, 23) to (30, 27).
+Exhaustion Level 1 Applied to Bison.
+Bison's Movement Reduced to 1/2.
+
+Crab's Turn.
+
+Hyena's Turn.
+Hyena Walked From (8, 23) to (5, 23).
+
+Eagle's Turn.
+Eagle Flew From (8, 12) to (12, 12).
+
+Grizzly Bear's Turn.
+Grizzly Bear 2xWalked From (3, 7) to (1, 7).
+Exhaustion Level 2 Applied to Grizzly Bear.
+Exhaustion Paralysis Applied.
+Exhaustion Paralysis Applied to Grizzly Bear For 1 Turn.
+Grizzly Bear Used Smell.
+
+Camel's Turn.
+Camel Walked From (12, 3) to (12, 4).
+Hawk Was Attacked by Camel Using The Attack Stomp.
+Flinch Applied to Hawk.
+
+Wolf's Turn.
+Due to Wolf's Paralysis, Wolf's Turn Was Skipped.
+Wolf's Exhaustion Decreased to Level 1. Exhaustion Paralysis Removed.
+Exhaustion Paralysis For Wolf is in Effect For 0 More Turns.
+
+Black Bear's Turn.
+Black Bear Walked From (4, 2) to (4, 0).
+Black Bear Used Smell.
+Rattlesnake's Camoflauge is Reduced to a Visual Radius of 9.
+Rattlesnake is Dead.
+
+Silver Ant's Turn.
+
+Deer's Turn.
+Deer Walked From (1, 12) to (0, 12).
+Deer's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Dolphin's Turn.
+Dolphin Used Echo Location.
+
+Shark's Turn.
+Moose Was Attacked by Shark Using The Attack Tail Slam.
+Moose is Dead.
+
+Orca's Turn.
+Orca Used Echo Location.
+Moose Was Attacked by Orca Using The Attack Tail Slam.
+Moose is Dead.
+
+Hawk's Turn.
+Due to Hawk Being Flinched, Hawk's Turn Was Skipped.
+Flinch Removed From Hawk.
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Plankton's Turn.
+
+Octopus's Turn.
+
+Zebra's Turn.
+Zebra 2xWalked From (29, 15) to (29, 19).
+Exhaustion Level 1 Applied to Zebra.
+Zebra's Movement Reduced to 1/2.
+
+Giraffe's Turn.
+Giraffe 2xWalked From (21, 24) to (18, 24).
+Exhaustion Level 1 Applied to Giraffe.
+Giraffe's Movement Reduced to 1/2.
+
+Elephant's Turn.
+Elephant Walked From (33, 19) to (33, 20).
+Elephant's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Bison's Turn.
+Bison's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Monkey's Turn.
+Monkey 2xWalked From (25, 24) to (25, 20).
+Exhaustion Level 1 Applied to Monkey.
+Monkey's Movement Reduced to 1/2.
+Crab Was Attacked by Monkey Using The Attack Punch.
+
+Crocodile's Turn.
+Crocodile Walked From (36, 33) to (37, 33).
+Polar Bear Was Attacked by Crocodile Using The Attack Bite Spin.
+Bleed Level 1 Applied to Polar Bear.
+Crocodile's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Polar Bear's Turn.
+Crocodile Was Attacked by Polar Bear Using The Attack Claw.
+Bleed Level 1 Applied to Crocodile.
+Bleed Damaged Polar Bear by 1.
+Bleed in Polar Bear is Reversed to Level 0.
+
+Ape's Turn.
+Due to Ape's Paralysis, Ape's Turn Was Skipped.
+Ape's Exhaustion Decreased to Level 1. Exhaustion Paralysis Removed.
+Exhaustion Paralysis For Ape is in Effect For 0 More Turns.
+
+Alligator's Turn.
+Alligator 2xWalked From (31, 32) to (34, 32).
+Exhaustion Level 1 Applied to Alligator.
+Alligator's Movement Reduced to 1/2.
+
+Penguin's Turn.
+
+Seal's Turn.
+
+Statistics of All Animals:
+
+	Wolf:
+		Health: 3
+		Armor: 0
+
+	Ape:
+		Health: 9
+		Armor: 0
+
+	Lion:
+		Health: 7
+		Armor: 0
+
+	Bison:
+		Health: 15
+		Armor: 0
+
+	Hyena:
+		Health: 6
+		Armor: 0
+
+	Eagle:
+		Health: 1
+		Armor: 0
+
+	Grizzly Bear:
+		Health: 20
+		Armor: 0
+
+	Hawk:
+		Health: 4
+		Armor: 0
+
+	Camel:
+		Health: 20
+		Armor: 0
+
+	Black Bear:
+		Health: 7
+		Armor: 0
+
+	Silver Ant:
+		Health: 5
+		Armor: 0
+
+	Deer:
+		Health: 1
+		Armor: 0
+
+	Dolphin:
+		Health: 12
+		Armor: 0
+
+	Shark:
+		Health: 12
+		Armor: 0
+
+	Orca:
+		Health: 18
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Plankton:
+		Health: 2
+		Armor: 0
+
+	Octopus:
+		Health: 9
+		Armor: 1
+
+	Zebra:
+		Health: 12
+		Armor: 0
+
+	Giraffe:
+		Health: 12
+		Armor: 0
+
+	Elephant:
+		Health: 18
+		Armor: 0
+
+	Bison:
+		Health: 15
+		Armor: 2
+
+	Crab:
+		Health: 2
+		Armor: 3
+
+	Monkey:
+		Health: 9
+		Armor: 0
+
+	Crocodile:
+		Health: 21
+		Armor: 0
+
+	Polar Bear:
+		Health: 14
+		Armor: 0
+
+	Alligator:
+		Health: 15
+		Armor: 2
+
+	Penguin:
+		Health: 8
+		Armor: 0
+
+	Seal:
+		Health: 12
+		Armor: 1
+
+Turn 20:
+
+Wolf's Turn.
+Wolf Used Smell.
+Wolf's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Ape's Turn.
+Ape's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Lion's Turn.
+
+Bison's Turn.
+Bison 2xWalked From (30, 27) to (30, 25).
+Exhaustion Level 2 Applied to Bison.
+Exhaustion Paralysis Applied.
+Exhaustion Paralysis Applied to Bison For 1 Turn.
+
+Hyena's Turn.
+
+Eagle's Turn.
+
+Grizzly Bear's Turn.
+Due to Grizzly Bear's Paralysis, Grizzly Bear Cannot Move This Turn.
+Grizzly Bear Used Smell.
+Grizzly Bear's Exhaustion Decreased to Level 1. Exhaustion Paralysis Removed.
+Exhaustion Paralysis For Grizzly Bear is in Effect For 0 More Turns.
+
+Hawk's Turn.
+Hawk 2xWalked From (11, 4) to (11, 6).
+Exhaustion Level 1 Applied to Hawk.
+Hawk's Movement Reduced to 1/2.
+
+Camel's Turn.
+
+Black Bear's Turn.
+Black Bear Walked From (4, 0) to (2, 0).
+Black Bear Used Smell.
+Rattlesnake's Camoflauge is Reduced to a Visual Radius of 11.
+Rattlesnake is Dead.
+
+Silver Ant's Turn.
+Silver Ant Walked From (8, 8) to (8, 4).
+
+Deer's Turn.
+Deer Walked From (0, 12) to (0, 14).
+
+Dolphin's Turn.
+Dolphin Used Echo Location.
+
+Shark's Turn.
+Moose Was Attacked by Shark Using The Attack Tail Slam.
+Moose is Dead.
+
+Orca's Turn.
+Orca Used Echo Location.
+Moose Was Attacked by Orca Using The Attack Tail Slam.
+Moose is Dead.
+
+Orca's Turn.
+Orca Used Echo Location.
+
+Plankton's Turn.
+
+Octopus's Turn.
+
+Zebra's Turn.
+Zebra's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Giraffe's Turn.
+Giraffe Walked From (18, 24) to (17, 24).
+Giraffe's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Elephant's Turn.
+
+Bison's Turn.
+Bison Walked From (23, 18) to (20, 18).
+
+Crab's Turn.
+Monkey Was Attacked by Crab Using The Attack Claw.
+
+Monkey's Turn.
+Monkey Walked From (25, 20) to (25, 21).
+Monkey's Exhaustion Decreased to Level 0. No Negative Effects.
+
+Crocodile's Turn.
+Polar Bear Was Attacked by Crocodile Using The Attack Bite.
+Bleed Level 1 Applied to Polar Bear.
+Bleed Damaged Crocodile by 1.
+Bleed in Crocodile is Reversed to Level 0.
+
+Polar Bear's Turn.
+Crocodile Was Attacked by Polar Bear Using The Attack Claw.
+Bleed Level 1 Applied to Crocodile.
+Bleed Damaged Polar Bear by 1.
+Bleed in Polar Bear is Reversed to Level 0.
+
+Alligator's Turn.
+Alligator 2xWalked From (34, 32) to (32, 32).
+Exhaustion Level 2 Applied to Alligator.
+Exhaustion Paralysis Applied.
+Exhaustion Paralysis Applied to Alligator For 1 Turn.
+
+Penguin's Turn.
+Penguin Walked From (28, 34) to (27, 34).
+
+Seal's Turn.
+
+Statistics of All Animals:
+
+	Wolf:
+		Health: 3
+		Armor: 0
+
+	Ape:
+		Health: 9
+		Armor: 0
+
+	Lion:
+		Health: 7
+		Armor: 0
+
+	Bison:
+		Health: 15
+		Armor: 0
+
+	Hyena:
+		Health: 6
+		Armor: 0
+
+	Eagle:
+		Health: 1
+		Armor: 0
+
+	Grizzly Bear:
+		Health: 20
+		Armor: 0
+
+	Hawk:
+		Health: 4
+		Armor: 0
+
+	Camel:
+		Health: 20
+		Armor: 0
+
+	Black Bear:
+		Health: 7
+		Armor: 0
+
+	Silver Ant:
+		Health: 5
+		Armor: 0
+
+	Deer:
+		Health: 1
+		Armor: 0
+
+	Dolphin:
+		Health: 12
+		Armor: 0
+
+	Shark:
+		Health: 12
+		Armor: 0
+
+	Orca:
+		Health: 18
+		Armor: 0
+
+	Orca:
+		Health: 20
+		Armor: 5
+
+	Plankton:
+		Health: 2
+		Armor: 0
+
+	Octopus:
+		Health: 9
+		Armor: 1
+
+	Zebra:
+		Health: 12
+		Armor: 0
+
+	Giraffe:
+		Health: 12
+		Armor: 0
+
+	Elephant:
+		Health: 18
+		Armor: 0
+
+	Bison:
+		Health: 15
+		Armor: 2
+
+	Crab:
+		Health: 2
+		Armor: 3
+
+	Monkey:
+		Health: 7
+		Armor: 0
+
+	Crocodile:
+		Health: 17
+		Armor: 0
+
+	Polar Bear:
+		Health: 10
+		Armor: 0
+
+	Alligator:
+		Health: 15
+		Armor: 2
+
+	Penguin:
+		Health: 8
+		Armor: 0
+
+	Seal:
+		Health: 12
+		Armor: 1

@@ -53,7 +53,7 @@ class Animals:
                 Ability = (Ability, "")
 
             #Animal Has This Ability
-            if Animal.CurrentAbilities[Ability[0].AbilityName] == False:
+            if isinstance(Animal.CurrentAbilities[Ability[0].AbilityName], bool):
                 Animal.CurrentAbilities[Ability[0].AbilityName] = True
 
             #Update's Animal's Default Night Vision
@@ -109,6 +109,35 @@ class Animals:
         #Returns None if Ability is Not Found.
         return FoundAbility
 
+    '''Apply Attack Effects to Those Not Dead.'''
+    def AttackEffects(Animal, Defender, AttackObject):
+
+        #Poison
+        FoundAbility = Animals.FindAbility("Poison", Defender.AbilityTypes, "Hurt")
+        if FoundAbility is not None:
+            FoundAbility[0].AbilityFunction(FoundAbility[0], Animal, FoundAbility[1])
+
+        if Defender.Health > 0:
+            #Venom
+            FoundAbility = Animals.FindAbility("Venom", Animal.AttackTypes, AttackObject)
+            if FoundAbility is not None:
+                FoundAbility[0].AbilityFunction(FoundAbility[0], Defender, FoundAbility[1])
+
+            #Paralysis
+            FoundAbility = Animals.FindAbility("Paralysis", Animal.AttackTypes, AttackObject)
+            if FoundAbility is not None and Animals.AnimalSizes.index(Animal.Size) > Animals.AnimalSizes.index(Defender.Size):
+                FoundAbility[0].AbilityFunction(FoundAbility[0], Defender, FoundAbility[1])
+
+            #Flinch
+            FoundAbility = Animals.FindAbility("Flinch", Animal.AttackTypes, AttackObject)
+            if FoundAbility is not None and Animals.AnimalSizes.index(Animal.Size) > Animals.AnimalSizes.index(Defender.Size):
+                FoundAbility[0].AbilityFunction(FoundAbility[0], Defender, FoundAbility[1])
+
+            #Bleed
+            FoundAbility = Animals.FindAbility("Bleed", Animal.AttackTypes, AttackObject)
+            if FoundAbility is not None:
+                FoundAbility[0].AbilityFunction(FoundAbility[0], Defender, FoundAbility[1])
+
     #Animal Attacks a Defender. Object Method.
     def Attack(Animal, Defender, Damage, Defenders, AttackObject):
 
@@ -131,32 +160,7 @@ class Animals:
 
         '''Apply Attack Effects to Those Not Dead.'''
         print(f"{Defender.AnimalName} Was Attacked by {Animal.AnimalName} Using The Attack {AttackObject.AttackName}.")
-
-        #Poison
-        FoundAbility = Animals.FindAbility("Poison", Defender.AbilityTypes, "Hurt")
-        if FoundAbility is not None:
-            FoundAbility.AbilityFunction(FoundAbility, Animal, FoundAbility[1])
-
-        if Defender.Health > 0:
-            #Venom
-            FoundAbility = Animals.FindAbility("Venom", Animal.AttackTypes, AttackObject)
-            if FoundAbility is not None:
-                FoundAbility[0].AbilityFunction(FoundAbility[0], Defender, FoundAbility[1])
-
-            #Paralysis
-            FoundAbility = Animals.FindAbility("Paralysis", Animal.AttackTypes, AttackObject)
-            if FoundAbility is not None and Animals.AnimalSizes.index(Animal.Size) > Animals.AnimalSizes.index(Defender.Size):
-                FoundAbility[0].AbilityFunction(FoundAbility[0], Defender, FoundAbility[1])
-
-            #Flinch
-            FoundAbility = Animals.FindAbility("Flinch", Animal.AttackTypes, AttackObject)
-            if FoundAbility is not None and Animals.AnimalSizes.index(Animal.Size) > Animals.AnimalSizes.index(Defender.Size):
-                FoundAbility[0].AbilityFunction(FoundAbility[0], Defender, FoundAbility[1])
-
-            #Bleed
-            FoundAbility = Animals.FindAbility("Bleed", Animal.AttackTypes, AttackObject)
-            if FoundAbility is not None:
-                FoundAbility[0].AbilityFunction(FoundAbility[0], Defender, FoundAbility[1])
+        Animals.AttackEffects(Animal, Defender, AttackObject)
 
         return Defenders
 
@@ -203,7 +207,7 @@ class AttackTypes:
 
         for AttackType in Animal.AttackTypes.keys():
             if len(Animal.AttackTypes[AttackType]) > 1:
-                Animal.AttackTypes[AttackType] = (Animal.AttackTypes[AttackType][0] + Addition, Animal.AttackTypes[AttackType][1:])
+                Animal.AttackTypes[AttackType] = tuple([Animal.AttackTypes[AttackType][0] + Addition] + list(Animal.AttackTypes[AttackType][1:]))
 
             else:
                 Animal.AttackTypes[AttackType] = tuple([Animal.AttackTypes[AttackType][0] + Addition])
@@ -289,11 +293,11 @@ class AbilityTypes():
             #For The Animal For 1 Turn. During This Time, There is a 50% Chance of Paralysis Each Turn.
             if Reverse:
                 NewTime = (Animal.CurrentAbilities["Exhaustion"][1][1] - 1) if Animal.CurrentAbilities["Exhaustion"][1][1] > 0 else 0
-                Animal.CurrentAbilities["Exhaustion"][1] = (False if NewTime == 0 else True, NewTime)
+                Animal.CurrentAbilities["Exhaustion"] = (Animal.CurrentAbilities["Exhaustion"][0], (False if NewTime == 0 else True, NewTime))
                 print(f"{ParalysisObject.SubEffects[0]} Paralysis For {Animal.AnimalName} is in Effect For {Animal.CurrentAbilities['Exhaustion'][1][1]} More Turn{'s' if Animal.CurrentAbilities['Exhaustion'][1][1] != 1 else ''}.")
 
             else:
-                Animal.CurrentAbilities["Exhaustion"][1] = (True, 1)
+                Animal.CurrentAbilities["Exhaustion"] = (Animal.CurrentAbilities["Exhaustion"][0], (True, 1))
                 print(f"{ParalysisObject.SubEffects[0]} Paralysis Applied to {Animal.AnimalName} For {Animal.CurrentAbilities['Exhaustion'][1][1]} Turn{'s' if Animal.CurrentAbilities['Exhaustion'][1][1] != 1 else ''}.")
 
         #Not a SubEffect
@@ -343,21 +347,24 @@ class AbilityTypes():
         #Check if This is a SubEffect
         if SubEffect == ColdBloodedObject.SubEffects[0]: #SubEffect == "+1 HP in Wildfire, Drought"
             #The Animal Heals From Being in a Wildfire or Drought
-            Animal.Health += 1 if Animal.Health < Animal.MaxHealth else 0
-            print(f"{Animal.AnimalName} is Cold Blooded, Gaining 1 Health From The Environmental Condition {SubEffect}.")
+            if Animal.Health < Animal.MaxHealth:
+                Animal.Health += 1
+                print(f"{Animal.AnimalName} is Cold Blooded, Gaining 1 Health From The Environmental Condition {SubEffect}.")
 
         #Not a SubEffect
         else:
 
             #The Animal Heals One Health Per Turn in The Sun
             if SubEffect == "Sun":
-                Animal.Health += 1 if Animal.Health < Animal.MaxHealth else 0
-                print(f"{Animal.AnimalName} is Cold Blooded, Gaining 1 Health From The Environmental Condition {SubEffect}.")
+                if Animal.Health < Animal.MaxHealth:
+                    Animal.Health += 1
+                    print(f"{Animal.AnimalName} is Cold Blooded, Gaining 1 Health From The Environmental Condition {SubEffect}.")
 
             #The Animal Loses One Health Per Turn in a Wildfire or Drought
             elif SubEffect in ["Wildfire", "Drought"]:
-                    Animal.Health -= 1 if Animal.Health > 0 else 0
-                    print(f"{Animal.AnimalName} is Cold Blooded, Losing 1 Health From The Environmental Condition {SubEffect}.")
+                    if Animal.Health > 0:
+                        Animal.Health -= 1
+                        print(f"{Animal.AnimalName} is Cold Blooded, Losing 1 Health From The Environmental Condition {SubEffect}.")
 
             elif SubEffect in ["Blizzard", "Tundra"]:
                 if Reverse:
@@ -519,8 +526,9 @@ class AbilityTypes():
 
         #Not a SubEffect
         else:
-            Animal.Health += 1 if Animal.Health < Animal.MaxHealth else 0
-            print(f"{Animal.AnimalName} Used {Animal.AnimalName}'s Rations, Gaining 1 Health.")
+            if Animal.Health < Animal.MaxHealth:
+                Animal.Health += 1
+                print(f"{Animal.AnimalName} Used {Animal.AnimalName}'s Rations, Gaining 1 Health.")
 
     #Apply Grouping to Animal. Assume Conditions Met.
     #Grouping = Animal is Stronger in Larger Groups. The More of The Same Animals on The Battlefield For The Start of
@@ -550,14 +558,14 @@ class AbilityTypes():
             if Reverse:
                 Animal.CurrentAbilities["Grouping"] -= 1
                 if Animal.CurrentAbilities["Grouping"] == 0:
-                    Animal.AttackTypes[AttackTypes.AttackTypeList[1]] = (Animal.AttackTypes[AttackTypes.AttackTypeList[1]][0], AttackTypes.AttackTypeList[5])
-                    print(f"{Animal.AnimalName}'s {Animal.AttackTypes[AttackTypes.AttackTypeList[1]][0].AttackName} Attack Now Has {AttackTypes.AttackTypeList[5].AttackName} Instead of {AttackTypes.AttackTypeList[1].AttackName} After One Group Member Left The Battlefield.")
+                    Animal.AttackTypes[AttackTypes.AttackTypeList[1]] = (Animal.AttackTypes[AttackTypes.AttackTypeList[1]][0], AbilityTypes.AbilityTypeList[5])
+                    print(f"{Animal.AnimalName}'s {AttackTypes.AttackTypeList[1].AttackName} Attack Now Has {AbilityTypes.AbilityTypeList[5].AbilityName} Instead of {AbilityTypes.AbilityTypeList[1].AbilityName} After One Group Member Left The Battlefield.")
 
             else:
                 Animal.CurrentAbilities["Grouping"] += 1
                 if Animal.CurrentAbilities["Grouping"] == 1:
-                    Animal.AttackTypes[AttackTypes.AttackTypeList[1]] = (Animal.AttackTypes[AttackTypes.AttackTypeList[1]][0], AttackTypes.AttackTypeList[1])
-                    print(f"{Animal.AnimalName}'s {Animal.AttackTypes[AttackTypes.AttackTypeList[1]][0].AttackName} Attack Now Has {AttackTypes.AttackTypeList[1].AttackName} Instead of {AttackTypes.AttackTypeList[5].AttackName} After One Group Member Joined The Battlefield.")
+                    Animal.AttackTypes[AttackTypes.AttackTypeList[1]] = (Animal.AttackTypes[AttackTypes.AttackTypeList[1]][0], AbilityTypes.AbilityTypeList[1])
+                    print(f"{Animal.AnimalName}'s {AttackTypes.AttackTypeList[1].AttackName} Attack Now Has {AbilityTypes.AbilityTypeList[1].AbilityName} Instead of {AbilityTypes.AbilityTypeList[5].AbilityName} After One Group Member Joined The Battlefield.")
 
         #Not a SubEffect
         else:
@@ -734,7 +742,7 @@ class AbilityTypes():
         if Animal Attacked:
             FoundAbility = Animals.FindAbility("Poison", Animal.AbilityTypes, "Hurt")
             if FoundAbility is not None:
-                FoundAbility.AbilityFunction(FoundAbility, OtherAnimal, FoundAbility[1])
+                FoundAbility[0].AbilityFunction(FoundAbility[0], OtherAnimal, FoundAbility[1])
 
         if Animal's Turn Ending:
             if Animal.CurrentAbilities["Poison"] > 0:
@@ -820,10 +828,11 @@ class AbilityTypes():
                     pass #Default Fear Already Applied at Animal Creation
 
                 #Apply Fear
-                Animal.CurrentAbilities["Fear"] = abs(FearLevel)
-                print(f"Fear Level {Animal.CurrentAbilities['Fear']} Applied to {Animal.AnimalName}.")
-                AttackTypes.AddDamage(Animal, min(0, FearLevel))
-                print(f"{Animal.AnimalName}'s Attack is Reduced by {Animal.CurrentAbilities['Fear']}.")
+                if FearLevel != 0:
+                    Animal.CurrentAbilities["Fear"] = abs(FearLevel)
+                    print(f"Fear Level {Animal.CurrentAbilities['Fear']} Applied to {Animal.AnimalName}.")
+                    AttackTypes.AddDamage(Animal, min(0, FearLevel))
+                    print(f"{Animal.AnimalName}'s Attack is Reduced by {Animal.CurrentAbilities['Fear']}.")
 
             else:
                 print(f"{Animal.AnimalName} is Immune to Fear.")
@@ -845,12 +854,14 @@ class AbilityTypes():
 
         if not(Reverse):
             Animal.CurrentAbilities["Exhaustion"] = (Animal.CurrentAbilities["Exhaustion"][0] + 1 if Animal.CurrentAbilities["Exhaustion"][0] < 2 else 0, Animal.CurrentAbilities["Exhaustion"][1])
+            print(f"Exhaustion Level {Animal.CurrentAbilities['Exhaustion'][0]} Applied to {Animal.AnimalName}.")
 
         #Level 1 Exhaustion, Speed Drop.
         if Animal.CurrentAbilities["Exhaustion"][0] == 1:
             if Reverse:
                 Animal.CurrentAbilities["Exhaustion"] = (Animal.CurrentAbilities["Exhaustion"][0] - 1, Animal.CurrentAbilities["Exhaustion"][1])
                 Animal.MovementTypes = deepcopy(Animal.OriginalMovementTypes)
+                print(f"{Animal.AnimalName}'s Exhaustion Decreased to Level {Animal.CurrentAbilities['Exhaustion'][0]}. No Negative Effects.")
 
             else:
                 #Check if This is a SubEffect
@@ -858,43 +869,50 @@ class AbilityTypes():
                     #Speed Drops by Half, Halved
                     for MovementType, MovementRadius in Animal.MovementTypes.items():
                         Animal.MovementTypes[MovementType] = MovementRadius * 3 // 4
+                    print(f"{Animal.AnimalName}'s Movement Reduced to 3/4.")
 
                 #Not a SubEffect
                 else:
                     #Speed Drops by Half
                     for MovementType, MovementRadius in Animal.MovementTypes.items():
                         Animal.MovementTypes[MovementType] = MovementRadius // 2
+                    print(f"{Animal.AnimalName}'s Movement Reduced to 1/2.")
 
         #Level 2 Exhaustion, Paralysis.
         elif Animal.CurrentAbilities["Exhaustion"][0] == 2:
             if Reverse:
                 Animal.CurrentAbilities["Exhaustion"] = (Animal.CurrentAbilities["Exhaustion"][0] - 1, Animal.CurrentAbilities["Exhaustion"][1])
+                print(f"{Animal.AnimalName}'s Exhaustion Decreased to Level {Animal.CurrentAbilities['Exhaustion'][0]}. Exhaustion Paralysis Removed.")
+
                 #Remove Exhaustion Paralysis
                 FoundAbility = Animals.FindAbility("Paralysis")
                 while Animal.CurrentAbilities["Exhaustion"][1][0]:
                     FoundAbility.AbilityFunction(FoundAbility, Animal, "Exhaustion", Reverse = True)
 
             else:
+                print("Exhaustion Paralysis Applied.")
                 FoundAbility = Animals.FindAbility("Paralysis")
                 FoundAbility.AbilityFunction(FoundAbility, Animal, "Exhaustion")
 
 def CreateGrid(Environment):
 
     #Create a 2D Grid With Animals Placed Diagonally
-    Grid2D = [["" for _ in range(len(Animals.AnimalList))] for _ in range(len(Animals.AnimalList))]
+    Grid2D = [[["", ""] for _ in range(len(Animals.AnimalList))] for _ in range(len(Animals.AnimalList))] #(Original, Current)
     DeathGrid2D = [[0 for _ in range(len(Animals.AnimalList))] for _ in range(len(Animals.AnimalList))]
     for i in range(len(Animals.AnimalList)):
         #Place Animal on Grid
-        Grid2D[i][i] = Animals.AnimalList[i]
+        Grid2D[i][i][1] = Animals.AnimalList[i]
         Animals.AnimalList[i].CurrentLocation = (i, i)
 
-        #Place Some Obstacles
+        #Place Some Obstacles Above Animals
         if i % 2 == 1:
             if Environment in ["Forest", "Rainforest"]:
-                Grid2D[i + 1][i] = "T" #Trees
+                Grid2D[i - 1][i] = ["T", "T"] #Trees
 
             elif Environment in ["Grasslands"]:
-                Grid2D[i + 1][i] = "R" #Rocks
+                Grid2D[i - 1][i] = ["R", "R"] #Rocks
+
+    print("Grid Created.\n")
 
     return Grid2D, DeathGrid2D
 
@@ -938,22 +956,23 @@ def CreateAnimalsAndAttackTypes():
     AttackTypes("Body Slam", 2, (True, 0))
     AttackTypes("Bite Spin", 1, (False, 0))
 
-    #Create Rattlesnake (Legendary).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[0]: (1, AbilityTypes.AbilityTypeList[0], AbilityTypes.AbilityTypeList[1])
-    }
+    for _ in range(2):
+        #Create Rattlesnake (Legendary).
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[0]: (1, AbilityTypes.AbilityTypeList[0], AbilityTypes.AbilityTypeList[1])
+        }
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[2], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]),
-        "Rattle": ((AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0]), (AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[2])),
-        "Smell": tuple([AbilityTypes.AbilityTypeList[4]])
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": (AbilityTypes.AbilityTypeList[2], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]),
+            "Rattle": ((AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0]), (AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[2])),
+            "Smell": tuple([AbilityTypes.AbilityTypeList[4]])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Slither": 3
-    }
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Slither": 3
+        }
 
-    Animals("Rattlesnake", "Small", "Predator", "Legendary", 10, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Rattlesnake", "Small", "Predator", "Legendary", 10, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Camel (Rare).
@@ -1184,23 +1203,24 @@ def CreateAnimalsAndAttackTypes():
     Animals("Dolphin", "Medium", "Prey", "Epic", 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
-    #Create Orca (Legendary).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[0]: (3, AbilityTypes.AbilityTypeList[8]),
-        AttackTypes.AttackTypeList[5]: (3, AbilityTypes.AbilityTypeList[5])
-    }
+    for _ in range(2):
+        #Create Orca (Legendary).
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[0]: (3, AbilityTypes.AbilityTypeList[8]),
+            AttackTypes.AttackTypeList[5]: (3, AbilityTypes.AbilityTypeList[5])
+        }
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[13]),
-        "OnSight": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0])]),
-        "Echo Location": (AbilityTypes.AbilityTypeList[4], (AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[1]))
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": (AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[13]),
+            "OnSight": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0])]),
+            "Echo Location": (AbilityTypes.AbilityTypeList[4], (AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[1]))
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Swim": 3
-    }
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Swim": 3
+        }
 
-    Animals("Orca", "Large", "Predator", "Legendary", 20, 5, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Orca", "Large", "Predator", "Legendary", 20, 5, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Plankton (Common).
@@ -1355,21 +1375,22 @@ def CreateAnimalsAndAttackTypes():
     Animals("Gazelle", "Medium", "Prey", "Common", 10, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
-    #Create Bison (Epic).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[1]: (2, AbilityTypes.AbilityTypeList[5]),
-        AttackTypes.AttackTypeList[8]: (3, AbilityTypes.AbilityTypeList[5])
-    }
+    for _ in range(2):
+        #Create Bison (Epic).
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[1]: (2, AbilityTypes.AbilityTypeList[5]),
+            AttackTypes.AttackTypeList[8]: (3, AbilityTypes.AbilityTypeList[5])
+        }
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": ((AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[7].SubEffects[0]), AbilityTypes.AbilityTypeList[13])
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": ((AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[7].SubEffects[0]), AbilityTypes.AbilityTypeList[13])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 3
-    }
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 3
+        }
 
-    Animals("Bison", "Large", "Prey", "Epic", 15, 2, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Bison", "Large", "Prey", "Epic", 15, 2, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Vulture (Rare).
@@ -1548,3 +1569,5 @@ def CreateAnimalsAndAttackTypes():
     }
 
     Animals("Seal", "Medium", "Prey", "Common", 12, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+    print("Animals Initialized.")

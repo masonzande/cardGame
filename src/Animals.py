@@ -7,13 +7,16 @@ from AnimalGrid import AnimalSight, CreateEnvironmentGrid
 def PreBattleEffects():
 
     #Grouping (Assuming All Animals Start on The Battlefield).
+    print("Pre-Battle Effects Applied.")
     UniqueAnimals = list(set([Animal2.AnimalName for Animal2 in Animals.AnimalList]))
     for AnimalName in UniqueAnimals:
         AllBattlefieldAnimalsWithThisType = [Animal2 for Animal2 in Animals.AnimalList if Animal2.AnimalName == AnimalName]
         if len(AllBattlefieldAnimalsWithThisType) > 1:
-            for SameAnimal in AllBattlefieldAnimalsWithThisType:
-                FoundAbility = Animals.FindAbility("Grouping", SameAnimal.AbilityTypes, "None")
-                if FoundAbility is not None:
+            #Assume Each of The Same Animal Has Grouping or Not
+            FoundAbility = Animals.FindAbility("Grouping", AllBattlefieldAnimalsWithThisType[0].AbilityTypes, "None")
+
+            if FoundAbility is not None:
+                for SameAnimal in AllBattlefieldAnimalsWithThisType:
                     FoundAbility[0].AbilityFunction(FoundAbility[0], SameAnimal, FoundAbility[1])
 
 '''Animal Turn Start, Update Effects.'''
@@ -67,65 +70,65 @@ def MovementAction(Animal, Environment, DayNight, Grid2D, AttackRadiusAnimals, V
     #Choose a Movement
     Movements = ["None"]
     for MovementType in Animal.MovementTypes.keys():
-        if MovementType in ["Walk", "Slither", "Climb", "Jump", "Fly"] and Environment not in ["Ocean"]:
+        if MovementType in ["Walk", "Slither", "Climb", "Jump", "Fly"] and ValidMovements[MovementType] != [] and Environment not in ["Ocean"]:
             Movements.append(MovementType)
 
-        elif MovementType in ["Swim", "Fly"] and Environment in ["Ocean"]:
+        elif MovementType in ["Swim", "Fly"] and ValidMovements[MovementType] != [] and Environment in ["Ocean"]:
             Movements.append(MovementType)
-
-        if MovementType in Movements and MovementType not in ["Climb", "Jump"]:
-            Movements.append(f"2x{MovementType}")
 
     Movement = Movements[r.randint(0, len(Movements) - 1)]
+    SaveLocation = Animal.CurrentLocation
 
     #Animal Movements Cannot Move Into The Same Grid Location as Another Animal
-    if Movement in ["Walk", "2xWalk"] and ValidMovements["Walk"] != []:
+    if Movement == "Walk" and ValidMovements["Walk"] != []:
         '''Walk.'''
 
         #Cannot Move Into The Same Grid Location as Obstacles
-        print(f"{Animal.AnimalName} {'2x' if Movement.startswith('2x') else ''}Walked From {Animal.CurrentLocation}", end = " ")
         Animal.CurrentLocation = r.choice(ValidMovements["Walk"])
-        print(f"to {Animal.CurrentLocation}.")
+        Moved = "Walked"
 
-    elif Movement in ["Slither", "2xSlither"] and ValidMovements["Slither"] != []:
+    elif Movement == "Slither" and ValidMovements["Slither"] != []:
         '''Slither.'''
 
         #Can Move Into The Same Grid Location as Obstacles
-        print(f"{Animal.AnimalName} {'2x' if Movement.startswith('2x') else ''}Slithered From {Animal.CurrentLocation}", end = " ")
         Animal.CurrentLocation = r.choice(ValidMovements["Slither"])
-        print(f"to {Animal.CurrentLocation}.")
+        Moved = "Slithered"
 
     elif Movement == "Climb" and ValidMovements["Climb"] != []:
         '''Climb.'''
 
         #Has to Move Into The Same Grid Location as Obstacles
-        print(f"{Animal.AnimalName} {'2x' if Movement.startswith('2x') else ''}Climbed From {Animal.CurrentLocation}", end = " ")
         Animal.CurrentLocation = r.choice(ValidMovements["Climb"])
-        print(f"to {Animal.CurrentLocation}.")
+        Moved = "Climbed"
 
     elif Movement == "Jump" and ValidMovements["Jump"] != []:
         '''Jump.'''
 
         #Has to Move Onto The Other Side of Animal's Grid Location Compared to an Obstacle's (Animal Must be Right Next to The Obstacle)
-        print(f"{Animal.AnimalName} {'2x' if Movement.startswith('2x') else ''}Jumped From {Animal.CurrentLocation}", end = " ")
         Animal.CurrentLocation = r.choice(ValidMovements["Jump"])
-        print(f"to {Animal.CurrentLocation}.")
+        Moved = "Jumped"
 
-    elif Movement in ["Swim", "2xSwim"] and ValidMovements["Swim"] != []:
+    elif Movement == "Swim" and ValidMovements["Swim"] != []:
         '''Swim.'''
 
         #Cannot Move Into The Same Grid Location as Obstacles
-        print(f"{Animal.AnimalName} {'2x' if Movement.startswith('2x') else ''}Swam From {Animal.CurrentLocation}", end = " ")
         Animal.CurrentLocation = r.choice(ValidMovements["Swim"])
-        print(f"to {Animal.CurrentLocation}.")
+        Moved = "Swam"
 
-    elif Movement in ["Fly", "2xFly"] and ValidMovements["Fly"] != []:
+    elif Movement == "Fly" and ValidMovements["Fly"] != []:
         '''Fly.'''
 
         #Can Move Into The Same Grid Location as Obstacles
-        print(f"{Animal.AnimalName} {'2x' if Movement.startswith('2x') else ''}Flew From {Animal.CurrentLocation}", end = " ")
         Animal.CurrentLocation = r.choice(ValidMovements["Fly"])
-        print(f"to {Animal.CurrentLocation}.")
+        Moved = "Flew"
+
+    if Movement != "None":
+        #Check if Movement Was 2x
+        if abs(Animal.CurrentLocation[0] - SaveLocation[0]) > Animal.MovementTypes[Movement] or abs(Animal.CurrentLocation[1] - SaveLocation[1]) > Animal.MovementTypes[Movement]:
+            Movement = f"2x{Movement}"
+
+        #Print Movement
+        print(f"{Animal.AnimalName} {'2x' if Movement.startswith('2x') else ''}{Moved} From {SaveLocation} to {Animal.CurrentLocation}.")
 
     #Exhaustion
     if Movement.startswith("2x"):
@@ -133,6 +136,10 @@ def MovementAction(Animal, Environment, DayNight, Grid2D, AttackRadiusAnimals, V
         FoundAbility[0].AbilityFunction(FoundAbility[0], Animal, FoundAbility[1])
 
     if Movement != "None":
+        #Update The Grid
+        Grid2D[SaveLocation[0]][SaveLocation[1]][1] = Grid2D[SaveLocation[0]][SaveLocation[1]][0] #Old Location
+        Grid2D[Animal.CurrentLocation[0]][Animal.CurrentLocation[1]][1] = Animal #New Location
+
         '''Determine Who The Animal Can See (Using Camoflauge, Night Vision).'''
         AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen = AnimalSight(Animal, Grid2D, DayNight)
 
@@ -230,7 +237,11 @@ def ExtraAction(Animal, DayNight, Grid2D, AttackRadiusAnimals, VisionPlusRadius,
     elif Action == "Cut Trees":
         '''Cut Trees.'''
         DestroyObstacle = r.choice(ObstaclesBeside)
-        Grid2D[DestroyObstacle[0]][DestroyObstacle[1]] = ""
+        Grid2D[DestroyObstacle[0]][DestroyObstacle[1]][0] = ""
+
+        #Should Always be in ["T", "", AnimalObject]
+        if Grid2D[DestroyObstacle[0]][DestroyObstacle[1]][1] == "T":
+            Grid2D[DestroyObstacle[0]][DestroyObstacle[1]][1] = ""
 
         '''Determine Who The Animal Can See (Using Camoflauge, Night Vision).'''
         AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen = AnimalSight(Animal, Grid2D, DayNight)
@@ -245,22 +256,26 @@ def AttackAction(Animal, AttackRadiusAnimals):
         '''Attack.'''
 
         #Choose an AttackType.
-        ChosenAttackType = r.choice([AttackType for AttackType in Animal.AttackTypes.keys()])
+        PossibleAttacks = [AttackType for AttackType in Animal.AttackTypes.keys() if AttackRadiusAnimals[AttackType] != []]
 
-        #Choose Animals to Attack.
-        if ChosenAttackType.SplashDamage[0]: #Assume Splash Hits Every Seen Animal in Attack Radius Right Now, Not Through Obstacles.
-            for Defender in list(AttackRadiusAnimals[ChosenAttackType]):
-                Defenders.append(Defender)
-                if Defender in Animals.AnimalList:
-                    Animals.AnimalList.remove(Defender) #Remove Chosen Defenders to Not Choose The Same Defender Twice.
+        if PossibleAttacks != []:
+            ChosenAttackType = r.choice(PossibleAttacks)
 
-        else:
-            Defenders = [Animals.AnimalList[r.randint(0, len(Animals.AnimalList) - 1)]]
-            Animals.AnimalList.remove(Defenders[0]) #Remove Chosen Defenders to Not Choose The Same Defender Twice (Consistency).
+            #Choose Animals to Attack.
+            if ChosenAttackType.SplashDamage[0]: #Assume Splash Hits Every Seen Animal in Attack Radius Right Now, Not Through Obstacles.
+                for Defender in list(AttackRadiusAnimals[ChosenAttackType]):
+                    Defenders.append(Defender)
+                    if Defender in Animals.AnimalList:
+                        Animals.AnimalList.remove(Defender) #Remove Chosen Defenders to Not Choose The Same Defender Twice.
 
-        #Attack Chosen Animals.
-        for Defender in Defenders:
-            Defenders = Animal.Attack(Defender, Animal.AttackTypes[ChosenAttackType][0], Defenders, ChosenAttackType) #Defender, Damage, AttackType.
+            else:
+                Defenders = [AttackRadiusAnimals[ChosenAttackType][r.randint(0, len(AttackRadiusAnimals[ChosenAttackType]) - 1)]]
+                if Defenders[0] in Animals.AnimalList:
+                    Animals.AnimalList.remove(Defenders[0]) #Remove Chosen Defenders to Not Choose The Same Defender Twice (Consistency).
+
+            #Attack Chosen Animals.
+            for Defender in Defenders:
+                Defenders = Animal.Attack(Defender, Animal.AttackTypes[ChosenAttackType][0], Defenders, ChosenAttackType) #Defender, Damage, AttackType.
 
     return Defenders
 
@@ -400,38 +415,42 @@ def main():
     #Print The Stats of All Animals Before Any Attacks.
     Animals.PrintAllAnimals()
 
-    #All Animals Attack a Random Other Animal (All if Splash)
-    for Animal in list(Animals.AnimalList):
-        SkipTurn = False
-        NoMovement = False
+    for Turn in range(1, 4):
+        print(f"\nTurn {Turn}:")
 
-        if Animal.Health > 0:
+        #All Animals Attack a Random Other Animal (Assume All Animals Are on The Battlefield)
+        for Animal in list(Animals.AnimalList):
+            SkipTurn = False
+            NoMovement = False
 
-            '''Animal Turn Start, Update Effects.'''
-            NoMovement, SkipTurn = StartTurnEffects(Animal, Weather, Environment, NoMovement, SkipTurn)
+            if Animal.Health > 0:
 
-            '''Turn.'''
-            if not(SkipTurn):
+                '''Animal Turn Start, Update Effects.'''
+                print(f"\n{Animal.AnimalName}'s Turn.")
+                NoMovement, SkipTurn = StartTurnEffects(Animal, Weather, Environment, NoMovement, SkipTurn)
 
-                '''Determine Who The Animal Can See (Using Camoflauge, Night Vision).'''
-                AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen = AnimalSight(Animal, Grid2D, DayNight)
+                '''Turn.'''
+                if not(SkipTurn):
 
-                '''Perform a Movement Action.'''
-                Movement, AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen = MovementAction(Animal, Environment, DayNight, Grid2D, AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen)
+                    '''Determine Who The Animal Can See (Using Camoflauge, Night Vision).'''
+                    AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen = AnimalSight(Animal, Grid2D, DayNight)
 
-                '''Perform a Non-Movement, Non-Attack Action.'''
-                Action, Grid2D, AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen, Defenders = ExtraAction(Animal, DayNight, Grid2D, AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen)
+                    '''Perform a Movement Action.'''
+                    Movement, AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen = MovementAction(Animal, Environment, DayNight, Grid2D, AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen)
 
-                '''Perform an Attack Action.'''
-                Defenders2 = AttackAction(Animal, AttackRadiusAnimals)
+                    '''Perform a Non-Movement, Non-Attack Action.'''
+                    Action, Grid2D, AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen, Defenders = ExtraAction(Animal, DayNight, Grid2D, AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen)
 
-            '''Animal Turn End, Update Effects.'''
-            DeathGrid2D = EndTurnEffects(Animal, Weather, Environment, Action, Movement, DeathGrid2D)
+                    '''Perform an Attack Action.'''
+                    Defenders2 = AttackAction(Animal, AttackRadiusAnimals)
 
-            #End of Turn
-            DeathGrid2D = EndTurn(Animal, SkipTurn, NoMovement, Defenders, Defenders2, DeathGrid2D)
+                '''Animal Turn End, Update Effects.'''
+                DeathGrid2D = EndTurnEffects(Animal, Weather, Environment, Action, Movement, DeathGrid2D)
 
-    #Print The Stats of All Animals After The Battle.
-    Animals.PrintAllAnimals()
+                #End of Turn
+                DeathGrid2D = EndTurn(Animal, SkipTurn, NoMovement, Defenders, Defenders2, DeathGrid2D)
+
+        #Print The Stats of All Animals After The Turn.
+        Animals.PrintAllAnimals()
 
 main()

@@ -1,5 +1,6 @@
 import OpenGL.GL as _GL
 import numpy as _np
+import pygame as _pg
 import graphics.target as _target
 
 active_target: int = 0
@@ -31,6 +32,9 @@ def create_ortho_projection(left: float, right: float, top: float, bottom: float
     ], dtype=_np.float32)
     p = scale @ translation
     return p
+
+def get_screen_size() -> tuple[int, int]:
+    return _pg.display.get_window_size()
 
 def bind_buffer(buffer: _target.RenderTarget):
     if buffer:

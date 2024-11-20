@@ -2,19 +2,12 @@ import numpy as np
 import pygame as pg
 from engine import Engine
 from graphics import clear, create_ortho_projection, bind_buffer
-import graphics
-from graphics import target
-from graphics import sprite
-from graphics import vertices
-from graphics.batcher import ShapeBatcher, SpriteBatcher
-from graphics.shader import Shader, VERTEX_DEFAULT, FRAGMENT_DEFAULT
+from graphics.batcher import SpriteBatcher
+from graphics.shader import Shader
 from graphics.sprite import Sprite, SpriteFont
-from graphics.vertices import VertexPosition2Color4
 from OpenGL.GL import *
 from loader import ContentLoader
 from graphics.target import RenderTarget
-import type_convert
-
 
 class CardGame(Engine):
     def __init__(self):
@@ -38,7 +31,7 @@ class CardGame(Engine):
         self.texture0 = self.content.load_custom("./card_portraits/Legendary - Giraffe.jpg", Sprite)
         self.texture1 = self.content.load_custom("./card_portraits/Common - Deer.png", Sprite)
         self.font0 = self.content.load_custom("./fonts/OpenSans-Regular.ttf", SpriteFont)
-        self.font0.set_font_size(20)
+        self.font0.set_font_size(48)
         self.font0.generate_font()
 
     def update(self, clock: pg.time.Clock):

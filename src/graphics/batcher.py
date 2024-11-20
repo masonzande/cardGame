@@ -120,12 +120,13 @@ class SpriteBatcher(Batcher[vertices.VertexPosition3Texture2]):
             print(message)
             return
         
-        str_dim = font.string_dims(message)
         self._font_program.set_uniform("text_color", type_convert.pg_color_to_numpy_array(color))
-        self._font_program.set_uniform("mvp", graphics.create_ortho_projection(0, str_dim[0], 0, str_dim[1]))
+        w, h = graphics.get_screen_size()
+        self._font_program.set_uniform("mvp", graphics.create_ortho_projection(0, w, h, 0))
         self._font_program.use()
         GL.glActiveTexture(GL.GL_TEXTURE0)
 
+        str_dim = font.string_dims(message)
         rt = target.RenderTarget(str_dim[0], str_dim[1])
 
         reset = graphics.active_target

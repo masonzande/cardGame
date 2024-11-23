@@ -1,6 +1,6 @@
 import random as r #Randomization.
 from copy import deepcopy
-from InitAnimals import Animals, CreateAnimalsAndAttackTypes
+from InitAnimals import Animals, CreateAttackAbilityTypes, CreateAnimalDeck
 from AnimalGrid import AnimalSight, CreateEnvironmentGrid
 
 '''Update Pre-Battle Effects.'''
@@ -83,46 +83,45 @@ def MovementAction(Animal, Environment, DayNight, Grid2D, AttackRadiusAnimals, V
     if Movement == "Walk" and ValidMovements["Walk"] != []:
         '''Walk.'''
 
-        #Cannot Move Into The Same Grid Location as Obstacles
-        Animal.CurrentLocation = r.choice(ValidMovements["Walk"])
+        #Cannot Move Into The Same Grid Location as Obstacles or Animals
         Moved = "Walked"
 
     elif Movement == "Slither" and ValidMovements["Slither"] != []:
         '''Slither.'''
 
-        #Can Move Into The Same Grid Location as Obstacles
-        Animal.CurrentLocation = r.choice(ValidMovements["Slither"])
+        #Can Move Into The Same Grid Location as Obstacles, Without Animals
         Moved = "Slithered"
 
     elif Movement == "Climb" and ValidMovements["Climb"] != []:
         '''Climb.'''
 
-        #Has to Move Into The Same Grid Location as Obstacles
-        Animal.CurrentLocation = r.choice(ValidMovements["Climb"])
+        #Has to Move Into The Same Grid Location as Obstacles, Without Animals
         Moved = "Climbed"
 
     elif Movement == "Jump" and ValidMovements["Jump"] != []:
         '''Jump.'''
 
-        #Has to Move Onto The Other Side of Animal's Grid Location Compared to an Obstacle's (Animal Must be Right Next to The Obstacle)
-        Animal.CurrentLocation = r.choice(ValidMovements["Jump"])
+        #Has to Move Onto The Other Side of Animal's Grid Location Compared to an Obstacle's
+        #(Animal Must be Right Next to The Obstacle, Without Animals).
         Moved = "Jumped"
 
     elif Movement == "Swim" and ValidMovements["Swim"] != []:
         '''Swim.'''
 
-        #Cannot Move Into The Same Grid Location as Obstacles
-        Animal.CurrentLocation = r.choice(ValidMovements["Swim"])
+        #Cannot Move Into The Same Grid Location as Obstacles or Animals
         Moved = "Swam"
 
     elif Movement == "Fly" and ValidMovements["Fly"] != []:
         '''Fly.'''
 
-        #Can Move Into The Same Grid Location as Obstacles
-        Animal.CurrentLocation = r.choice(ValidMovements["Fly"])
+        #Can Move Into The Same Grid Location as Obstacles, Without Animals
         Moved = "Flew"
 
     if Movement != "None":
+        #Move Animal
+        print(f"Valid Movements For {Movement}: {ValidMovements[Movement]}")
+        Animal.CurrentLocation = r.choice(ValidMovements[Movement])
+
         #Check if Movement Was 2x
         if abs(Animal.CurrentLocation[0] - SaveLocation[0]) > Animal.MovementTypes[Movement] or abs(Animal.CurrentLocation[1] - SaveLocation[1]) > Animal.MovementTypes[Movement]:
             Movement = f"2x{Movement}"
@@ -142,6 +141,9 @@ def MovementAction(Animal, Environment, DayNight, Grid2D, AttackRadiusAnimals, V
 
         '''Determine Who The Animal Can See (Using Camoflauge, Night Vision).'''
         AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen = AnimalSight(Animal, Grid2D, DayNight)
+
+    else:
+        print("Movement Not Chosen.")
 
     return Movement, AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen
 
@@ -171,16 +173,18 @@ def ExtraAction(Animal, DayNight, Grid2D, AttackRadiusAnimals, VisionPlusRadius,
             if FoundAbility is not None:
                 FoundAbility[0].AbilityFunction(FoundAbility[0], Animal, FoundAbility[1])
 
-        #Fear (Assuming if Animal Sees Other Animals, The Other Animals See Animal).
+        #Fear (Assuming if Animal Sees Opposing Animals, The Opposing Animals See Animal).
         FoundAbility = Animals.FindAbility("Fear", Animal.AbilityTypes, Action)
         if FoundAbility is not None:
+            print(f"Surrounding Animals Heard & Feared {Animal.AnimalName}'s Rattle: {[OtherAnimal.AnimalName for OtherAnimal in AnimalsSeen]}")
             for OtherAnimal in AnimalsSeen:
                 FoundAbility[0].AbilityFunction(FoundAbility[0], OtherAnimal, FoundAbility[1])
 
     elif Action == "Smell":
         '''Smell.'''
 
-        #Assume Smell Hits Every Animal Within Vision + 1 Distance Right Now, Not Through Obstacles.
+        #Assume Smell Hits Every Opposing Animal Within Vision + 1 Distance Right Now, Not Through Obstacles (Can be Through Animals).
+        print(f"{Animal.AnimalName} Smelled The Surrounding Animals: {[Defender.AnimalName for Defender in VisionPlusRadius]}")
         for Defender in list(VisionPlusRadius):
             Defenders.append(Defender)
             if Defender in Animals.AnimalList:
@@ -204,7 +208,8 @@ def ExtraAction(Animal, DayNight, Grid2D, AttackRadiusAnimals, VisionPlusRadius,
     elif Action == "Echo Location":
         '''Echo Location.'''
 
-        #Assume Echo Location Hits Every Animal Within Vision + 1 Distance Right Now, Not Through Obstacles.
+        #Assume Echo Location Hits Every Opposing Animal Within Vision + 1 Distance Right Now, Not Through Obstacles (Can be Through Animals).
+        print(f"{Animal.AnimalName} Echo Located The Surrounding Animals: {[Defender.AnimalName for Defender in VisionPlusRadius]}")
         for Defender in list(VisionPlusRadius):
             Defenders.append(Defender)
             if Defender in Animals.AnimalList:
@@ -228,16 +233,19 @@ def ExtraAction(Animal, DayNight, Grid2D, AttackRadiusAnimals, VisionPlusRadius,
     elif Action == "Bark":
         '''Bark.'''
 
-        #Fear (Assuming if Animal Sees Other Animals, The Other Animals See Animal).
+        #Fear (Assuming if Animal Sees Opposing Animals, The Opposing Animals See Animal).
         FoundAbility = Animals.FindAbility("Fear", Animal.AbilityTypes, Action)
         if FoundAbility is not None:
+            print(f"Surrounding Animals Heard & Feared {Animal.AnimalName}'s Bark: {[OtherAnimal.AnimalName for OtherAnimal in AnimalsSeen]}")
             for OtherAnimal in AnimalsSeen:
                 FoundAbility[0].AbilityFunction(FoundAbility[0], OtherAnimal, FoundAbility[1])
 
     elif Action == "Cut Trees":
         '''Cut Trees.'''
-        DestroyObstacle = r.choice(ObstaclesBeside)
+        print(f"Trees That {Animal.AnimalName} Could Cut: {ObstaclesBeside}")
+        DestroyObstacle = r.choice(ObstaclesBeside) #Does Not Care if an Animal is on The Obstacle
         Grid2D[DestroyObstacle[0]][DestroyObstacle[1]][0] = ""
+        print(f"{Animal.AnimalName} Cut a Tree at {DestroyObstacle}.")
 
         #Should Always be in ["T", "", AnimalObject]
         if Grid2D[DestroyObstacle[0]][DestroyObstacle[1]][1] == "T":
@@ -256,26 +264,37 @@ def AttackAction(Animal, AttackRadiusAnimals):
         '''Attack.'''
 
         #Choose an AttackType.
-        PossibleAttacks = [AttackType for AttackType in Animal.AttackTypes.keys() if AttackRadiusAnimals[AttackType] != []]
+        PossibleAttacks = [AttackType for AttackType in Animal.AttackTypes.keys() if AttackRadiusAnimals[AttackType] != ["None"]]
 
+        print(f"{Animal.AnimalName}'s Possible Attacks: {[Attack.AttackName for Attack in PossibleAttacks]}")
         if PossibleAttacks != []:
+            #Choose a Valid Attack Type
             ChosenAttackType = r.choice(PossibleAttacks)
+            ValidDefenders = AttackRadiusAnimals[ChosenAttackType][1:]
+            print(f"With Chosen Attack {ChosenAttackType.AttackName}, {Animal.AnimalName} Could Attack: {[Defender.AnimalName for Defender in ValidDefenders]}")
 
-            #Choose Animals to Attack.
-            if ChosenAttackType.SplashDamage[0]: #Assume Splash Hits Every Seen Animal in Attack Radius Right Now, Not Through Obstacles.
-                for Defender in list(AttackRadiusAnimals[ChosenAttackType]):
-                    Defenders.append(Defender)
-                    if Defender in Animals.AnimalList:
-                        Animals.AnimalList.remove(Defender) #Remove Chosen Defenders to Not Choose The Same Defender Twice.
-
-            else:
+            if ValidDefenders != []:
+                #Choose Animals to Attack.
                 Defenders = [AttackRadiusAnimals[ChosenAttackType][r.randint(0, len(AttackRadiusAnimals[ChosenAttackType]) - 1)]]
-                if Defenders[0] in Animals.AnimalList:
-                    Animals.AnimalList.remove(Defenders[0]) #Remove Chosen Defenders to Not Choose The Same Defender Twice (Consistency).
+                if ChosenAttackType.SplashDamage[0] and Defenders != ["None"]: #Assume Splash Hits Every Seen Opposing Animal in Attack Radius Right Now, Not Through Obstacles or Animals.
+                    print(f"{Animal.AnimalName} Splash Attacks All.")
+                    for Defender in list(ValidDefenders):
+                        Defenders.append(Defender)
+                        if Defender in Animals.AnimalList:
+                            Animals.AnimalList.remove(Defender) #Remove Chosen Defenders to Not Choose The Same Defender Twice.
 
-            #Attack Chosen Animals.
-            for Defender in Defenders:
-                Defenders = Animal.Attack(Defender, Animal.AttackTypes[ChosenAttackType][0], Defenders, ChosenAttackType) #Defender, Damage, AttackType.
+                else:
+                    print(f"{Animal.AnimalName} Attacks {Defenders[0]}.")
+                    #Check if Animal Chooses to Attack at All
+                    if Defenders[0] in Animals.AnimalList:
+                        Animals.AnimalList.remove(Defenders[0]) #Remove Chosen Defenders to Not Choose The Same Defender Twice (Consistency).
+
+                        #Attack Chosen Animals.
+                        for Defender in list(Defenders):
+                            Defenders = Animal.Attack(Defender, Animal.AttackTypes[ChosenAttackType][0], Defenders, ChosenAttackType) #Defender, Damage, AttackType.
+
+                    else:
+                        Defenders = []
 
     return Defenders
 
@@ -400,11 +419,16 @@ def EndTurn(Animal, SkipTurn, NoMovement, Defenders, Defenders2, DeathGrid2D):
 
     return DeathGrid2D
 
-#Test File
 def main():
 
-    #Create The Animals + AttackTypes.
-    CreateAnimalsAndAttackTypes()
+    #Create Attack Types + Ability Types
+    CreateAttackAbilityTypes()
+
+    #Create Players + Player Decks
+    Player1, Player2 = 1, 2
+    MaxDeckSize1, MaxDeckSize2 = 12, 12
+    CreateAnimalDeck(Player1, MaxDeckSize1)
+    CreateAnimalDeck(Player2, MaxDeckSize2)
 
     #Choose Environment, Weather / Natural Disaster, Time of Day.
     Environment, Weather, DayNight, Grid2D, DeathGrid2D = CreateEnvironmentGrid()
@@ -415,10 +439,10 @@ def main():
     #Print The Stats of All Animals Before Any Attacks.
     Animals.PrintAllAnimals()
 
-    for Turn in range(1, 4):
+    for Turn in range(1, 26):
         print(f"\nTurn {Turn}:")
 
-        #All Animals Attack a Random Other Animal (Assume All Animals Are on The Battlefield)
+        #All Animals Attack a Random Opposing Animal (Assume All Animals Are on The Battlefield)
         for Animal in list(Animals.AnimalList):
             SkipTurn = False
             NoMovement = False

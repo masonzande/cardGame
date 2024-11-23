@@ -8,12 +8,13 @@ class Animals:
     AnimalSizes = ["Tiny", "Small", "Medium", "Large", "Giant"]
 
     #Define an Animal Object.
-    #"AnimalName", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-    def __init__(Animal, AnimalName, Size, PredPrey, Rarity, Health, Armor, AttackTypes, MovementTypes, AbilityTypes):
+    #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+    def __init__(Animal, AnimalName, Size, PredPrey, Rarity, Player, Health, Armor, AttackTypes, MovementTypes, AbilityTypes):
 
         #Animal Name/Rarity/Health/Armor.
-        Animal.AnimalName = AnimalName #String Name of The Animal.
+        Animal.Player = Player #Player ID That is Using This Animal
         Animal.AnimalID = len([Animal2 for Animal2 in Animals.AnimalList if Animal2.AnimalName == AnimalName]) + 1 #Give a Unique ID to an Animal.
+        Animal.AnimalName = f"Player {Player} {AnimalName}" #String Name of The Animal.
         Animal.Rarity = Rarity #String Rarity of The Animal. (Common/Rare/Epic/Legendary).
         Animal.PredPrey = PredPrey #String "Predator" or "Prey" Classification of The Animal
         Animal.MaxHealth = Health #Integer. The Maximum Health of an Animal. Reaching 0 Means The Card is Removed From The Battlefield.
@@ -652,7 +653,7 @@ class AbilityTypes():
         '''
 
         #Check if This is a SubEffect
-        if SubEffect not in IntellectObject.SubEffects:
+        if SubEffect in IntellectObject.SubEffects:
             pass #SubEffects do Not Exist For Intellect
 
         #Not a SubEffect
@@ -775,7 +776,7 @@ class AbilityTypes():
 
         '''
         Use Cases:
-        #Assume Animal Seeing Other Animals Means The Other Animals See Animal
+        #Assume Animal Seeing Opposing Animals Means The Opposing Animals See Animal
         if Animal Seen by Other Animals:
             FoundAbility = Animals.FindAbility("Fear", Animal.AbilityTypes, "OnSight")
             if FoundAbility is not None:
@@ -919,14 +920,14 @@ def CreateGrid(Environment):
 def OnSightFear(Animal, AnimalsSeen):
 
     '''Animal's Sight Changed, Update Effects.'''
-    #Fear (Assuming if Animal Sees Other Animals, The Other Animals See Animal).
+    #Fear (Assuming if Animal Sees Opposing Animals, The Opposing Animals See Animal).
     FoundAbility = Animals.FindAbility("Fear", Animal.AbilityTypes, "OnSight")
     if FoundAbility is not None:
         for OtherAnimal in AnimalsSeen:
             FoundAbility[0].AbilityFunction(FoundAbility[0], OtherAnimal, FoundAbility[1])
 
-#Create The Animals + Attack Types.
-def CreateAnimalsAndAttackTypes():
+#Create Attack Types + Ability Types
+def CreateAttackAbilityTypes():
 
     #Create AbilityTypes: "AbilityName", ["SubEffects"]
     AbilityTypes("Venom", AbilityTypes.Venom)
@@ -956,7 +957,82 @@ def CreateAnimalsAndAttackTypes():
     AttackTypes("Body Slam", 2, (True, 0))
     AttackTypes("Bite Spin", 1, (False, 0))
 
-    for _ in range(2):
+#Initialize an Animal Deck
+def ChooseAnimals(Player, MaxDeckSize):
+
+    AnimalDeck = {
+        "Rattlesnake": 0,
+        "Camel": 0,
+        "Scorpion": 0,
+        "Silver Ant": 0,
+        "Wolf": 0,
+        "Grizzly Bear": 0,
+        "Black Bear": 0,
+        "Deer": 0,
+        "Rabbit": 0,
+        "Moose": 0,
+        "Eagle": 0,
+        "Hawk": 0,
+        "Shark": 0,
+        "Dolphin": 0,
+        "Orca": 0,
+        "Plankton": 0,
+        "Octopus": 0,
+        "Crab": 0,
+        "Lion": 0,
+        "Giraffe": 0,
+        "Elephant": 0,
+        "Zebra": 0,
+        "Hyena": 0,
+        "Gazelle": 0,
+        "Bison": 0,
+        "Vulture": 0,
+        "Monkey": 0,
+        "Ape": 0,
+        "Alligator": 0,
+        "Crocodile": 0,
+        "Poison Frog": 0,
+        "Polar Bear": 0,
+        "Arctic Fox": 0,
+        "Penguin": 0,
+        "Seal": 0
+    }
+
+    #Choose How Many of What Animals Get Added to The Player's Deck
+    DeckSize = 0
+    AnimalNames = list(AnimalDeck.keys())
+    while DeckSize < MaxDeckSize:
+
+        #Add a Random Number of Animals
+        AddAnimal = r.randint(1, 2)
+
+        #Ensure The Added Animal Count is Less Than The Maximum
+        if DeckSize + AddAnimal > MaxDeckSize:
+            AddAnimal = MaxDeckSize - DeckSize
+
+        #Add The Random Number of Animals
+        RandomAnimal = AnimalNames[r.randint(0, len(AnimalNames) - 1)]
+        if AnimalDeck[RandomAnimal] < AddAnimal:
+            AddAnimal -= AnimalDeck[RandomAnimal]
+            AnimalDeck[RandomAnimal] += AddAnimal
+
+        #Not Adding Any Animals
+        else:
+            AddAnimal = 0
+
+        DeckSize += AddAnimal
+
+    print(f"Player {Player} Animal Deck Initialized With {DeckSize} Animal Cards.")
+
+    return AnimalDeck
+
+#Create Decks of Animals.
+def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
+
+    AnimalDeck = ChooseAnimals(Player, MaxDeckSize)
+
+    for _ in range(AnimalDeck["Rattlesnake"]):
+
         #Create Rattlesnake (Legendary).
         AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
             AttackTypes.AttackTypeList[0]: (1, AbilityTypes.AbilityTypeList[0], AbilityTypes.AbilityTypeList[1])
@@ -972,239 +1048,266 @@ def CreateAnimalsAndAttackTypes():
             "Slither": 3
         }
 
-        Animals("Rattlesnake", "Small", "Predator", "Legendary", 10, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Rattlesnake", "Small", "Predator", "Legendary", Player, 10, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Camel (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[1]: (2, AbilityTypes.AbilityTypeList[5])
-    }
+    for _ in range(AnimalDeck["Camel"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[6], AbilityTypes.AbilityTypeList[13])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[1]: (2, AbilityTypes.AbilityTypeList[5])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 2
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[6], AbilityTypes.AbilityTypeList[13])
+        }
 
-    Animals("Camel", "Large", "Prey", "Rare", 20, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 2
+        }
+
+        Animals("Camel", "Large", "Prey", "Rare", Player, 20, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Scorpion (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[2]: (1, AbilityTypes.AbilityTypeList[0])
-    }
+    for _ in range(AnimalDeck["Scorpion"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[2], AbilityTypes.AbilityTypeList[13]),
-        "OnSight": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[1])])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[2]: (1, AbilityTypes.AbilityTypeList[0])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 2
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[2], AbilityTypes.AbilityTypeList[13]),
+            "OnSight": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[1])])
+        }
 
-    Animals("Scorpion", "Small", "Predator", "Rare", 8, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 2
+        }
+
+        Animals("Scorpion", "Small", "Predator", "Rare", Player, 8, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Silver Ant (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[0]: tuple([1])
-    }
+    for _ in range(AnimalDeck["Silver Ant"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[7], (AbilityTypes.AbilityTypeList[2], AbilityTypes.AbilityTypeList[2].SubEffects[0]), (AbilityTypes.AbilityTypeList[13], AbilityTypes.AbilityTypeList[13].SubEffects[0]), AbilityTypes.AbilityTypeList[10])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[0]: tuple([1])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 6
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": (AbilityTypes.AbilityTypeList[7], (AbilityTypes.AbilityTypeList[2], AbilityTypes.AbilityTypeList[2].SubEffects[0]), (AbilityTypes.AbilityTypeList[13], AbilityTypes.AbilityTypeList[13].SubEffects[0]), AbilityTypes.AbilityTypeList[10])
+        }
 
-    Animals("Silver Ant", "Tiny", "Prey", "Rare", 5, 2, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 6
+        }
+
+        Animals("Silver Ant", "Tiny", "Prey", "Rare", Player, 5, 2, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Wolf (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[0]: (2, AbilityTypes.AbilityTypeList[8]),
-        AttackTypes.AttackTypeList[3]: (1, AbilityTypes.AbilityTypeList[8])
-    }
+    for _ in range(AnimalDeck["Wolf"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]),
-        "OnSight": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0])]),
-        "Smell": tuple([(AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[0])])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[0]: (2, AbilityTypes.AbilityTypeList[8]),
+            AttackTypes.AttackTypeList[3]: (1, AbilityTypes.AbilityTypeList[8])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 3
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": (AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]),
+            "OnSight": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0])]),
+            "Smell": tuple([(AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[0])])
+        }
 
-    Animals("Wolf", "Medium", "Predator", "Rare", 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 3
+        }
+
+        Animals("Wolf", "Medium", "Predator", "Rare", Player, 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Grizzly Bear (Legendary).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[0]: (3, AbilityTypes.AbilityTypeList[8]),
-        AttackTypes.AttackTypeList[3]: (2, AbilityTypes.AbilityTypeList[8])
-    }
+    for _ in range(AnimalDeck["Grizzly Bear"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": ((AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[3]), AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]),
-        "OnSight": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0])]),
-        "Smell": tuple([(AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[0])])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[0]: (3, AbilityTypes.AbilityTypeList[8]),
+            AttackTypes.AttackTypeList[3]: (2, AbilityTypes.AbilityTypeList[8])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 3
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": ((AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[3]), AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]),
+            "OnSight": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0])]),
+            "Smell": tuple([(AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[0])])
+        }
 
-    Animals("Grizzly Bear", "Large", "Predator", "Legendary", 20, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 3
+        }
+
+        Animals("Grizzly Bear", "Large", "Predator", "Legendary", Player, 20, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Black Bear (Epic).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[0]: (2, AbilityTypes.AbilityTypeList[8]),
-        AttackTypes.AttackTypeList[3]: (2, AbilityTypes.AbilityTypeList[8])
-    }
+    for _ in range(AnimalDeck["Black Bear"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]),
-        "Smell": tuple([(AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[0])])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[0]: (2, AbilityTypes.AbilityTypeList[8]),
+            AttackTypes.AttackTypeList[3]: (2, AbilityTypes.AbilityTypeList[8])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 3,
-        "Climb": 1
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]),
+            "Smell": tuple([(AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[0])])
+        }
 
-    Animals("Black Bear", "Large", "Predator", "Epic", 17, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 3,
+            "Climb": 1
+        }
+
+        Animals("Black Bear", "Large", "Predator", "Epic", Player, 17, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Deer (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[1]: (1, AbilityTypes.AbilityTypeList[5]),
-        AttackTypes.AttackTypeList[4]: (2, AbilityTypes.AbilityTypeList[8])
-    }
+    for _ in range(AnimalDeck["Deer"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[1]: (1, AbilityTypes.AbilityTypeList[5]),
+            AttackTypes.AttackTypeList[4]: (2, AbilityTypes.AbilityTypeList[8])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 3,
-        "Jump": 2
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13])
+        }
 
-    Animals("Deer", "Medium", "Prey", "Common", 10, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 3,
+            "Jump": 2
+        }
+
+        Animals("Deer", "Medium", "Prey", "Common", Player, 10, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Rabbit (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[1]: (1, AbilityTypes.AbilityTypeList[5])
-    }
+    for _ in range(AnimalDeck["Rabbit"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": tuple([AbilityTypes.AbilityTypeList[13]])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[1]: (1, AbilityTypes.AbilityTypeList[5])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 4,
-        "Jump": 2
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": tuple([AbilityTypes.AbilityTypeList[13]])
+        }
 
-    Animals("Rabbit", "Small", "Prey", "Common", 6, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 4,
+            "Jump": 2
+        }
+
+        Animals("Rabbit", "Small", "Prey", "Common", Player, 6, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Moose (Epic).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[1]: (2, AbilityTypes.AbilityTypeList[5]),
-        AttackTypes.AttackTypeList[4]: (3, AbilityTypes.AbilityTypeList[8])
-    }
+    for _ in range(AnimalDeck["Moose"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[1]: (2, AbilityTypes.AbilityTypeList[5]),
+            AttackTypes.AttackTypeList[4]: (3, AbilityTypes.AbilityTypeList[8])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 3,
-        "Swim": 2
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13])
+        }
 
-    Animals("Moose", "Large", "Prey", "Epic", 15, 3, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 3,
+            "Swim": 2
+        }
+
+        Animals("Moose", "Large", "Prey", "Epic", Player, 15, 3, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Eagle (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[3]: tuple([2]),
-    }
+    for _ in range(AnimalDeck["Eagle"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": tuple([AbilityTypes.AbilityTypeList[13]])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[3]: tuple([2]),
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 1,
-        "Fly": 4
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": tuple([AbilityTypes.AbilityTypeList[13]])
+        }
 
-    Animals("Eagle", "Medium", "Predator", "Common", 6, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 1,
+            "Fly": 4
+        }
+
+        Animals("Eagle", "Medium", "Predator", "Common", Player, 6, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Hawk (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[3]: tuple([2]),
-    }
+    for _ in range(AnimalDeck["Hawk"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": tuple([AbilityTypes.AbilityTypeList[13]])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[3]: tuple([2]),
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 1,
-        "Fly": 3
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": tuple([AbilityTypes.AbilityTypeList[13]])
+        }
 
-    Animals("Hawk", "Medium", "Predator", "Common", 7, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 1,
+            "Fly": 3
+        }
+
+        Animals("Hawk", "Medium", "Predator", "Common", Player, 7, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Shark (Epic).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[0]: (3, AbilityTypes.AbilityTypeList[8]),
-        AttackTypes.AttackTypeList[5]: (2, AbilityTypes.AbilityTypeList[5])
-    }
+    for _ in range(AnimalDeck["Shark"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]),
-        "OnSight": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[2])])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[0]: (3, AbilityTypes.AbilityTypeList[8]),
+            AttackTypes.AttackTypeList[5]: (2, AbilityTypes.AbilityTypeList[5])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Swim": 3
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]),
+            "OnSight": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[2])])
+        }
 
-    Animals("Shark", "Large", "Predator", "Epic", 14, 4, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Swim": 3
+        }
+
+        Animals("Shark", "Large", "Predator", "Epic", Player, 14, 4, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Dolphin (Epic).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[5]: (1, AbilityTypes.AbilityTypeList[5])
-    }
+    for _ in range(AnimalDeck["Dolphin"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]),
-        "Echo Location": tuple([(AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[1])])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[5]: (1, AbilityTypes.AbilityTypeList[5])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Swim": 4
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": (AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]),
+            "Echo Location": tuple([(AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[1])])
+        }
 
-    Animals("Dolphin", "Medium", "Prey", "Epic", 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Swim": 4
+        }
+
+        Animals("Dolphin", "Medium", "Prey", "Epic", Player, 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
-    for _ in range(2):
-        #Create Orca (Legendary).
+    #Create Orca (Legendary).
+    for _ in range(AnimalDeck["Orca"]):
+
         AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
             AttackTypes.AttackTypeList[0]: (3, AbilityTypes.AbilityTypeList[8]),
             AttackTypes.AttackTypeList[5]: (3, AbilityTypes.AbilityTypeList[5])
@@ -1220,163 +1323,182 @@ def CreateAnimalsAndAttackTypes():
             "Swim": 3
         }
 
-        Animals("Orca", "Large", "Predator", "Legendary", 20, 5, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Orca", "Large", "Predator", "Legendary", Player, 20, 5, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Plankton (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-    }
+    for _ in range(AnimalDeck["Plankton"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[6], AbilityTypes.AbilityTypeList[13])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Swim": 1
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": (AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[6], AbilityTypes.AbilityTypeList[13])
+        }
 
-    Animals("Plankton", "Tiny", "Prey", "Common", 2, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Swim": 1
+        }
+
+        Animals("Plankton", "Tiny", "Prey", "Common", Player, 2, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Octopus (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[6]: tuple([1]),
-        AttackTypes.AttackTypeList[7]: (0, AbilityTypes.AbilityTypeList[1])
-    }
+    for _ in range(AnimalDeck["Octopus"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[6]: tuple([1]),
+            AttackTypes.AttackTypeList[7]: (0, AbilityTypes.AbilityTypeList[1])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Swim": 2
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13])
+        }
 
-    Animals("Octopus", "Small", "Prey", "Rare", 9, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Swim": 2
+        }
+
+        Animals("Octopus", "Small", "Prey", "Rare", Player, 9, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Crab (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[3]: tuple([2])
-    }
+    for _ in range(AnimalDeck["Crab"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": ((AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[4].SubEffects[0]), AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[3]: tuple([2])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 2,
-        "Swim": 1
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": ((AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[4].SubEffects[0]), AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13])
+        }
 
-    Animals("Crab", "Small", "Prey", "Rare", 3, 6, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 2,
+            "Swim": 1
+        }
+
+        Animals("Crab", "Small", "Prey", "Rare", Player, 3, 6, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Lion (Legendary).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[0]: (3, AbilityTypes.AbilityTypeList[8]),
-        AttackTypes.AttackTypeList[3]: (2, AbilityTypes.AbilityTypeList[8])
-    }
+    for _ in range(AnimalDeck["Lion"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[13]),
-        "OnSight": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0])])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[0]: (3, AbilityTypes.AbilityTypeList[8]),
+            AttackTypes.AttackTypeList[3]: (2, AbilityTypes.AbilityTypeList[8])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 3
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[13]),
+            "OnSight": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0])])
+        }
 
-    Animals("Lion", "Medium", "Predator", "Legendary", 16, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 3
+        }
+
+        Animals("Lion", "Medium", "Predator", "Legendary", Player, 16, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Giraffe (Legendary).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[1]: (3, AbilityTypes.AbilityTypeList[5])
-    }
+    for _ in range(AnimalDeck["Giraffe"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": tuple([AbilityTypes.AbilityTypeList[13]])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[1]: (3, AbilityTypes.AbilityTypeList[5])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 2
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": tuple([AbilityTypes.AbilityTypeList[13]])
+        }
 
-    Animals("Giraffe", "Giant", "Prey", "Legendary", 25, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 2
+        }
+
+        Animals("Giraffe", "Giant", "Prey", "Legendary", Player, 25, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Elephant (Legendary).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[8]: (3, AbilityTypes.AbilityTypeList[1]),
-        AttackTypes.AttackTypeList[7]: (0, AbilityTypes.AbilityTypeList[1]),
-        AttackTypes.AttackTypeList[1]: (2, AbilityTypes.AbilityTypeList[5])
-    }
+    for _ in range(AnimalDeck["Elephant"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": tuple([AbilityTypes.AbilityTypeList[13]])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[8]: (3, AbilityTypes.AbilityTypeList[1]),
+            AttackTypes.AttackTypeList[7]: (0, AbilityTypes.AbilityTypeList[1]),
+            AttackTypes.AttackTypeList[1]: (2, AbilityTypes.AbilityTypeList[5])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 2
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": tuple([AbilityTypes.AbilityTypeList[13]])
+        }
 
-    Animals("Elephant", "Giant", "Prey", "Legendary", 20, 4, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 2
+        }
+
+        Animals("Elephant", "Giant", "Prey", "Legendary", Player, 20, 4, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Zebra (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[1]: (1, AbilityTypes.AbilityTypeList[5])
-    }
+    for _ in range(AnimalDeck["Zebra"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[13])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[1]: (1, AbilityTypes.AbilityTypeList[5])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 3
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[13])
+        }
 
-    Animals("Zebra", "Medium", "Prey", "Common", 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 3
+        }
+
+        Animals("Zebra", "Medium", "Prey", "Common", Player, 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Hyena (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[0]: (2, AbilityTypes.AbilityTypeList[8]),
-        AttackTypes.AttackTypeList[3]: (1, AbilityTypes.AbilityTypeList[8])
-    }
+    for _ in range(AnimalDeck["Hyena"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[10], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[0]: (2, AbilityTypes.AbilityTypeList[8]),
+            AttackTypes.AttackTypeList[3]: (1, AbilityTypes.AbilityTypeList[8])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 3
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[10], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13])
+        }
 
-    Animals("Hyena", "Medium", "Predator", "Rare", 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 3
+        }
+
+        Animals("Hyena", "Medium", "Predator", "Rare", Player, 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Gazelle (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[1]: (1, AbilityTypes.AbilityTypeList[5]),
-        AttackTypes.AttackTypeList[4]: (2, AbilityTypes.AbilityTypeList[8])
-    }
+    for _ in range(AnimalDeck["Gazelle"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[1]: (1, AbilityTypes.AbilityTypeList[5]),
+            AttackTypes.AttackTypeList[4]: (2, AbilityTypes.AbilityTypeList[8])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 3,
-        "Jump": 2
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": (AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13])
+        }
 
-    Animals("Gazelle", "Medium", "Prey", "Common", 10, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 3,
+            "Jump": 2
+        }
+
+        Animals("Gazelle", "Medium", "Prey", "Common", Player, 10, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
-    for _ in range(2):
-        #Create Bison (Epic).
+    #Create Bison (Epic).
+    for _ in range(AnimalDeck["Bison"]):
+
         AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
             AttackTypes.AttackTypeList[1]: (2, AbilityTypes.AbilityTypeList[5]),
             AttackTypes.AttackTypeList[8]: (3, AbilityTypes.AbilityTypeList[5])
@@ -1390,184 +1512,202 @@ def CreateAnimalsAndAttackTypes():
             "Walk": 3
         }
 
-        Animals("Bison", "Large", "Prey", "Epic", 15, 2, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Bison", "Large", "Prey", "Epic", Player, 15, 2, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Vulture (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[3]: tuple([2])
-    }
+    for _ in range(AnimalDeck["Vulture"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[10], (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[4].SubEffects[0]), AbilityTypes.AbilityTypeList[13])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[3]: tuple([2])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 1,
-        "Fly": 3
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": (AbilityTypes.AbilityTypeList[10], (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[4].SubEffects[0]), AbilityTypes.AbilityTypeList[13])
+        }
 
-    Animals("Vulture", "Medium", "Prey", "Rare", 8, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 1,
+            "Fly": 3
+        }
+
+        Animals("Vulture", "Medium", "Prey", "Rare", Player, 8, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Monkey (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[6]: tuple([1])
-    }
+    for _ in range(AnimalDeck["Monkey"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[13])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[6]: tuple([1])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 2,
-        "Climb": 2
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": (AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[13])
+        }
 
-    Animals("Monkey", "Medium", "Prey", "Rare", 9, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 2,
+            "Climb": 2
+        }
+
+        Animals("Monkey", "Medium", "Prey", "Rare", Player, 9, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Ape (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[6]: tuple([2]),
-        AttackTypes.AttackTypeList[7]: (0, AbilityTypes.AbilityTypeList[1])
-    }
+    for _ in range(AnimalDeck["Ape"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[13])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[6]: tuple([2]),
+            AttackTypes.AttackTypeList[7]: (0, AbilityTypes.AbilityTypeList[1])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 2
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": (AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[13])
+        }
 
-    Animals("Ape", "Large", "Predator", "Rare", 13, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 2
+        }
+
+        Animals("Ape", "Large", "Predator", "Rare", Player, 13, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Alligator (Epic).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[0]: (3, AbilityTypes.AbilityTypeList[8]),
-        AttackTypes.AttackTypeList[9]: (4, AbilityTypes.AbilityTypeList[8]),
-        AttackTypes.AttackTypeList[5]: (2, AbilityTypes.AbilityTypeList[5])
-    }
+    for _ in range(AnimalDeck["Alligator"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]),
-        "OnSight": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0])])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[0]: (3, AbilityTypes.AbilityTypeList[8]),
+            AttackTypes.AttackTypeList[9]: (4, AbilityTypes.AbilityTypeList[8]),
+            AttackTypes.AttackTypeList[5]: (2, AbilityTypes.AbilityTypeList[5])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 2,
-        "Swim": 2
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]),
+            "OnSight": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0])])
+        }
 
-    Animals("Alligator", "Medium", "Predator", "Epic", 17, 6, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 2,
+            "Swim": 2
+        }
+
+        Animals("Alligator", "Medium", "Predator", "Epic", Player, 17, 6, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Crocodile (Epic).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[0]: (3, AbilityTypes.AbilityTypeList[8]),
-        AttackTypes.AttackTypeList[9]: (4, AbilityTypes.AbilityTypeList[8]),
-        AttackTypes.AttackTypeList[5]: (2, AbilityTypes.AbilityTypeList[5])
-    }
+    for _ in range(AnimalDeck["Crocodile"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]),
-        "OnSight": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0])])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[0]: (3, AbilityTypes.AbilityTypeList[8]),
+            AttackTypes.AttackTypeList[9]: (4, AbilityTypes.AbilityTypeList[8]),
+            AttackTypes.AttackTypeList[5]: (2, AbilityTypes.AbilityTypeList[5])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 2,
-        "Swim": 2
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]),
+            "OnSight": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0])])
+        }
 
-    Animals("Crocodile", "Medium", "Predator", "Epic", 21, 2, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 2,
+            "Swim": 2
+        }
+
+        Animals("Crocodile", "Medium", "Predator", "Epic", Player, 21, 2, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Poison Frog (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-    }
+    for _ in range(AnimalDeck["Poison Frog"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": tuple([AbilityTypes.AbilityTypeList[13]]),
-        "Hurt": tuple([AbilityTypes.AbilityTypeList[11]])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 1,
-        "Jump": 2
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": tuple([AbilityTypes.AbilityTypeList[13]]),
+            "Hurt": tuple([AbilityTypes.AbilityTypeList[11]])
+        }
 
-    Animals("Poison Frog", "Small", "Prey", "Common", 7, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 1,
+            "Jump": 2
+        }
+
+        Animals("Poison Frog", "Small", "Prey", "Common", Player, 7, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Polar Bear (Legendary).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[0]: (4, AbilityTypes.AbilityTypeList[8]),
-        AttackTypes.AttackTypeList[3]: (3, AbilityTypes.AbilityTypeList[8])
-    }
+    for _ in range(AnimalDeck["Polar Bear"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]),
-        "OnSight": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0])])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[0]: (4, AbilityTypes.AbilityTypeList[8]),
+            AttackTypes.AttackTypeList[3]: (3, AbilityTypes.AbilityTypeList[8])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 3,
-        "Swim": 3
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]),
+            "OnSight": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0])])
+        }
 
-    Animals("Polar Bear", "Large", "Predator", "Legendary", 20, 5, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 3,
+            "Swim": 3
+        }
+
+        Animals("Polar Bear", "Large", "Predator", "Legendary", Player, 20, 5, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Arctic Fox (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[0]: tuple([2]),
-        AttackTypes.AttackTypeList[3]: tuple([1])
-    }
+    for _ in range(AnimalDeck["Arctic Fox"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]),
-        "Bark": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[2])])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[0]: tuple([2]),
+            AttackTypes.AttackTypeList[3]: tuple([1])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 2
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]),
+            "Bark": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[2])])
+        }
 
-    Animals("Arctic Fox", "Medium", "Predator", "Rare", 8, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 2
+        }
+
+        Animals("Arctic Fox", "Medium", "Predator", "Rare", Player, 8, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Penguin (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[0]: tuple([1])
-    }
+    for _ in range(AnimalDeck["Penguin"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[0]: tuple([1])
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 1,
-        "Swim": 2
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13])
+        }
 
-    Animals("Penguin", "Medium", "Prey", "Common", 8, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 1,
+            "Swim": 2
+        }
+
+        Animals("Penguin", "Medium", "Prey", "Common", Player, 8, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Seal (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[8]: (1, AbilityTypes.AbilityTypeList[1]),
-    }
+    for _ in range(AnimalDeck["Seal"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[8]: (1, AbilityTypes.AbilityTypeList[1]),
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Swim": 2
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13])
+        }
 
-    Animals("Seal", "Medium", "Prey", "Common", 12, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Swim": 2
+        }
 
-    print("Animals Initialized.")
+        Animals("Seal", "Medium", "Prey", "Common", Player, 12, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.

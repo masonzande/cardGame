@@ -4,7 +4,9 @@ import random as r
 def CheckDirection(Animal, i, Vision, Direction, XY, AnimalsSeen, ValidMovements, VisionPlusRadius, ObstacleBlocked, AnimalBlocked, Index):
 
     if Direction[1] not in ["T", "R"] and not(ObstacleBlocked[Index]):
+        #Check if This Square is an Animal
         if Direction[1] != "":
+            #Square is an Animal
 
             #Stop Appending Opposing Animals to VisionPlusRadius After Vision + 1 Radius
             if i < Vision + 2 and Animal.Player != Direction[1].Player:
@@ -20,15 +22,19 @@ def CheckDirection(Animal, i, Vision, Direction, XY, AnimalsSeen, ValidMovements
                 AnimalBlocked[Index] = True
 
         else:
-            #Empty Path to This Square, Including Square
+            #Square is Empty
             #Valid Movements Are Within 2xMovement
-            if "Walk" in Animal.MovementTypes.keys() and i <= 2 * Animal.MovementTypes["Walk"]:
+            if "Walk" in Animal.MovementTypes.keys() and i <= 2 * Animal.MovementTypes["Walk"] and not(AnimalBlocked[Index]):
+                #Empty Path to This Square, Including Square
                 ValidMovements["Walk"].append(XY)
-            if "Swim" in Animal.MovementTypes.keys() and i <= 2 * Animal.MovementTypes["Swim"]:
+            if "Swim" in Animal.MovementTypes.keys() and i <= 2 * Animal.MovementTypes["Swim"] and not(AnimalBlocked[Index]):
+                #Empty Path to This Square, Including Square
                 ValidMovements["Swim"].append(XY)
-            if "Slither" in Animal.MovementTypes.keys() and i <= 2 * Animal.MovementTypes["Slither"]:
+            if "Slither" in Animal.MovementTypes.keys() and i <= 2 * Animal.MovementTypes["Slither"] and not(AnimalBlocked[Index]):
+                #Empty Path to This Square, Including Square
                 ValidMovements["Slither"].append(XY)
             if "Fly" in Animal.MovementTypes.keys() and i <= 2 * Animal.MovementTypes["Fly"]:
+                #Maybe Empty Path to This Square (Can Fly Over Animals), Empty Square
                 ValidMovements["Fly"].append(XY)
 
     else:

@@ -426,7 +426,7 @@ def main():
 
     #Create Players + Player Decks
     Player1, Player2 = 1, 2
-    MaxDeckSize1, MaxDeckSize2 = 12, 12
+    MaxDeckSize1, MaxDeckSize2 = 12, 12 #Change Deck Sizes Here
     CreateAnimalDeck(Player1, MaxDeckSize1)
     CreateAnimalDeck(Player2, MaxDeckSize2)
 
@@ -439,7 +439,7 @@ def main():
     #Print The Stats of All Animals Before Any Attacks.
     Animals.PrintAllAnimals()
 
-    for Turn in range(1, 26):
+    for Turn in range(1, 26): #Change Turn Count Here
         print(f"\nTurn {Turn}:")
 
         #All Animals Attack a Random Opposing Animal (Assume All Animals Are on The Battlefield)

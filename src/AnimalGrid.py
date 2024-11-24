@@ -1,9 +1,9 @@
 from InitAnimals import OnSightFear, CreateGrid
-import random as r
+import numpy as np
 
 def CheckDirection(Animal, i, Vision, Direction, XY, AnimalsSeen, ValidMovements, VisionPlusRadius, ObstacleBlocked, AnimalBlocked, Index):
 
-    if Direction[1] not in ["T", "R"] and not(ObstacleBlocked[Index]):
+    if Direction[1] not in ("T", "R") and not(ObstacleBlocked[Index]):
         #Check if This Square is an Animal
         if Direction[1] != "":
             #Square is an Animal
@@ -42,7 +42,7 @@ def CheckDirection(Animal, i, Vision, Direction, XY, AnimalsSeen, ValidMovements
             #Empty Path to This Square. This Square is an Obstacle
 
             #Check if There is an Animal on This Obstacle
-            if Direction[1] not in ["T", "R", ""]:
+            if Direction[1] not in ("T", "R", ""):
                 #Empty Path to This Square. This Square Also Has an Animal
                 AnimalBlocked[Index] = True
 
@@ -75,19 +75,19 @@ def AnimalSight(Animal, Grid2D, DayNight):
         "Swim": [],
         "Fly": []
     }
-    ObstacleBlocked = [False, False, False, False]
-    AnimalBlocked = [False, False, False, False]
+    ObstacleBlocked = np.array([False, False, False, False], dtype = np.bool)
+    AnimalBlocked = np.array([False, False, False, False], dtype = np.bool)
 
-    MaxMove = max([Move for Move in Animal.MovementTypes.values()])
+    MaxMove = np.max([Move for Move in Animal.MovementTypes.values()])
 
-    for i in range(1, max(2 * Vision + 1, 2 * MaxMove + 1)):
+    for i in range(1, np.max((2 * Vision + 1, 2 * MaxMove + 1))):
         #Animal in Position Left, Right, up, Down i, Append to Seen if Camoflauge Does Not Impede Vision
-        XYs = ((Animal.CurrentLocation[0] - i, Animal.CurrentLocation[1]), (Animal.CurrentLocation[0] + i, Animal.CurrentLocation[1]), (Animal.CurrentLocation[0], Animal.CurrentLocation[1] + i), (Animal.CurrentLocation[0], Animal.CurrentLocation[1] - i))
-        for Index in range(len(XYs)):
+        XYs = np.array([(Animal.CurrentLocation[0] - i, Animal.CurrentLocation[1]), (Animal.CurrentLocation[0] + i, Animal.CurrentLocation[1]), (Animal.CurrentLocation[0], Animal.CurrentLocation[1] + i), (Animal.CurrentLocation[0], Animal.CurrentLocation[1] - i)], dtype = np.int32)
+        for Index in range(XYs.shape[0]):
             XY = XYs[Index]
 
             #Check That This is a Valid Grid Point
-            if XY[0] >= 0 and XY[1] >= 0 and XY[0] < len(Grid2D) and XY[1] < len(Grid2D[0]):
+            if XY[0] >= 0 and XY[1] >= 0 and XY[0] < Grid2D.shape[0] and XY[1] < Grid2D[0].shape[0]:
                 Direction = Grid2D[XY[0]][XY[1]]
                 SaveObsBlock = ObstacleBlocked[Index]
                 SaveAnBlock = AnimalBlocked[Index]
@@ -95,7 +95,7 @@ def AnimalSight(Animal, Grid2D, DayNight):
 
                 #Animal Can Only See Animals up to Radius Vision
                 if i == Vision:
-                    SaveAnimalsSeen = list(AnimalsSeen)
+                    SaveAnimalsSeen = np.array(AnimalsSeen, dtype = object)
 
                 #First Obstacle in This Direction Just Found
                 if SaveObsBlock != ObstacleBlocked[Index]:
@@ -123,7 +123,7 @@ def AnimalSight(Animal, Grid2D, DayNight):
                             OtherSide = (Animal.CurrentLocation[0], Animal.CurrentLocation[1] - i - 1)
 
                         #Check if OtherSide is Valid
-                        if OtherSide[0] >= 0 and OtherSide[1] >= 0 and OtherSide[0] < len(Grid2D) and OtherSide[1] < len(Grid2D[0]):
+                        if OtherSide[0] >= 0 and OtherSide[1] >= 0 and OtherSide[0] < Grid2D.shape[0] and OtherSide[1] < Grid2D[0].shape[0]:
                             #Check if The Other Side of This Obstacle is Free
                             if Grid2D[OtherSide[0]][OtherSide[1]][1] == "":
                                 ValidMovements["Jump"].append(OtherSide)
@@ -132,12 +132,20 @@ def AnimalSight(Animal, Grid2D, DayNight):
         for Attack in AttackRadiusAnimals.keys(): #Assume Attack Radius is at Most 2 * Vision Radius
             #Animals on Obstacles Have to be Attacked From 1 Closer Distance Than Normal
             if i + 1 == Attack.AttackRadius:
-                AttackRadiusAnimals[Attack].extend([Animal2 for Animal2 in AnimalsSeen if Grid2D[Animal2.CurrentLocation[0]][Animal2.CurrentLocation[1]][0] in ["T", "R"]])
+                AttackRadiusAnimals[Attack].extend([Animal2 for Animal2 in AnimalsSeen if Grid2D[Animal2.CurrentLocation[0]][Animal2.CurrentLocation[1]][0] in ("T", "R")])
 
             #Animals Not on Obstacles Can be Attacked From Normal Distance
             elif i == Attack.AttackRadius:
-                AttackRadiusAnimals[Attack].extend([Animal2 for Animal2 in AnimalsSeen if Grid2D[Animal2.CurrentLocation[0]][Animal2.CurrentLocation[1]][0] not in ["T", "R"]])
+                AttackRadiusAnimals[Attack].extend([Animal2 for Animal2 in AnimalsSeen if Grid2D[Animal2.CurrentLocation[0]][Animal2.CurrentLocation[1]][0] not in ("T", "R")])
 
+    #Convert to Numpy Arrays
+    ObstaclesBeside = np.array(ObstaclesBeside, dtype = np.int32)
+    for Movement in ValidMovements.keys():
+        ValidMovements[Movement] = np.array(ValidMovements[Movement], dtype = np.int32)
+    for Attack in AttackRadiusAnimals.keys():
+        AttackRadiusAnimals[Attack] = np.array(AttackRadiusAnimals[Attack], dtype = object)
+    VisionPlusRadius = np.array(VisionPlusRadius, dtype = object)
+    AnimalsSeen = np.array(AnimalsSeen, dtype = object)
 
     '''Animal's Sight Changed, Update Effects.'''
     OnSightFear(Animal, SaveAnimalsSeen)
@@ -148,18 +156,19 @@ def CreateEnvironmentGrid():
 
     #Map Environments to Weathers / Natural Disasters
     Environments = {
-        "Tundra": ["Sun", "Clouds", "Snow", "Blizzard", "Hail", "Meteor", "Earthquake"],
-        "Rainforest": ["Rain", "Sun", "Clouds", "Thunderstorm", "Earthquake", "Meteor", "Wildfire"],
-        "Grasslands": ["Rain", "Sun", "Clouds", "Snow", "Thunderstorm", "Tsunami", "Drought", "Tornado", "Earthquake", "Meteor", "Wildfire"],
-        "Ocean": ["Rain", "Sun", "Clouds", "Thunderstorm", "Tsunami", "Meteor"],
-        "Forest": ["Rain", "Sun", "Clouds", "Snow", "Thunderstorm", "Drought", "Earthquake", "Meteor", "Wildfire"],
-        "Desert": ["Sun", "Drought", "Earthquake", "Meteor"]
+        "Tundra": np.array(["Sun", "Clouds", "Snow", "Blizzard", "Hail", "Meteor", "Earthquake"], dtype = np.str_),
+        "Rainforest": np.array(["Rain", "Sun", "Clouds", "Thunderstorm", "Earthquake", "Meteor", "Wildfire"], dtype = np.str_),
+        "Grasslands": np.array(["Rain", "Sun", "Clouds", "Snow", "Thunderstorm", "Tsunami", "Drought", "Tornado", "Earthquake", "Meteor", "Wildfire"], dtype = np.str_),
+        "Ocean": np.array(["Rain", "Sun", "Clouds", "Thunderstorm", "Tsunami", "Meteor"], dtype = np.str_),
+        "Forest": np.array(["Rain", "Sun", "Clouds", "Snow", "Thunderstorm", "Drought", "Earthquake", "Meteor", "Wildfire"], dtype = np.str_),
+        "Desert": np.array(["Sun", "Drought", "Earthquake", "Meteor"], dtype = np.str_)
     }
 
     #Choose Environment, Weather / Natural Disaster, Time of Day.
-    Environment = r.choice(list(Environments.keys()))
-    Weather = r.choice(Environments[Environment])
-    DayNight = r.choice(["Day", "Night"])
+    EnvironmentNames = list(Environments.keys())
+    Environment = EnvironmentNames[np.random.randint(0, len(EnvironmentNames))]
+    Weather = Environments[Environment][np.random.randint(0, Environments[Environment].shape[0])]
+    DayNight = ("Day", "Night")[np.random.randint(0, 2)]
     print(f"Environment = {Environment}, Weather = {Weather}, DayNight = {DayNight}.")
 
     Grid2D, DeathGrid2D = CreateGrid(Environment)

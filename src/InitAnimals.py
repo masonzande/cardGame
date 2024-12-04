@@ -1,19 +1,22 @@
-import random as r
+import numpy as np
 from copy import deepcopy
 
 #Class For Every Animal in The Game.
 class Animals:
 
-    AnimalList = [] #List of Every Animal.
-    AnimalSizes = ["Tiny", "Small", "Medium", "Large", "Giant"]
+    AnimalList = np.array([], dtype = object) #List of Every Animal.
+    InBattle = np.array([], dtype = object) #List of Every Animal in Battle.
+    AnimalSizes = ("Tiny", "Small", "Medium", "Large", "Giant")
+    AnimalRarities = ("Common", "Rare", "Epic", "Legendary")
 
     #Define an Animal Object.
-    #"AnimalName", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-    def __init__(Animal, AnimalName, Size, PredPrey, Rarity, Health, Armor, AttackTypes, MovementTypes, AbilityTypes):
+    #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+    def __init__(Animal, AnimalName, Size, PredPrey, Rarity, Player, Health, Armor, AttackTypes, MovementTypes, AbilityTypes):
 
         #Animal Name/Rarity/Health/Armor.
-        Animal.AnimalName = AnimalName #String Name of The Animal.
-        Animal.AnimalID = len([Animal2 for Animal2 in Animals.AnimalList if Animal2.AnimalName == AnimalName]) + 1 #Give a Unique ID to an Animal.
+        Animal.Player = Player #Player ID That is Using This Animal
+        Animal.AnimalID = len([OtherAnimal for OtherAnimal in Animals.AnimalList if OtherAnimal.AnimalName.split(" ")[0] == AnimalName]) + 1 #Give a Unique ID to an Animal.
+        Animal.AnimalName = f"{AnimalName} {Animal.AnimalID}" #String Name of The Animal.
         Animal.Rarity = Rarity #String Rarity of The Animal. (Common/Rare/Epic/Legendary).
         Animal.PredPrey = PredPrey #String "Predator" or "Prey" Classification of The Animal
         Animal.MaxHealth = Health #Integer. The Maximum Health of an Animal. Reaching 0 Means The Card is Removed From The Battlefield.
@@ -21,7 +24,7 @@ class Animals:
         Animal.Armor = Armor #Integer. Damage Done Affects Armor First. Health Cannot be Damaged When Armor Has Not Broken.
         Animal.MaxArmor = Armor #Integer. Maximum Value For Armor. Damage Done Affects Armor First. Health Cannot be Damaged When Armor Has Not Broken.
         Animal.Size = Size #String Size of The Animal. (Tiny/Small/Medium/Large/Giant).
-        Animals.AnimalList.append(Animal) #The Animals Class Contains a List of Every Animal.
+        Animals.AnimalList = np.append(Animals.AnimalList, Animal) #The Animals Class Contains a List of Every Animal.
 
         #Animal Movement.
         Animal.MovementTypes = MovementTypes #Dictionary of String Movement Types For This Animal Mapped to Integer Movement Radii.
@@ -32,7 +35,7 @@ class Animals:
         Animal.AbilityTypes = AbilityTypes #{Condition: AbilityObjects}. "None" is Active at All Times.
         Animal.CurrentAbilities = {
             "Venom": 0, #Level of Venom Currently Applied to The Animal
-            "Paralysis": (False, 0), #Whether The Animal is Paralyzed, Number of Turns Paralyzed
+            "Paralysis": np.array([False, 0], dtype = object), #Whether The Animal is Paralyzed, Number of Turns Paralyzed
             "ColdBlooded": False, #Whether The Animal Has The Ability ColdBlooded
             "Camoflauge": 9999, #How Many Tiles Away The Animal Can be Seen
             "Night Vision": 1, #How Many Tiles Away The Animal Can See in The Dark
@@ -44,20 +47,20 @@ class Animals:
             "Scavenger": False, #Whether The Animal Has The Ability Scavenger
             "Poison": 0, #Level of Poison Currently Applied to The Animal
             "Fear": 0, #Level of Fear Currently Applied to The Animal
-            "Exhaustion": (0, (False, 0)) #Level of Exhaustion + Exhaustion Paralysis Currently Applied to The Animal
+            "Exhaustion": np.array([0, [False, 0]], dtype = object) #Level of Exhaustion + Exhaustion Paralysis Currently Applied to The Animal
         }
 
         #Set Defaults to Current Abilities
         for Ability in AbilityTypes["None"]:
-            if not(isinstance(Ability, tuple)):
-                Ability = (Ability, "")
+            if not(isinstance(Ability, np.ndarray)):
+                Ability = np.array([Ability, ""], dtype = object)
 
             #Animal Has This Ability
             if isinstance(Animal.CurrentAbilities[Ability[0].AbilityName], bool):
                 Animal.CurrentAbilities[Ability[0].AbilityName] = True
 
             #Update's Animal's Default Night Vision
-            elif Animal.CurrentAbilities[Ability[0].AbilityName] == 1:
+            elif not(isinstance(Animal.CurrentAbilities[Ability[0].AbilityName], np.ndarray)) and Animal.CurrentAbilities[Ability[0].AbilityName] == 1:
 
                 if Ability[1] == "SelfReduced":
                     Animal.CurrentAbilities[Ability[0].AbilityName] = 2
@@ -66,7 +69,7 @@ class Animals:
                     Animal.CurrentAbilities[Ability[0].AbilityName] = 3
 
             #Update's Animal's Default Camoflauge
-            elif Animal.CurrentAbilities[Ability[0].AbilityName] == 9999:
+            elif not(isinstance(Animal.CurrentAbilities[Ability[0].AbilityName], np.ndarray)) and Animal.CurrentAbilities[Ability[0].AbilityName] == 9999:
 
                 if Ability[1] == "SelfReduced":
                     Animal.CurrentAbilities[Ability[0].AbilityName] = 2
@@ -77,7 +80,7 @@ class Animals:
         #Save Original Camoflauge, Night Vision, CurrentLocation.
         Animal.OriginalCamoflauge = Animal.CurrentAbilities["Camoflauge"]
         Animal.OriginalNightVision = Animal.CurrentAbilities["Night Vision"]
-        Animal.CurrentLocation = ("", "") #(X, Y) Coordinates. Integer Numbers After Grid Initialization.
+        Animal.CurrentLocation = np.array([-1, -1], dtype = np.int32) #(X, Y) Coordinates. Integer Numbers After Grid Initialization.
 
     #Find an Ability in a Dictionary of Animal's Abilities.
     def FindAbility(AbilityName, Dictionary = None, Key = None):
@@ -86,21 +89,21 @@ class Animals:
         Ability = 0
         if Dictionary is not None:
             if Key in Dictionary.keys():
-                while FoundAbility == None and Ability in range(len(Dictionary[Key])):
+                while FoundAbility == None and Ability in range(Dictionary[Key].shape[0]):
                     #Ignore Ability == 0 When The Dictionary is For AttackTypes
-                    if not(isinstance(Dictionary[Key][Ability], int)):
-                        if not(isinstance(Dictionary[Key][Ability], tuple)):
+                    if not(isinstance(Dictionary[Key][Ability], int)) and not(isinstance(Dictionary[Key][Ability], np.int32)):
+                        if not(isinstance(Dictionary[Key][Ability], np.ndarray)):
                             if Dictionary[Key][Ability].AbilityName == AbilityName:
                                 FoundAbility = (Dictionary[Key][Ability], None)
 
                         else:
                             if Dictionary[Key][Ability][0].AbilityName == AbilityName:
-                                FoundAbility = Dictionary[Key][Ability]
+                                FoundAbility = tuple(Dictionary[Key][Ability])
 
                     Ability += 1
 
         else:
-            while FoundAbility == None and Ability in range(len(AbilityTypes.AbilityTypeList)):
+            while FoundAbility == None and Ability in range(AbilityTypes.AbilityTypeList.shape[0]):
                 if AbilityTypes.AbilityTypeList[Ability].AbilityName == AbilityName:
                     FoundAbility = AbilityTypes.AbilityTypeList[Ability]
 
@@ -159,7 +162,7 @@ class Animals:
                 Defender.Health = 0
 
         '''Apply Attack Effects to Those Not Dead.'''
-        print(f"{Defender.AnimalName} Was Attacked by {Animal.AnimalName} Using The Attack {AttackObject.AttackName}.")
+        print(f"{Defender} Was Attacked by {Animal} Using The Attack {AttackObject.AttackName}.")
         Animals.AttackEffects(Animal, Defender, AttackObject)
 
         return Defenders
@@ -172,10 +175,10 @@ class Animals:
         print(f"\t{Tabs}Armor: {Animal.Armor}")
 
     #Print The Stats of All Animals. Class Mathod.
-    def PrintAllAnimals():
+    def PrintAllAnimalsInBattle():
 
         print("\nStatistics of All Animals:")
-        for Animal in Animals.AnimalList:
+        for Animal in Animals.InBattle:
             Animal.PrintAnimal("\t")
 
     #Add Movement to All Movements That an Animal Has
@@ -192,7 +195,7 @@ class Animals:
 #Class For Every Attack Type in The Game.
 class AttackTypes:
 
-    AttackTypeList = [] #List of Every AttackType.
+    AttackTypeList = np.array([], dtype = object) #List of Every AttackType.
 
     #Define an Attack Type Object.
     def __init__(AttackType, AttackName, AttackRadius, SplashDamage):
@@ -200,29 +203,29 @@ class AttackTypes:
         AttackType.AttackName = AttackName  #String Name of The Attack. Unique.
         AttackType.AttackRadius = AttackRadius #Integer. Number of Squares That The Attack Can Reach Without Being Hindered.
         AttackType.SplashDamage = SplashDamage #(Boolean, Damage). Whether or Not The Attack Has Splash Damage, The Damage to Add to Splashed Targets.
-        AttackTypes.AttackTypeList.append(AttackType) #The AttackTypes Class Contains a List of Every AttackType.
+        AttackTypes.AttackTypeList = np.append(AttackTypes.AttackTypeList, AttackType) #The AttackTypes Class Contains a List of Every AttackType.
 
     #Add Damage to All Attacks That an Animal Has
     def AddDamage(Animal, Addition):
 
         for AttackType in Animal.AttackTypes.keys():
-            if len(Animal.AttackTypes[AttackType]) > 1:
-                Animal.AttackTypes[AttackType] = tuple([Animal.AttackTypes[AttackType][0] + Addition] + list(Animal.AttackTypes[AttackType][1:]))
+            if Animal.AttackTypes[AttackType].shape[0] > 1:
+                Animal.AttackTypes[AttackType] = np.array([Animal.AttackTypes[AttackType][0] + Addition] + list(Animal.AttackTypes[AttackType][1:]), dtype = object)
 
             else:
-                Animal.AttackTypes[AttackType] = tuple([Animal.AttackTypes[AttackType][0] + Addition])
+                Animal.AttackTypes[AttackType] = np.array([Animal.AttackTypes[AttackType][0] + Addition], dtype = np.int32)
 
 #Class For Every Ability Type in The Game.
 class AbilityTypes():
 
-    AbilityTypeList = [] #List of Every AbilityType.
+    AbilityTypeList = np.array([], dtype = np.int32) #List of Every AbilityType.
 
     #Define an Ability Type Object.
-    def __init__(AbilityType, AbilityName, AbilityFunction, SubEffects = []):
+    def __init__(AbilityType, AbilityName, AbilityFunction, SubEffects = np.array([], dtype = np.str_)):
 
         AbilityType.AbilityName = AbilityName #String Name of The Ability. Unique.
         AbilityType.SubEffects = SubEffects #List of String Effects From This Ability.
-        AbilityTypes.AbilityTypeList.append(AbilityType) #The AbilityTypes Class Contains a List of Every AbilityType.
+        AbilityTypes.AbilityTypeList = np.append(AbilityTypes.AbilityTypeList, AbilityType) #The AbilityTypes Class Contains a List of Every AbilityType.
         AbilityType.AbilityFunction = AbilityFunction #Function Pointer For This Ability
 
     #Apply Venom to Animal. Assume Conditions Met.
@@ -253,13 +256,13 @@ class AbilityTypes():
             #Each Time The Venom Damages The Animal (Equal to Level Damage), The Level of Venom Decreases.
             if Reverse:
                 Animal.Health -= Animal.CurrentAbilities["Venom"] if Animal.Health - Animal.CurrentAbilities["Venom"] > 0 else 0
-                print(f"Venom Damaged {Animal.AnimalName} by {Animal.CurrentAbilities['Venom']}.")
+                print(f"Venom Damaged {Animal} by {Animal.CurrentAbilities['Venom']}.")
                 Animal.CurrentAbilities["Venom"] -= 1 if Animal.CurrentAbilities["Venom"] > 0 else 0
-                print(f"Venom in {Animal.AnimalName} is Reversed to Level {Animal.CurrentAbilities['Venom']}.")
+                print(f"Venom in {Animal} is Reversed to Level {Animal.CurrentAbilities['Venom']}.")
 
             else:
                 Animal.CurrentAbilities["Venom"] += 1 if Animal.CurrentAbilities["Venom"] < 2 else 0
-                print(f"Venom Level {Animal.CurrentAbilities['Venom']} Applied to {Animal.AnimalName}.")
+                print(f"Venom Level {Animal.CurrentAbilities['Venom']} Applied to {Animal}.")
 
     #Apply Paralysis to Animal. Assume Conditions Met.
     #Paralysis = Immobilization of Smaller Animals. Chance 1-3 Turns of no Movement (50% Chance of Attack Paralysis During That Time).
@@ -293,12 +296,12 @@ class AbilityTypes():
             #For The Animal For 1 Turn. During This Time, There is a 50% Chance of Paralysis Each Turn.
             if Reverse:
                 NewTime = (Animal.CurrentAbilities["Exhaustion"][1][1] - 1) if Animal.CurrentAbilities["Exhaustion"][1][1] > 0 else 0
-                Animal.CurrentAbilities["Exhaustion"] = (Animal.CurrentAbilities["Exhaustion"][0], (False if NewTime == 0 else True, NewTime))
-                print(f"{ParalysisObject.SubEffects[0]} Paralysis For {Animal.AnimalName} is in Effect For {Animal.CurrentAbilities['Exhaustion'][1][1]} More Turn{'s' if Animal.CurrentAbilities['Exhaustion'][1][1] != 1 else ''}.")
+                Animal.CurrentAbilities["Exhaustion"][1] = np.array([False if NewTime == 0 else True, NewTime], dtype = object)
+                print(f"{ParalysisObject.SubEffects[0]} Paralysis For {Animal} is in Effect For {Animal.CurrentAbilities['Exhaustion'][1][1]} More Turn{'s' if Animal.CurrentAbilities['Exhaustion'][1][1] != 1 else ''}.")
 
             else:
-                Animal.CurrentAbilities["Exhaustion"] = (Animal.CurrentAbilities["Exhaustion"][0], (True, 1))
-                print(f"{ParalysisObject.SubEffects[0]} Paralysis Applied to {Animal.AnimalName} For {Animal.CurrentAbilities['Exhaustion'][1][1]} Turn{'s' if Animal.CurrentAbilities['Exhaustion'][1][1] != 1 else ''}.")
+                Animal.CurrentAbilities["Exhaustion"][1] = np.array([True, 1], dtype = object)
+                print(f"{ParalysisObject.SubEffects[0]} Paralysis Applied to {Animal} For {Animal.CurrentAbilities['Exhaustion'][1][1]} Turn{'s' if Animal.CurrentAbilities['Exhaustion'][1][1] != 1 else ''}.")
 
         #Not a SubEffect
         else:
@@ -306,12 +309,12 @@ class AbilityTypes():
             #For The Animal For 1-3 Turns. During This Time, There is a 50% Chance of Paralysis Each Turn.
             if Reverse:
                 NewTime = (Animal.CurrentAbilities["Paralysis"][1] - 1) if Animal.CurrentAbilities["Paralysis"][1] > 0 else 0
-                Animal.CurrentAbilities["Paralysis"] = (False if NewTime == 0 else True, NewTime)
-                print(f"Paralysis For {Animal.AnimalName} is in Effect For {Animal.CurrentAbilities['Paralysis'][1]} More Turn{'s' if Animal.CurrentAbilities['Paralysis'][1] != 1 else ''}.")
+                Animal.CurrentAbilities["Paralysis"] = np.array([False if NewTime == 0 else True, NewTime], dtype = object)
+                print(f"Paralysis For {Animal} is in Effect For {Animal.CurrentAbilities['Paralysis'][1]} More Turn{'s' if Animal.CurrentAbilities['Paralysis'][1] != 1 else ''}.")
 
             else:
-                Animal.CurrentAbilities["Paralysis"] = (True, r.randint(1, 3))
-                print(f"Paralysis Applied to {Animal.AnimalName} For {Animal.CurrentAbilities['Paralysis'][1]} Turn{'s' if Animal.CurrentAbilities['Paralysis'][1] != 1 else ''}.")
+                Animal.CurrentAbilities["Paralysis"] = np.array([True, np.random.randint(1, 4)], dtype = object)
+                print(f"Paralysis Applied to {Animal} For {Animal.CurrentAbilities['Paralysis'][1]} Turn{'s' if Animal.CurrentAbilities['Paralysis'][1] != 1 else ''}.")
 
     #Apply ColdBlooded to Animal. Assume Conditions Met.
     #ColdBlooded = Gains 1 HP Per Turn in Sun (Not Over Maximum), -1 HP Per Turn in Wildfire, Drought. Half Speed Rounded Down in Blizzard, Tundra.
@@ -349,7 +352,7 @@ class AbilityTypes():
             #The Animal Heals From Being in a Wildfire or Drought
             if Animal.Health < Animal.MaxHealth:
                 Animal.Health += 1
-                print(f"{Animal.AnimalName} is Cold Blooded, Gaining 1 Health From The Environmental Condition {SubEffect}.")
+                print(f"{Animal} is Cold Blooded, Gaining 1 Health From The Environmental Condition {SubEffect}.")
 
         #Not a SubEffect
         else:
@@ -358,23 +361,23 @@ class AbilityTypes():
             if SubEffect == "Sun":
                 if Animal.Health < Animal.MaxHealth:
                     Animal.Health += 1
-                    print(f"{Animal.AnimalName} is Cold Blooded, Gaining 1 Health From The Environmental Condition {SubEffect}.")
+                    print(f"{Animal} is Cold Blooded, Gaining 1 Health From The Environmental Condition {SubEffect}.")
 
             #The Animal Loses One Health Per Turn in a Wildfire or Drought
-            elif SubEffect in ["Wildfire", "Drought"]:
+            elif SubEffect in ("Wildfire", "Drought"):
                     if Animal.Health > 0:
                         Animal.Health -= 1
-                        print(f"{Animal.AnimalName} is Cold Blooded, Losing 1 Health From The Environmental Condition {SubEffect}.")
+                        print(f"{Animal} is Cold Blooded, Losing 1 Health From The Environmental Condition {SubEffect}.")
 
-            elif SubEffect in ["Blizzard", "Tundra"]:
+            elif SubEffect in ("Blizzard", "Tundra"):
                 if Reverse:
                     Animal.MovementTypes = deepcopy(Animal.OriginalMovementTypes)
-                    print(f"{Animal.AnimalName} is Cold Blooded, Regaining Half Speed For Ending Turn in The Environmental Condition {SubEffect}.")
+                    print(f"{Animal} is Cold Blooded, Regaining Half Speed For Ending Turn in The Environmental Condition {SubEffect}.")
 
                 else:
                     for MovementType, MovementRadius in Animal.MovementTypes.items():
                         Animal.MovementTypes[MovementType] = MovementRadius // 2
-                    print(f"{Animal.AnimalName} is Cold Blooded, Losing Half Speed For Starting Turn in The Environmental Condition {SubEffect}.")
+                    print(f"{Animal} is Cold Blooded, Losing Half Speed For Starting Turn in The Environmental Condition {SubEffect}.")
 
     #Apply Camoflauge to Animal. Assume Conditions Met.
     #Camoflauge = Unable to be Seen Easily. Visibility & Attackability of Animal is Within One "Space" Distance. Enemy Player Knows That The Card Exists on The Battlefield. Camoflauge Effects Stack Until 0 or 9999.
@@ -411,21 +414,21 @@ class AbilityTypes():
             #The Animal Reduces Another Animal's Camoflauge or The Animal's Own Camoflauge
             if Reverse:
                 Animal.CurrentAbilities["Camoflauge"] = Animal.CurrentAbilities["Camoflauge"] - 2 if Animal.CurrentAbilities["Camoflauge"] - 2 > 0 else 0
-                print(f"{Animal.AnimalName}'s Camoflauge is Increased to a Visual Radius of {Animal.CurrentAbilities['Camoflauge']}.")
+                print(f"{Animal}'s Camoflauge is Increased to a Visual Radius of {Animal.CurrentAbilities['Camoflauge']}.")
 
             else:
                 Animal.CurrentAbilities["Camoflauge"] = Animal.CurrentAbilities["Camoflauge"] + 2 if Animal.CurrentAbilities["Camoflauge"] + 2 < 9999 else 9999
-                print(f"{Animal.AnimalName}'s Camoflauge is Reduced to a Visual Radius of {Animal.CurrentAbilities['Camoflauge']}.")
+                print(f"{Animal}'s Camoflauge is Reduced to a Visual Radius of {Animal.CurrentAbilities['Camoflauge']}.")
 
         elif SubEffect == CamoflaugeObject.SubEffects[1]: #SubEffect == "Removed"
             #Camoflauge is Removed From This Animal
             if Reverse:
                 Animal.CurrentAbilities["Camoflauge"] = Animal.OriginalCamoflauge
-                print(f"{Animal.AnimalName}'s Camoflauge is Increased to a Visual Radius of {Animal.CurrentAbilities['Camoflauge']}.")
+                print(f"{Animal}'s Camoflauge is Increased to a Visual Radius of {Animal.CurrentAbilities['Camoflauge']}.")
 
             else:
                 Animal.CurrentAbilities["Camoflauge"] = 9999
-                print(f"{Animal.AnimalName}'s Camoflauge is Reduced to a Visual Radius of {Animal.CurrentAbilities['Camoflauge']}.")
+                print(f"{Animal}'s Camoflauge is Reduced to a Visual Radius of {Animal.CurrentAbilities['Camoflauge']}.")
 
         #Not a SubEffect
         else:
@@ -457,22 +460,22 @@ class AbilityTypes():
             #Animal Reduces Animal's Own Night Vision
             if Reverse:
                 Animal.CurrentAbilities["Night Vision"] += 1
-                print(f"{Animal.AnimalName}'s Night Vision is Increased to a Visual Radius of {Animal.CurrentAbilities['Night Vision']}.")
+                print(f"{Animal}'s Night Vision is Increased to a Visual Radius of {Animal.CurrentAbilities['Night Vision']}.")
 
             else:
                 Animal.CurrentAbilities["Night Vision"] -= 1
-                print(f"{Animal.AnimalName}'s Night Vision is Decreased to a Visual Radius of {Animal.CurrentAbilities['Night Vision']}.")
+                print(f"{Animal}'s Night Vision is Decreased to a Visual Radius of {Animal.CurrentAbilities['Night Vision']}.")
 
         #Not a SubEffect
         else:
             #Animal Increases Animal's Own Night Vision
             if Reverse:
                 Animal.CurrentAbilities["Night Vision"] -= 1
-                print(f"{Animal.AnimalName}'s Night Vision is Decreased to a Visual Radius of {Animal.CurrentAbilities['Night Vision']}.")
+                print(f"{Animal}'s Night Vision is Decreased to a Visual Radius of {Animal.CurrentAbilities['Night Vision']}.")
 
             else:
                 Animal.CurrentAbilities["Night Vision"] += 1
-                print(f"{Animal.AnimalName}'s Night Vision is Increased to a Visual Radius of {Animal.CurrentAbilities['Night Vision']}.")
+                print(f"{Animal}'s Night Vision is Increased to a Visual Radius of {Animal.CurrentAbilities['Night Vision']}.")
 
     #Apply Flinch to Animal. Assume Conditions Met.
     #Flinch = Skip Turn (Affects Lower Size Animals).
@@ -502,11 +505,11 @@ class AbilityTypes():
         else:
             if Reverse:
                 Animal.CurrentAbilities["Flinch"] = False
-                print(f"Flinch Removed From {Animal.AnimalName}.")
+                print(f"Flinch Removed From {Animal}.")
 
             else:
                 Animal.CurrentAbilities["Flinch"] = True
-                print(f"Flinch Applied to {Animal.AnimalName}.")
+                print(f"Flinch Applied to {Animal}.")
 
     #Apply Rations to Animal. Assume Conditions Met.
     #Rations = +1 HP Per Turn (Not Over Maximum).
@@ -528,7 +531,7 @@ class AbilityTypes():
         else:
             if Animal.Health < Animal.MaxHealth:
                 Animal.Health += 1
-                print(f"{Animal.AnimalName} Used {Animal.AnimalName}'s Rations, Gaining 1 Health.")
+                print(f"{Animal} Used {Animal}'s Rations, Gaining 1 Health.")
 
     #Apply Grouping to Animal. Assume Conditions Met.
     #Grouping = Animal is Stronger in Larger Groups. The More of The Same Animals on The Battlefield For The Start of
@@ -537,8 +540,7 @@ class AbilityTypes():
 
         '''
         Use Cases:
-        #Assuming All Animals in AnimalList Are on The Battlefield
-        AllBattlefieldAnimalsWithThisType = [Animal2 for Animal2 in Animals.AnimalList if Animal2.AnimalName == Animal.AnimalName]
+        AllBattlefieldAnimalsWithThisType = [Animal2 for Animal2 in Animals.InBattle if Animal2.AnimalName == Animal.AnimalName]
         if len(AllBattlefieldAnimalsWithThisType) > 1:
             if The Same Animal is Added to The Battlefield:
                 for SameAnimal in AllBattlefieldAnimalsWithThisType:
@@ -558,14 +560,14 @@ class AbilityTypes():
             if Reverse:
                 Animal.CurrentAbilities["Grouping"] -= 1
                 if Animal.CurrentAbilities["Grouping"] == 0:
-                    Animal.AttackTypes[AttackTypes.AttackTypeList[1]] = (Animal.AttackTypes[AttackTypes.AttackTypeList[1]][0], AbilityTypes.AbilityTypeList[5])
-                    print(f"{Animal.AnimalName}'s {AttackTypes.AttackTypeList[1].AttackName} Attack Now Has {AbilityTypes.AbilityTypeList[5].AbilityName} Instead of {AbilityTypes.AbilityTypeList[1].AbilityName} After One Group Member Left The Battlefield.")
+                    Animal.AttackTypes[AttackTypes.AttackTypeList[1]][1] = AbilityTypes.AbilityTypeList[5]
+                    print(f"{Animal}'s {AttackTypes.AttackTypeList[1].AttackName} Attack Now Has {AbilityTypes.AbilityTypeList[5].AbilityName} Instead of {AbilityTypes.AbilityTypeList[1].AbilityName} After One Group Member Left The Battlefield.")
 
             else:
                 Animal.CurrentAbilities["Grouping"] += 1
                 if Animal.CurrentAbilities["Grouping"] == 1:
-                    Animal.AttackTypes[AttackTypes.AttackTypeList[1]] = (Animal.AttackTypes[AttackTypes.AttackTypeList[1]][0], AbilityTypes.AbilityTypeList[1])
-                    print(f"{Animal.AnimalName}'s {AttackTypes.AttackTypeList[1].AttackName} Attack Now Has {AbilityTypes.AbilityTypeList[1].AbilityName} Instead of {AbilityTypes.AbilityTypeList[5].AbilityName} After One Group Member Joined The Battlefield.")
+                    Animal.AttackTypes[AttackTypes.AttackTypeList[1]][1] = AbilityTypes.AbilityTypeList[1]
+                    print(f"{Animal}'s {AttackTypes.AttackTypeList[1].AttackName} Attack Now Has {AbilityTypes.AbilityTypeList[1].AbilityName} Instead of {AbilityTypes.AbilityTypeList[5].AbilityName} After One Group Member Joined The Battlefield.")
 
         #Not a SubEffect
         else:
@@ -576,13 +578,13 @@ class AbilityTypes():
                     #Reverse +1 Attack For Predators
                     if Animal.PredPrey == "Predator":
                         AttackTypes.AddDamage(Animal, -1)
-                        print(f"Being a Predator, {Animal.AnimalName}'s Attack Decreased by 1 After One Group Member Left The Battlefield.")
+                        print(f"Being a Predator, {Animal}'s Attack Decreased by 1 After One Group Member Left The Battlefield.")
 
                     #Reverse +1 HP For Prey
                     else: #Animal.PredPrey == "Prey"
                         Animal.Health -= 1 if Animal.Health > 0 else 0
                         Animal.MaxHealth -= 1
-                        print(f"Being a Prey, {Animal.AnimalName}'s Maximum Health (+ Current Health) Decreased by 1 After One Group Member Left The Battlefield.")
+                        print(f"Being a Prey, {Animal}'s Maximum Health (+ Current Health) Decreased by 1 After One Group Member Left The Battlefield.")
 
             else:
                 if Animal.CurrentAbilities["Grouping"] < 3:
@@ -591,13 +593,13 @@ class AbilityTypes():
                     #+1 Attack For Predators
                     if Animal.PredPrey == "Predator":
                         AttackTypes.AddDamage(Animal, 1)
-                        print(f"Being a Predator, {Animal.AnimalName}'s Attack Increased by 1 After One Group Member Joined The Battlefield.")
+                        print(f"Being a Predator, {Animal}'s Attack Increased by 1 After One Group Member Joined The Battlefield.")
 
                     #+1 HP For Prey
                     else: #Animal.PredPrey == "Prey"
                         Animal.Health += 1
                         Animal.MaxHealth += 1
-                        print(f"Being a Prey, {Animal.AnimalName}'s Maximum Health (+ Current Health) Increased by 1 After One Group Member Joined The Battlefield.")
+                        print(f"Being a Prey, {Animal}'s Maximum Health (+ Current Health) Increased by 1 After One Group Member Joined The Battlefield.")
 
     #Apply Bleed to Animal. Assume Conditions Met.
     #Bleed = Lose 1 Health Ignoring Armor Per Level of Bleed Per Turn. Max 3.
@@ -625,13 +627,13 @@ class AbilityTypes():
         else:
             if Reverse:
                 Animal.Health -= Animal.CurrentAbilities["Bleed"] if Animal.Health - Animal.CurrentAbilities["Bleed"] > 0 else 0
-                print(f"Bleed Damaged {Animal.AnimalName} by {Animal.CurrentAbilities['Bleed']}.")
+                print(f"Bleed Damaged {Animal} by {Animal.CurrentAbilities['Bleed']}.")
                 Animal.CurrentAbilities["Bleed"] -= 1 if Animal.CurrentAbilities["Bleed"] > 0 else 0
-                print(f"Bleed in {Animal.AnimalName} is Reversed to Level {Animal.CurrentAbilities['Bleed']}.")
+                print(f"Bleed in {Animal} is Reversed to Level {Animal.CurrentAbilities['Bleed']}.")
 
             else:
                 Animal.CurrentAbilities["Bleed"] += 1 if Animal.CurrentAbilities["Bleed"] < 3 else 0
-                print(f"Bleed Level {Animal.CurrentAbilities['Bleed']} Applied to {Animal.AnimalName}.")
+                print(f"Bleed Level {Animal.CurrentAbilities['Bleed']} Applied to {Animal}.")
 
     #Apply Intellect to Animal. Assume Conditions Met.
     #Intellect = Able to Use Tools. (Axe For +1 Attack & Able to Cut Trees in Forest, Sword + Shield For +1 Attack & +1 Armor in Grasslands,
@@ -652,7 +654,7 @@ class AbilityTypes():
         '''
 
         #Check if This is a SubEffect
-        if SubEffect not in IntellectObject.SubEffects:
+        if SubEffect in IntellectObject.SubEffects:
             pass #SubEffects do Not Exist For Intellect
 
         #Not a SubEffect
@@ -662,52 +664,52 @@ class AbilityTypes():
                 if Reverse:
                     #Reverse +1 Attack
                     AttackTypes.AddDamage(Animal, -1)
-                    print(f"{Animal.AnimalName}'s Attack Reverses in The {SubEffect}, Removing 1 Attack.")
+                    print(f"{Animal}'s Attack Reverses in The {SubEffect}, Removing 1 Attack.")
 
                     #Reverse Can Cut Trees
                     del Animal.AbilityTypes["Cut Trees"]
-                    print(f"{Animal.AnimalName} Can no Longer Cut Trees.")
+                    print(f"{Animal} Can no Longer Cut Trees.")
 
                 else:
                     #+1 Attack
                     AttackTypes.AddDamage(Animal, 1)
-                    print(f"{Animal.AnimalName}'s Intellect Allows For Greater Attack in The {SubEffect}, Gaining 1 Attack.")
+                    print(f"{Animal}'s Intellect Allows For Greater Attack in The {SubEffect}, Gaining 1 Attack.")
 
                     #Can Cut Trees
-                    Animal.AbilityTypes["Cut Trees"] = tuple([])
-                    print(f"{Animal.AnimalName} Can Cut Trees.")
+                    Animal.AbilityTypes["Cut Trees"] = np.array([], dtype = np.int32)
+                    print(f"{Animal} Can Cut Trees.")
 
             elif SubEffect == "Grasslands":
                 #Sword + Shield
                 if Reverse:
                     #Reverse +1 Attack
                     AttackTypes.AddDamage(Animal, -1)
-                    print(f"{Animal.AnimalName}'s Attack Reverses in The {SubEffect}, Removing 1 Attack.")
+                    print(f"{Animal}'s Attack Reverses in The {SubEffect}, Removing 1 Attack.")
 
                     #Reverse +1 Armor
                     Animal.Armor -= 1 if Animal.Armor > 0 else 0
                     Animal.MaxArmor -= 1
-                    print(f"{Animal.AnimalName}'s Defense Reverses in The {SubEffect}, Removing 1 From Maximum Armor (+ Current Armor).")
+                    print(f"{Animal}'s Defense Reverses in The {SubEffect}, Removing 1 From Maximum Armor (+ Current Armor).")
 
                 else:
                     #+1 Attack
                     AttackTypes.AddDamage(Animal, 1)
-                    print(f"{Animal.AnimalName}'s Intellect Allows For Greater Attack in The {SubEffect}, Gaining 1 Attack.")
+                    print(f"{Animal}'s Intellect Allows For Greater Attack in The {SubEffect}, Gaining 1 Attack.")
 
                     #+1 Armor
                     Animal.Armor += 1
                     Animal.MaxArmor += 1
-                    print(f"{Animal.AnimalName}'s Intellect Allows For Greater Defense in The {SubEffect}, Gaining 1 Maximum Armor (+ Current Armor).")
+                    print(f"{Animal}'s Intellect Allows For Greater Defense in The {SubEffect}, Gaining 1 Maximum Armor (+ Current Armor).")
 
             elif SubEffect == "Tundra":
                 #Boots For +1 Speed in Tundra
                 if Reverse:
                     Animals.AddMovement(Animal, -1)
-                    print(f"{Animal.AnimalName}'s Travel of The {SubEffect} Comes to a Halt, Removing 1 Speed.")
+                    print(f"{Animal}'s Travel of The {SubEffect} Comes to a Halt, Removing 1 Speed.")
 
                 else:
                     Animals.AddMovement(Animal, 1)
-                    print(f"{Animal.AnimalName}'s Intellect Allows Faster Traversal of The {SubEffect}, Gaining 1 Speed.")
+                    print(f"{Animal}'s Intellect Allows Faster Traversal of The {SubEffect}, Gaining 1 Speed.")
 
     #Apply Scavenger to Animal. Assume Conditions Met.
     #Scavenger = +1 HP (Not Over Maximum) When Ending Turn on a Square Where an Animal Has Died (One Turn Use Per Death on Square).
@@ -731,7 +733,7 @@ class AbilityTypes():
         #Not a SubEffect
         else:
             Animal.Health += 1 if Animal.Health < Animal.MaxHealth else 0
-            print(f"{Animal.AnimalName}'s Scavenging Gained {Animal.AnimalName} 1 Health.")
+            print(f"{Animal}'s Scavenging Gained {Animal} 1 Health.")
 
     #Apply Poison to Animal. Assume Conditions Met.
     #Poison = Touching The Animal Causes Toxic Damage. Max 2.
@@ -761,13 +763,13 @@ class AbilityTypes():
             #Each Time The Poison Damages The Animal (Equal to Level Damage), The Level of Poison Decreases.
             if Reverse:
                 Animal.Health -= Animal.CurrentAbilities["Poison"] if Animal.Health - Animal.CurrentAbilities["Poison"] > 0 else 0
-                print(f"Poison Damaged {Animal.AnimalName} by {Animal.CurrentAbilities['Poison']}.")
+                print(f"Poison Damaged {Animal} by {Animal.CurrentAbilities['Poison']}.")
                 Animal.CurrentAbilities["Poison"] -= 1 if Animal.CurrentAbilities["Poison"] > 0 else 0
-                print(f"Poison in {Animal.AnimalName} is Reversed to Level {Animal.CurrentAbilities['Poison']}.")
+                print(f"Poison in {Animal} is Reversed to Level {Animal.CurrentAbilities['Poison']}.")
 
             else:
                 Animal.CurrentAbilities["Poison"] += 1 if Animal.CurrentAbilities["Poison"] < 2 else 0
-                print(f"Poison Level {Animal.CurrentAbilities['Poison']} Applied to {Animal.AnimalName}.")
+                print(f"Poison Level {Animal.CurrentAbilities['Poison']} Applied to {Animal}.")
 
     #Apply Fear to Animal. Assume Conditions Met.
     #Fear = Subtracts Attack From Opposing Animal (1 Per Size Difference).
@@ -775,7 +777,7 @@ class AbilityTypes():
 
         '''
         Use Cases:
-        #Assume Animal Seeing Other Animals Means The Other Animals See Animal
+        #Assume Animal Seeing Opposing Animals Means The Opposing Animals See Animal
         if Animal Seen by Other Animals:
             FoundAbility = Animals.FindAbility("Fear", Animal.AbilityTypes, "OnSight")
             if FoundAbility is not None:
@@ -797,7 +799,7 @@ class AbilityTypes():
         if Reverse:
             #Remove All Fear
             Animal.CurrentAbilities["Fear"] = 0
-            print(f"All Fear Removed From {Animal.AnimalName}.")
+            print(f"All Fear Removed From {Animal}.")
 
         else:
             #Fear Immune, Nothing Happens
@@ -829,13 +831,13 @@ class AbilityTypes():
 
                 #Apply Fear
                 if FearLevel != 0:
-                    Animal.CurrentAbilities["Fear"] = abs(FearLevel)
-                    print(f"Fear Level {Animal.CurrentAbilities['Fear']} Applied to {Animal.AnimalName}.")
+                    Animal.CurrentAbilities["Fear"] = np.abs(FearLevel)
+                    print(f"Fear Level {Animal.CurrentAbilities['Fear']} Applied to {Animal}.")
                     AttackTypes.AddDamage(Animal, min(0, FearLevel))
-                    print(f"{Animal.AnimalName}'s Attack is Reduced by {Animal.CurrentAbilities['Fear']}.")
+                    print(f"{Animal}'s Attack is Reduced by {Animal.CurrentAbilities['Fear']}.")
 
             else:
-                print(f"{Animal.AnimalName} is Immune to Fear.")
+                print(f"{Animal} is Immune to Fear.")
 
     #Apply Exhaustion to Animal. Assume Conditions Met.
     #Exhaustion = Level 1: Lose Half Speed, Rounded Down. Level 2: Paralysis, Cannot Move. Max 2.
@@ -853,15 +855,15 @@ class AbilityTypes():
         '''
 
         if not(Reverse):
-            Animal.CurrentAbilities["Exhaustion"] = (Animal.CurrentAbilities["Exhaustion"][0] + 1 if Animal.CurrentAbilities["Exhaustion"][0] < 2 else 0, Animal.CurrentAbilities["Exhaustion"][1])
-            print(f"Exhaustion Level {Animal.CurrentAbilities['Exhaustion'][0]} Applied to {Animal.AnimalName}.")
+            Animal.CurrentAbilities["Exhaustion"][0] = Animal.CurrentAbilities["Exhaustion"][0] + 1 if Animal.CurrentAbilities["Exhaustion"][0] < 2 else 0
+            print(f"Exhaustion Level {Animal.CurrentAbilities['Exhaustion'][0]} Applied to {Animal}.")
 
         #Level 1 Exhaustion, Speed Drop.
         if Animal.CurrentAbilities["Exhaustion"][0] == 1:
             if Reverse:
-                Animal.CurrentAbilities["Exhaustion"] = (Animal.CurrentAbilities["Exhaustion"][0] - 1, Animal.CurrentAbilities["Exhaustion"][1])
+                Animal.CurrentAbilities["Exhaustion"][0] = Animal.CurrentAbilities["Exhaustion"][0] - 1
                 Animal.MovementTypes = deepcopy(Animal.OriginalMovementTypes)
-                print(f"{Animal.AnimalName}'s Exhaustion Decreased to Level {Animal.CurrentAbilities['Exhaustion'][0]}. No Negative Effects.")
+                print(f"{Animal}'s Exhaustion Decreased to Level {Animal.CurrentAbilities['Exhaustion'][0]}. No Negative Effects.")
 
             else:
                 #Check if This is a SubEffect
@@ -869,20 +871,20 @@ class AbilityTypes():
                     #Speed Drops by Half, Halved
                     for MovementType, MovementRadius in Animal.MovementTypes.items():
                         Animal.MovementTypes[MovementType] = MovementRadius * 3 // 4
-                    print(f"{Animal.AnimalName}'s Movement Reduced to 3/4.")
+                    print(f"{Animal}'s Movement Reduced to 3/4.")
 
                 #Not a SubEffect
                 else:
                     #Speed Drops by Half
                     for MovementType, MovementRadius in Animal.MovementTypes.items():
                         Animal.MovementTypes[MovementType] = MovementRadius // 2
-                    print(f"{Animal.AnimalName}'s Movement Reduced to 1/2.")
+                    print(f"{Animal}'s Movement Reduced to 1/2.")
 
         #Level 2 Exhaustion, Paralysis.
         elif Animal.CurrentAbilities["Exhaustion"][0] == 2:
             if Reverse:
-                Animal.CurrentAbilities["Exhaustion"] = (Animal.CurrentAbilities["Exhaustion"][0] - 1, Animal.CurrentAbilities["Exhaustion"][1])
-                print(f"{Animal.AnimalName}'s Exhaustion Decreased to Level {Animal.CurrentAbilities['Exhaustion'][0]}. Exhaustion Paralysis Removed.")
+                Animal.CurrentAbilities["Exhaustion"][0] = Animal.CurrentAbilities["Exhaustion"][0] - 1
+                print(f"{Animal}'s Exhaustion Decreased to Level {Animal.CurrentAbilities['Exhaustion'][0]}. Exhaustion Paralysis Removed.")
 
                 #Remove Exhaustion Paralysis
                 FoundAbility = Animals.FindAbility("Paralysis")
@@ -896,678 +898,826 @@ class AbilityTypes():
 
 def CreateGrid(Environment):
 
-    #Create a 2D Grid With Animals Placed Diagonally
-    Grid2D = [[["", ""] for _ in range(len(Animals.AnimalList))] for _ in range(len(Animals.AnimalList))] #(Original, Current)
-    DeathGrid2D = [[0 for _ in range(len(Animals.AnimalList))] for _ in range(len(Animals.AnimalList))]
-    for i in range(len(Animals.AnimalList)):
-        #Place Animal on Grid
-        Grid2D[i][i][1] = Animals.AnimalList[i]
-        Animals.AnimalList[i].CurrentLocation = (i, i)
+    #Create a 2D Grid of Size 10 x 10
+    GridSize = 10
+    MaxNumberObstacles = 3
+    Grid2D = np.array([[["", ""] for _ in range(GridSize)] for _ in range(GridSize)], dtype = object) #(Original, Current)
+    DeathGrid2D = np.array([[0 for _ in range(GridSize)] for _ in range(GridSize)], dtype = np.int32)
+    Trees = np.array(["T", "T"], dtype = object)
+    Rocks = np.array(["R", "R"], dtype = object)
+    for _ in range(MaxNumberObstacles):
 
-        #Place Some Obstacles Above Animals
-        if i % 2 == 1:
-            if Environment in ["Forest", "Rainforest"]:
-                Grid2D[i - 1][i] = ["T", "T"] #Trees
+        #Randomly Add up to 3 Obstacles to Grid
+        if Environment in ("Forest", "Rainforest"):
+            Grid2D[np.random.randint(0, GridSize)][np.random.randint(0, GridSize)] = Trees #Trees
 
-            elif Environment in ["Grasslands"]:
-                Grid2D[i - 1][i] = ["R", "R"] #Rocks
+        elif Environment == "Grasslands":
+            Grid2D[np.random.randint(0, GridSize)][np.random.randint(0, GridSize)] = Rocks #Rocks
 
-    print("Grid Created.\n")
+    print(f"Grid Created of Size {GridSize}x{GridSize} With up to {MaxNumberObstacles} Obstacles.")
 
     return Grid2D, DeathGrid2D
 
 def OnSightFear(Animal, AnimalsSeen):
 
     '''Animal's Sight Changed, Update Effects.'''
-    #Fear (Assuming if Animal Sees Other Animals, The Other Animals See Animal).
+    #Fear (Assuming if Animal Sees Opposing Animals, The Opposing Animals See Animal).
     FoundAbility = Animals.FindAbility("Fear", Animal.AbilityTypes, "OnSight")
     if FoundAbility is not None:
         for OtherAnimal in AnimalsSeen:
             FoundAbility[0].AbilityFunction(FoundAbility[0], OtherAnimal, FoundAbility[1])
 
-#Create The Animals + Attack Types.
-def CreateAnimalsAndAttackTypes():
+#Create Attack Types + Ability Types
+def CreateAttackAbilityTypes():
 
     #Create AbilityTypes: "AbilityName", ["SubEffects"]
     AbilityTypes("Venom", AbilityTypes.Venom)
-    AbilityTypes("Paralysis", AbilityTypes.Paralysis, ["Exhaustion"])
-    AbilityTypes("ColdBlooded", AbilityTypes.ColdBlooded, ["+1 HP in Wildfire, Drought"])
-    AbilityTypes("Camoflauge", AbilityTypes.Camoflauge, ["Reduced", "Removed", "SelfReduced"])
-    AbilityTypes("Night Vision", AbilityTypes.NightVision, ["SelfReduced"])
+    AbilityTypes("Paralysis", AbilityTypes.Paralysis, np.array(["Exhaustion"], dtype = np.str_))
+    AbilityTypes("ColdBlooded", AbilityTypes.ColdBlooded, np.array(["+1 HP in Wildfire, Drought"], dtype = np.str_))
+    AbilityTypes("Camoflauge", AbilityTypes.Camoflauge, np.array(["Reduced", "Removed", "SelfReduced"], dtype = np.str_))
+    AbilityTypes("Night Vision", AbilityTypes.NightVision, np.array(["SelfReduced"], dtype = np.str_))
     AbilityTypes("Flinch", AbilityTypes.Flinch)
     AbilityTypes("Rations", AbilityTypes.Rations)
-    AbilityTypes("Grouping", AbilityTypes.Grouping, ["AttackTypes.AttackTypeList[1] : AbilityTypes.AbilityTypeList[1]"])
+    AbilityTypes("Grouping", AbilityTypes.Grouping, np.array(["AttackTypes.AttackTypeList[1] : AbilityTypes.AbilityTypeList[1]"], dtype = np.str_))
     AbilityTypes("Bleed", AbilityTypes.Bleed)
     AbilityTypes("Intellect", AbilityTypes.Intellect)
     AbilityTypes("Scavenger", AbilityTypes.Scavenger)
     AbilityTypes("Poison", AbilityTypes.Poison)
-    AbilityTypes("Fear", AbilityTypes.Fear, ["All", "Larger", "Smaller", "Immune"])
-    AbilityTypes("Exhaustion", AbilityTypes.Exhaustion, ["Halved"])
+    AbilityTypes("Fear", AbilityTypes.Fear, np.array(["All", "Larger", "Smaller", "Immune"], dtype = np.str_))
+    AbilityTypes("Exhaustion", AbilityTypes.Exhaustion, np.array(["Halved"], dtype = np.str_))
 
     #Create AttackTypes: "AttackName", AttackRadius, [SplashBool, SplashDamage (Added to Damage, Minimum 1)]
-    AttackTypes("Bite", 1, (False, 0))
-    AttackTypes("Stomp", 1, (False, 0))
-    AttackTypes("Tail Strike", 1, (False, 0))
-    AttackTypes("Claw", 1, (True, -1))
-    AttackTypes("Horns", 2, (True, -1))
-    AttackTypes("Tail Slam", 2, (True, -1))
-    AttackTypes("Punch", 1, (False, 0))
-    AttackTypes("Grab", 1, (False, 0))
-    AttackTypes("Body Slam", 2, (True, 0))
-    AttackTypes("Bite Spin", 1, (False, 0))
+    AttackTypes("Bite", 1, np.array([False, 0], dtype = object))
+    AttackTypes("Stomp", 1, np.array([False, 0], dtype = object))
+    AttackTypes("Tail Strike", 1, np.array([False, 0], dtype = object))
+    AttackTypes("Claw", 1, np.array([True, -1], dtype = object))
+    AttackTypes("Horns", 2, np.array([True, -1], dtype = object))
+    AttackTypes("Tail Slam", 2, np.array([True, -1], dtype = object))
+    AttackTypes("Punch", 1, np.array([False, 0], dtype = object))
+    AttackTypes("Grab", 1, np.array([False, 0], dtype = object))
+    AttackTypes("Body Slam", 2, np.array([True, 0], dtype = object))
+    AttackTypes("Bite Spin", 1, np.array([False, 0], dtype = object))
 
-    for _ in range(2):
+#Initialize an Animal Deck
+def ChooseAnimals(Player, MaxDeckSize):
+
+    AnimalDeck = {
+        "Rattlesnake": 0,
+        "Camel": 0,
+        "Scorpion": 0,
+        "Silver Ant": 0,
+        "Wolf": 0,
+        "Grizzly Bear": 0,
+        "Black Bear": 0,
+        "Deer": 0,
+        "Rabbit": 0,
+        "Moose": 0,
+        "Eagle": 0,
+        "Hawk": 0,
+        "Shark": 0,
+        "Dolphin": 0,
+        "Orca": 0,
+        "Plankton": 0,
+        "Octopus": 0,
+        "Crab": 0,
+        "Lion": 0,
+        "Giraffe": 0,
+        "Elephant": 0,
+        "Zebra": 0,
+        "Hyena": 0,
+        "Gazelle": 0,
+        "Bison": 0,
+        "Vulture": 0,
+        "Monkey": 0,
+        "Ape": 0,
+        "Alligator": 0,
+        "Crocodile": 0,
+        "Poison Frog": 0,
+        "Polar Bear": 0,
+        "Arctic Fox": 0,
+        "Penguin": 0,
+        "Seal": 0
+    }
+
+    #Choose How Many of What Animals Get Added to The Player's Deck
+    DeckSize = 0
+
+    #Show The Player What Animals Could be Added to The Deck
+    print(f"\nPlayer {Player}'s Deck is of Size {MaxDeckSize}.")
+    print("Animals to Choose From:")
+    print(list(AnimalDeck.keys()))
+
+    #Assume Animal Rarities Have no Effect Currently
+    while DeckSize < MaxDeckSize:
+
+        #Add a Number of Animals That Player Desires
+        Animal = input(f"Which Animal Would Player {Player} Like to Add to Player {Player}'s Deck? ")
+
+        #Check That The Player Desires a Valid Animal
+        if Animal in AnimalDeck.keys():
+            AddAnimal = int(input(f"How Many of {Animal} Does Player {Player} Desire? "))
+
+            #Ensure The Added Animal Count is Less Than The Maximum
+            if DeckSize + AddAnimal > MaxDeckSize:
+                AddAnimal = MaxDeckSize - DeckSize
+
+            #Add The Number of Animals
+            if AnimalDeck[Animal] < AddAnimal:
+                AddAnimal -= AnimalDeck[Animal]
+                AnimalDeck[Animal] += AddAnimal
+
+            #Not Adding Any Animals
+            else:
+                AddAnimal = 0
+
+            DeckSize += AddAnimal
+
+    print(f"Player {Player} Animal Deck Initialized With {DeckSize} Animal Cards.")
+
+    return AnimalDeck
+
+#Create Decks of Animals.
+def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
+
+    AnimalDeck = ChooseAnimals(Player, MaxDeckSize)
+
+    for _ in range(AnimalDeck["Rattlesnake"]):
+
         #Create Rattlesnake (Legendary).
         AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[0]: (1, AbilityTypes.AbilityTypeList[0], AbilityTypes.AbilityTypeList[1])
+            AttackTypes.AttackTypeList[0]: np.array([1, AbilityTypes.AbilityTypeList[0], AbilityTypes.AbilityTypeList[1]], dtype = object)
         }
 
         AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": (AbilityTypes.AbilityTypeList[2], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]),
-            "Rattle": ((AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0]), (AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[2])),
-            "Smell": tuple([AbilityTypes.AbilityTypeList[4]])
+            "None": np.array([AbilityTypes.AbilityTypeList[2], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object),
+            "Rattle": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0]], dtype = object), np.array([AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[2]], dtype = object)], dtype = object),
+            "Smell": np.array([AbilityTypes.AbilityTypeList[4]], dtype = object)
         }
 
         AnimalMovements = { #"MovementType": MovementRadius
             "Slither": 3
         }
 
-        Animals("Rattlesnake", "Small", "Predator", "Legendary", 10, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Rattlesnake", "Small", "Predator", "Legendary", Player, 10, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Camel (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[1]: (2, AbilityTypes.AbilityTypeList[5])
-    }
+    for _ in range(AnimalDeck["Camel"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[6], AbilityTypes.AbilityTypeList[13])
-    }
-
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 2
-    }
-
-    Animals("Camel", "Large", "Prey", "Rare", 20, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Scorpion (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[2]: (1, AbilityTypes.AbilityTypeList[0])
-    }
-
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[2], AbilityTypes.AbilityTypeList[13]),
-        "OnSight": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[1])])
-    }
-
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 2
-    }
-
-    Animals("Scorpion", "Small", "Predator", "Rare", 8, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Silver Ant (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[0]: tuple([1])
-    }
-
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[7], (AbilityTypes.AbilityTypeList[2], AbilityTypes.AbilityTypeList[2].SubEffects[0]), (AbilityTypes.AbilityTypeList[13], AbilityTypes.AbilityTypeList[13].SubEffects[0]), AbilityTypes.AbilityTypeList[10])
-    }
-
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 6
-    }
-
-    Animals("Silver Ant", "Tiny", "Prey", "Rare", 5, 2, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Wolf (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[0]: (2, AbilityTypes.AbilityTypeList[8]),
-        AttackTypes.AttackTypeList[3]: (1, AbilityTypes.AbilityTypeList[8])
-    }
-
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]),
-        "OnSight": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0])]),
-        "Smell": tuple([(AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[0])])
-    }
-
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 3
-    }
-
-    Animals("Wolf", "Medium", "Predator", "Rare", 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Grizzly Bear (Legendary).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[0]: (3, AbilityTypes.AbilityTypeList[8]),
-        AttackTypes.AttackTypeList[3]: (2, AbilityTypes.AbilityTypeList[8])
-    }
-
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": ((AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[3]), AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]),
-        "OnSight": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0])]),
-        "Smell": tuple([(AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[0])])
-    }
-
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 3
-    }
-
-    Animals("Grizzly Bear", "Large", "Predator", "Legendary", 20, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Black Bear (Epic).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[0]: (2, AbilityTypes.AbilityTypeList[8]),
-        AttackTypes.AttackTypeList[3]: (2, AbilityTypes.AbilityTypeList[8])
-    }
-
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]),
-        "Smell": tuple([(AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[0])])
-    }
-
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 3,
-        "Climb": 1
-    }
-
-    Animals("Black Bear", "Large", "Predator", "Epic", 17, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Deer (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[1]: (1, AbilityTypes.AbilityTypeList[5]),
-        AttackTypes.AttackTypeList[4]: (2, AbilityTypes.AbilityTypeList[8])
-    }
-
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13])
-    }
-
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 3,
-        "Jump": 2
-    }
-
-    Animals("Deer", "Medium", "Prey", "Common", 10, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Rabbit (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[1]: (1, AbilityTypes.AbilityTypeList[5])
-    }
-
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": tuple([AbilityTypes.AbilityTypeList[13]])
-    }
-
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 4,
-        "Jump": 2
-    }
-
-    Animals("Rabbit", "Small", "Prey", "Common", 6, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Moose (Epic).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[1]: (2, AbilityTypes.AbilityTypeList[5]),
-        AttackTypes.AttackTypeList[4]: (3, AbilityTypes.AbilityTypeList[8])
-    }
-
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13])
-    }
-
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 3,
-        "Swim": 2
-    }
-
-    Animals("Moose", "Large", "Prey", "Epic", 15, 3, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Eagle (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[3]: tuple([2]),
-    }
-
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": tuple([AbilityTypes.AbilityTypeList[13]])
-    }
-
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 1,
-        "Fly": 4
-    }
-
-    Animals("Eagle", "Medium", "Predator", "Common", 6, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Hawk (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[3]: tuple([2]),
-    }
-
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": tuple([AbilityTypes.AbilityTypeList[13]])
-    }
-
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 1,
-        "Fly": 3
-    }
-
-    Animals("Hawk", "Medium", "Predator", "Common", 7, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Shark (Epic).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[0]: (3, AbilityTypes.AbilityTypeList[8]),
-        AttackTypes.AttackTypeList[5]: (2, AbilityTypes.AbilityTypeList[5])
-    }
-
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]),
-        "OnSight": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[2])])
-    }
-
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Swim": 3
-    }
-
-    Animals("Shark", "Large", "Predator", "Epic", 14, 4, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Dolphin (Epic).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[5]: (1, AbilityTypes.AbilityTypeList[5])
-    }
-
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]),
-        "Echo Location": tuple([(AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[1])])
-    }
-
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Swim": 4
-    }
-
-    Animals("Dolphin", "Medium", "Prey", "Epic", 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    for _ in range(2):
-        #Create Orca (Legendary).
         AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[0]: (3, AbilityTypes.AbilityTypeList[8]),
-            AttackTypes.AttackTypeList[5]: (3, AbilityTypes.AbilityTypeList[5])
+            AttackTypes.AttackTypeList[1]: np.array([2, AbilityTypes.AbilityTypeList[5]], dtype = object)
         }
 
         AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": (AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[13]),
-            "OnSight": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0])]),
-            "Echo Location": (AbilityTypes.AbilityTypeList[4], (AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[1]))
+            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[6], AbilityTypes.AbilityTypeList[13]], dtype = object)
         }
 
         AnimalMovements = { #"MovementType": MovementRadius
-            "Swim": 3
+            "Walk": 2
         }
 
-        Animals("Orca", "Large", "Predator", "Legendary", 20, 5, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Camel", "Large", "Prey", "Rare", Player, 20, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
-    #Create Plankton (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-    }
+    #Create Scorpion (Rare).
+    for _ in range(AnimalDeck["Scorpion"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[6], AbilityTypes.AbilityTypeList[13])
-    }
-
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Swim": 1
-    }
-
-    Animals("Plankton", "Tiny", "Prey", "Common", 2, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Octopus (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[6]: tuple([1]),
-        AttackTypes.AttackTypeList[7]: (0, AbilityTypes.AbilityTypeList[1])
-    }
-
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13])
-    }
-
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Swim": 2
-    }
-
-    Animals("Octopus", "Small", "Prey", "Rare", 9, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Crab (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[3]: tuple([2])
-    }
-
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": ((AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[4].SubEffects[0]), AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13])
-    }
-
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 2,
-        "Swim": 1
-    }
-
-    Animals("Crab", "Small", "Prey", "Rare", 3, 6, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Lion (Legendary).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[0]: (3, AbilityTypes.AbilityTypeList[8]),
-        AttackTypes.AttackTypeList[3]: (2, AbilityTypes.AbilityTypeList[8])
-    }
-
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[13]),
-        "OnSight": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0])])
-    }
-
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 3
-    }
-
-    Animals("Lion", "Medium", "Predator", "Legendary", 16, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Giraffe (Legendary).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[1]: (3, AbilityTypes.AbilityTypeList[5])
-    }
-
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": tuple([AbilityTypes.AbilityTypeList[13]])
-    }
-
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 2
-    }
-
-    Animals("Giraffe", "Giant", "Prey", "Legendary", 25, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Elephant (Legendary).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[8]: (3, AbilityTypes.AbilityTypeList[1]),
-        AttackTypes.AttackTypeList[7]: (0, AbilityTypes.AbilityTypeList[1]),
-        AttackTypes.AttackTypeList[1]: (2, AbilityTypes.AbilityTypeList[5])
-    }
-
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": tuple([AbilityTypes.AbilityTypeList[13]])
-    }
-
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 2
-    }
-
-    Animals("Elephant", "Giant", "Prey", "Legendary", 20, 4, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Zebra (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[1]: (1, AbilityTypes.AbilityTypeList[5])
-    }
-
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[13])
-    }
-
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 3
-    }
-
-    Animals("Zebra", "Medium", "Prey", "Common", 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Hyena (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[0]: (2, AbilityTypes.AbilityTypeList[8]),
-        AttackTypes.AttackTypeList[3]: (1, AbilityTypes.AbilityTypeList[8])
-    }
-
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[10], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13])
-    }
-
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 3
-    }
-
-    Animals("Hyena", "Medium", "Predator", "Rare", 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Gazelle (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[1]: (1, AbilityTypes.AbilityTypeList[5]),
-        AttackTypes.AttackTypeList[4]: (2, AbilityTypes.AbilityTypeList[8])
-    }
-
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13])
-    }
-
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 3,
-        "Jump": 2
-    }
-
-    Animals("Gazelle", "Medium", "Prey", "Common", 10, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    for _ in range(2):
-        #Create Bison (Epic).
         AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[1]: (2, AbilityTypes.AbilityTypeList[5]),
-            AttackTypes.AttackTypeList[8]: (3, AbilityTypes.AbilityTypeList[5])
+            AttackTypes.AttackTypeList[2]: np.array([1, AbilityTypes.AbilityTypeList[0]], dtype = object)
         }
 
         AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": ((AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[7].SubEffects[0]), AbilityTypes.AbilityTypeList[13])
+            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[2], AbilityTypes.AbilityTypeList[13]], dtype = object),
+            "OnSight": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[1]], dtype = object)], dtype = object)
+        }
+
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 2
+        }
+
+        Animals("Scorpion", "Small", "Predator", "Rare", Player, 8, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Silver Ant (Rare).
+    for _ in range(AnimalDeck["Silver Ant"]):
+
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[0]: np.array([1], dtype = object)
+        }
+
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[7], np.array([AbilityTypes.AbilityTypeList[2], AbilityTypes.AbilityTypeList[2].SubEffects[0]], dtype = object), np.array([AbilityTypes.AbilityTypeList[13], AbilityTypes.AbilityTypeList[13].SubEffects[0]], dtype = object), AbilityTypes.AbilityTypeList[10]], dtype = object)
+        }
+
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 6
+        }
+
+        Animals("Silver Ant", "Tiny", "Prey", "Rare", Player, 5, 2, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Wolf (Rare).
+    for _ in range(AnimalDeck["Wolf"]):
+
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[0]: np.array([2, AbilityTypes.AbilityTypeList[8]], dtype = object),
+            AttackTypes.AttackTypeList[3]: np.array([1, AbilityTypes.AbilityTypeList[8]], dtype = object)
+        }
+
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]], dtype = object),
+            "OnSight": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0]], dtype = object)], dtype = object),
+            "Smell": np.array([np.array([AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[0]], dtype = object)], dtype = object)
         }
 
         AnimalMovements = { #"MovementType": MovementRadius
             "Walk": 3
         }
 
-        Animals("Bison", "Large", "Prey", "Epic", 15, 2, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Wolf", "Medium", "Predator", "Rare", Player, 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Grizzly Bear (Legendary).
+    for _ in range(AnimalDeck["Grizzly Bear"]):
+
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[0]: np.array([3, AbilityTypes.AbilityTypeList[8]], dtype = object),
+            AttackTypes.AttackTypeList[3]: np.array([2, AbilityTypes.AbilityTypeList[8]], dtype = object)
+        }
+
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[3]], dtype = object), AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]], dtype = object),
+            "OnSight": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0]], dtype = object)], dtype = object),
+            "Smell": np.array([np.array([AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[0]], dtype = object)], dtype = object)
+        }
+
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 3
+        }
+
+        Animals("Grizzly Bear", "Large", "Predator", "Legendary", Player, 20, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Black Bear (Epic).
+    for _ in range(AnimalDeck["Black Bear"]):
+
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[0]: np.array([2, AbilityTypes.AbilityTypeList[8]], dtype = object),
+            AttackTypes.AttackTypeList[3]: np.array([2, AbilityTypes.AbilityTypeList[8]], dtype = object)
+        }
+
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]], dtype = object),
+            "Smell": np.array([np.array([AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[0]], dtype = object)], dtype = object)
+        }
+
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 3,
+            "Climb": 1
+        }
+
+        Animals("Black Bear", "Large", "Predator", "Epic", Player, 17, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Deer (Common).
+    for _ in range(AnimalDeck["Deer"]):
+
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[1]: np.array([1, AbilityTypes.AbilityTypeList[5]], dtype = object),
+            AttackTypes.AttackTypeList[4]: np.array([2, AbilityTypes.AbilityTypeList[8]], dtype = object)
+        }
+
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]], dtype = object)
+        }
+
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 3,
+            "Jump": 2
+        }
+
+        Animals("Deer", "Medium", "Prey", "Common", Player, 10, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Rabbit (Common).
+    for _ in range(AnimalDeck["Rabbit"]):
+
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[1]: np.array([1, AbilityTypes.AbilityTypeList[5]], dtype = object)
+        }
+
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[13]], dtype = object)
+        }
+
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 4,
+            "Jump": 2
+        }
+
+        Animals("Rabbit", "Small", "Prey", "Common", Player, 6, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Moose (Epic).
+    for _ in range(AnimalDeck["Moose"]):
+
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[1]: np.array([2, AbilityTypes.AbilityTypeList[5]], dtype = object),
+            AttackTypes.AttackTypeList[4]: np.array([3, AbilityTypes.AbilityTypeList[8]], dtype = object)
+        }
+
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]], dtype = object)
+        }
+
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 3,
+            "Swim": 2
+        }
+
+        Animals("Moose", "Large", "Prey", "Epic", Player, 15, 3, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Eagle (Common).
+    for _ in range(AnimalDeck["Eagle"]):
+
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[3]: np.array([2], dtype = object),
+        }
+
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[13]], dtype = object)
+        }
+
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 1,
+            "Fly": 4
+        }
+
+        Animals("Eagle", "Medium", "Predator", "Common", Player, 6, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Hawk (Common).
+    for _ in range(AnimalDeck["Hawk"]):
+
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[3]: np.array([2], dtype = object),
+        }
+
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[13]], dtype = object)
+        }
+
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 1,
+            "Fly": 3
+        }
+
+        Animals("Hawk", "Medium", "Predator", "Common", Player, 7, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Shark (Epic).
+    for _ in range(AnimalDeck["Shark"]):
+
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[0]: np.array([3, AbilityTypes.AbilityTypeList[8]], dtype = object),
+            AttackTypes.AttackTypeList[5]: np.array([2, AbilityTypes.AbilityTypeList[5]], dtype = object)
+        }
+
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]], dtype = object),
+            "OnSight": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[2]], dtype = object)], dtype = object)
+        }
+
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Swim": 3
+        }
+
+        Animals("Shark", "Large", "Predator", "Epic", Player, 14, 4, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Dolphin (Epic).
+    for _ in range(AnimalDeck["Dolphin"]):
+
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[5]: np.array([1, AbilityTypes.AbilityTypeList[5]], dtype = object)
+        }
+
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]], dtype = object),
+            "Echo Location": np.array([np.array([AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[1]], dtype = object)], dtype = object)
+        }
+
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Swim": 4
+        }
+
+        Animals("Dolphin", "Medium", "Prey", "Epic", Player, 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Orca (Legendary).
+    for _ in range(AnimalDeck["Orca"]):
+
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[0]: np.array([3, AbilityTypes.AbilityTypeList[8]], dtype = object),
+            AttackTypes.AttackTypeList[5]: np.array([3, AbilityTypes.AbilityTypeList[5]], dtype = object)
+        }
+
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[13]], dtype = object),
+            "OnSight": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0]], dtype = object)], dtype = object),
+            "Echo Location": np.array([AbilityTypes.AbilityTypeList[4], np.array([AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[1]], dtype = object)], dtype = object)
+        }
+
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Swim": 3
+        }
+
+        Animals("Orca", "Large", "Predator", "Legendary", Player, 20, 5, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Plankton (Common).
+    for _ in range(AnimalDeck["Plankton"]):
+
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        }
+
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[6], AbilityTypes.AbilityTypeList[13]], dtype = object)
+        }
+
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Swim": 1
+        }
+
+        Animals("Plankton", "Tiny", "Prey", "Common", Player, 2, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Octopus (Rare).
+    for _ in range(AnimalDeck["Octopus"]):
+
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[6]: np.array([1], dtype = object),
+            AttackTypes.AttackTypeList[7]: np.array([0, AbilityTypes.AbilityTypeList[1]], dtype = object)
+        }
+
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object)
+        }
+
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Swim": 2
+        }
+
+        Animals("Octopus", "Small", "Prey", "Rare", Player, 9, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Crab (Rare).
+    for _ in range(AnimalDeck["Crab"]):
+
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[3]: np.array([2], dtype = object)
+        }
+
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[4].SubEffects[0]], dtype = object), AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object)
+        }
+
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 2,
+            "Swim": 1
+        }
+
+        Animals("Crab", "Small", "Prey", "Rare", Player, 3, 6, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Lion (Legendary).
+    for _ in range(AnimalDeck["Lion"]):
+
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[0]: np.array([3, AbilityTypes.AbilityTypeList[8]], dtype = object),
+            AttackTypes.AttackTypeList[3]: np.array([2, AbilityTypes.AbilityTypeList[8]], dtype = object)
+        }
+
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[13]], dtype = object),
+            "OnSight": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0]], dtype = object)], dtype = object)
+        }
+
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 3
+        }
+
+        Animals("Lion", "Medium", "Predator", "Legendary", Player, 16, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Giraffe (Legendary).
+    for _ in range(AnimalDeck["Giraffe"]):
+
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[1]: np.array([3, AbilityTypes.AbilityTypeList[5]], dtype = object)
+        }
+
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[13]], dtype = object)
+        }
+
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 2
+        }
+
+        Animals("Giraffe", "Giant", "Prey", "Legendary", Player, 25, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Elephant (Legendary).
+    for _ in range(AnimalDeck["Elephant"]):
+
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[8]: np.array([3, AbilityTypes.AbilityTypeList[1]], dtype = object),
+            AttackTypes.AttackTypeList[7]: np.array([0, AbilityTypes.AbilityTypeList[1]], dtype = object),
+            AttackTypes.AttackTypeList[1]: np.array([2, AbilityTypes.AbilityTypeList[5]], dtype = object)
+        }
+
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[13]], dtype = object)
+        }
+
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 2
+        }
+
+        Animals("Elephant", "Giant", "Prey", "Legendary", Player, 20, 4, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Zebra (Common).
+    for _ in range(AnimalDeck["Zebra"]):
+
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[1]: np.array([1, AbilityTypes.AbilityTypeList[5]], dtype = object)
+        }
+
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[13]], dtype = object)
+        }
+
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 3
+        }
+
+        Animals("Zebra", "Medium", "Prey", "Common", Player, 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Hyena (Rare).
+    for _ in range(AnimalDeck["Hyena"]):
+
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[0]: np.array([2, AbilityTypes.AbilityTypeList[8]], dtype = object),
+            AttackTypes.AttackTypeList[3]: np.array([1, AbilityTypes.AbilityTypeList[8]], dtype = object)
+        }
+
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[10], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object)
+        }
+
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 3
+        }
+
+        Animals("Hyena", "Medium", "Predator", "Rare", Player, 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Gazelle (Common).
+    for _ in range(AnimalDeck["Gazelle"]):
+
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[1]: np.array([1, AbilityTypes.AbilityTypeList[5]], dtype = object),
+            AttackTypes.AttackTypeList[4]: np.array([2, AbilityTypes.AbilityTypeList[8]], dtype = object)
+        }
+
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object)
+        }
+
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 3,
+            "Jump": 2
+        }
+
+        Animals("Gazelle", "Medium", "Prey", "Common", Player, 10, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Bison (Epic).
+    for _ in range(AnimalDeck["Bison"]):
+
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[1]: np.array([2, AbilityTypes.AbilityTypeList[5]], dtype = object),
+            AttackTypes.AttackTypeList[8]: np.array([3, AbilityTypes.AbilityTypeList[5]], dtype = object)
+        }
+
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([np.array([AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[7].SubEffects[0]], dtype = object), AbilityTypes.AbilityTypeList[13]], dtype = object)
+        }
+
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 3
+        }
+
+        Animals("Bison", "Large", "Prey", "Epic", Player, 15, 2, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Vulture (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[3]: tuple([2])
-    }
+    for _ in range(AnimalDeck["Vulture"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[10], (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[4].SubEffects[0]), AbilityTypes.AbilityTypeList[13])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[3]: np.array([2], dtype = object)
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 1,
-        "Fly": 3
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[10], np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[4].SubEffects[0]], dtype = object), AbilityTypes.AbilityTypeList[13]], dtype = object)
+        }
 
-    Animals("Vulture", "Medium", "Prey", "Rare", 8, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 1,
+            "Fly": 3
+        }
+
+        Animals("Vulture", "Medium", "Prey", "Rare", Player, 8, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Monkey (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[6]: tuple([1])
-    }
+    for _ in range(AnimalDeck["Monkey"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[13])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[6]: np.array([1], dtype = object)
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 2,
-        "Climb": 2
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[13]], dtype = object)
+        }
 
-    Animals("Monkey", "Medium", "Prey", "Rare", 9, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 2,
+            "Climb": 2
+        }
+
+        Animals("Monkey", "Medium", "Prey", "Rare", Player, 9, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Ape (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[6]: tuple([2]),
-        AttackTypes.AttackTypeList[7]: (0, AbilityTypes.AbilityTypeList[1])
-    }
+    for _ in range(AnimalDeck["Ape"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[13])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[6]: np.array([2], dtype = object),
+            AttackTypes.AttackTypeList[7]: np.array([0, AbilityTypes.AbilityTypeList[1]], dtype = object)
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 2
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[13]], dtype = object)
+        }
 
-    Animals("Ape", "Large", "Predator", "Rare", 13, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 2
+        }
+
+        Animals("Ape", "Large", "Predator", "Rare", Player, 13, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Alligator (Epic).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[0]: (3, AbilityTypes.AbilityTypeList[8]),
-        AttackTypes.AttackTypeList[9]: (4, AbilityTypes.AbilityTypeList[8]),
-        AttackTypes.AttackTypeList[5]: (2, AbilityTypes.AbilityTypeList[5])
-    }
+    for _ in range(AnimalDeck["Alligator"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]),
-        "OnSight": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0])])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[0]: np.array([3, AbilityTypes.AbilityTypeList[8]], dtype = object),
+            AttackTypes.AttackTypeList[9]: np.array([4, AbilityTypes.AbilityTypeList[8]], dtype = object),
+            AttackTypes.AttackTypeList[5]: np.array([2, AbilityTypes.AbilityTypeList[5]], dtype = object)
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 2,
-        "Swim": 2
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object),
+            "OnSight": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0]], dtype = object)], dtype = object)
+        }
 
-    Animals("Alligator", "Medium", "Predator", "Epic", 17, 6, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 2,
+            "Swim": 2
+        }
+
+        Animals("Alligator", "Medium", "Predator", "Epic", Player, 17, 6, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Crocodile (Epic).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[0]: (3, AbilityTypes.AbilityTypeList[8]),
-        AttackTypes.AttackTypeList[9]: (4, AbilityTypes.AbilityTypeList[8]),
-        AttackTypes.AttackTypeList[5]: (2, AbilityTypes.AbilityTypeList[5])
-    }
+    for _ in range(AnimalDeck["Crocodile"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]),
-        "OnSight": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0])])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[0]: np.array([3, AbilityTypes.AbilityTypeList[8]], dtype = object),
+            AttackTypes.AttackTypeList[9]: np.array([4, AbilityTypes.AbilityTypeList[8]], dtype = object),
+            AttackTypes.AttackTypeList[5]: np.array([2, AbilityTypes.AbilityTypeList[5]], dtype = object)
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 2,
-        "Swim": 2
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object),
+            "OnSight": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0]], dtype = object)], dtype = object)
+        }
 
-    Animals("Crocodile", "Medium", "Predator", "Epic", 21, 2, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 2,
+            "Swim": 2
+        }
+
+        Animals("Crocodile", "Medium", "Predator", "Epic", Player, 21, 2, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Poison Frog (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-    }
+    for _ in range(AnimalDeck["Poison Frog"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": tuple([AbilityTypes.AbilityTypeList[13]]),
-        "Hurt": tuple([AbilityTypes.AbilityTypeList[11]])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 1,
-        "Jump": 2
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[13]], dtype = object),
+            "Hurt": np.array([AbilityTypes.AbilityTypeList[11]], dtype = object)
+        }
 
-    Animals("Poison Frog", "Small", "Prey", "Common", 7, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 1,
+            "Jump": 2
+        }
+
+        Animals("Poison Frog", "Small", "Prey", "Common", Player, 7, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Polar Bear (Legendary).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[0]: (4, AbilityTypes.AbilityTypeList[8]),
-        AttackTypes.AttackTypeList[3]: (3, AbilityTypes.AbilityTypeList[8])
-    }
+    for _ in range(AnimalDeck["Polar Bear"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]),
-        "OnSight": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0])])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[0]: np.array([4, AbilityTypes.AbilityTypeList[8]], dtype = object),
+            AttackTypes.AttackTypeList[3]: np.array([3, AbilityTypes.AbilityTypeList[8]], dtype = object)
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 3,
-        "Swim": 3
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object),
+            "OnSight": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0]], dtype = object)], dtype = object)
+        }
 
-    Animals("Polar Bear", "Large", "Predator", "Legendary", 20, 5, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 3,
+            "Swim": 3
+        }
+
+        Animals("Polar Bear", "Large", "Predator", "Legendary", Player, 20, 5, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Arctic Fox (Rare).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[0]: tuple([2]),
-        AttackTypes.AttackTypeList[3]: tuple([1])
-    }
+    for _ in range(AnimalDeck["Arctic Fox"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]),
-        "Bark": tuple([(AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[2])])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[0]: np.array([2], dtype = object),
+            AttackTypes.AttackTypeList[3]: np.array([1], dtype = object)
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 2
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object),
+            "Bark": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[2]], dtype = object)], dtype = object)
+        }
 
-    Animals("Arctic Fox", "Medium", "Predator", "Rare", 8, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 2
+        }
+
+        Animals("Arctic Fox", "Medium", "Predator", "Rare", Player, 8, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Penguin (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[0]: tuple([1])
-    }
+    for _ in range(AnimalDeck["Penguin"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[0]: np.array([1], dtype = object)
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Walk": 1,
-        "Swim": 2
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]], dtype = object)
+        }
 
-    Animals("Penguin", "Medium", "Prey", "Common", 8, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Walk": 1,
+            "Swim": 2
+        }
+
+        Animals("Penguin", "Medium", "Prey", "Common", Player, 8, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Seal (Common).
-    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        AttackTypes.AttackTypeList[8]: (1, AbilityTypes.AbilityTypeList[1]),
-    }
+    for _ in range(AnimalDeck["Seal"]):
 
-    AnimalAbilities = { #"Activation": (AbilityType Objects)
-        "None": (AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13])
-    }
+        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+            AttackTypes.AttackTypeList[8]: np.array([1, AbilityTypes.AbilityTypeList[1]], dtype = object),
+        }
 
-    AnimalMovements = { #"MovementType": MovementRadius
-        "Swim": 2
-    }
+        AnimalAbilities = { #"Activation": (AbilityType Objects)
+            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object)
+        }
 
-    Animals("Seal", "Medium", "Prey", "Common", 12, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "Rarity", Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        AnimalMovements = { #"MovementType": MovementRadius
+            "Swim": 2
+        }
 
-    print("Animals Initialized.")
+        Animals("Seal", "Medium", "Prey", "Common", Player, 12, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.

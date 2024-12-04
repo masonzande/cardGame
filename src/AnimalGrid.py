@@ -1,4 +1,4 @@
-from InitAnimals import OnSightFear, CreateGrid
+from InitAnimals import Animals, OnSightFear, CreateGrid
 import numpy as np
 
 def CheckDirection(Animal, i, Vision, Direction, XY, AnimalsSeen, ValidMovements, VisionPlusRadius, ObstacleBlocked, AnimalBlocked, Index):
@@ -67,6 +67,7 @@ def AnimalSight(Animal, Grid2D, DayNight):
     AttackRadiusAnimals = {Attack: ["None"] for Attack in Animal.AttackTypes}
     VisionPlusRadius = []
     ObstaclesBeside = []
+    SaveAnimalsSeen = np.array([], dtype = object)
     ValidMovements = {
         "Walk": [],
         "Slither": [],
@@ -75,8 +76,8 @@ def AnimalSight(Animal, Grid2D, DayNight):
         "Swim": [],
         "Fly": []
     }
-    ObstacleBlocked = np.array([False, False, False, False], dtype = np.bool)
-    AnimalBlocked = np.array([False, False, False, False], dtype = np.bool)
+    ObstacleBlocked = np.array([False, False, False, False], dtype = np.bool_)
+    AnimalBlocked = np.array([False, False, False, False], dtype = np.bool_)
 
     MaxMove = np.max([Move for Move in Animal.MovementTypes.values()])
 
@@ -152,6 +153,46 @@ def AnimalSight(Animal, Grid2D, DayNight):
 
     return AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, SaveAnimalsSeen
 
+def AddAnimalToGrid(Player, MaxDeckSize, Grid2D):
+
+    print(f"\nPlayer {Player}'s Deck is of Size {MaxDeckSize}.")
+    print("Animals to Choose From:")
+    PossibleAnimals = [Animal.AnimalName for Animal in Animals.AnimalList if Animal not in Animals.InBattle and Animal.CurrentLocation[0] == -1 and Animal.Player == Player]
+    print(PossibleAnimals)
+
+    #Player Chooses an Animal
+    ChosenAnimal = ""
+    while ChosenAnimal not in PossibleAnimals and ChosenAnimal.upper() != "N":
+        ChosenAnimal = input(f"Which Animal Does Player {Player} Wish to Choose to Place on The Battlefield? ")
+
+    #Place The Animal on The Battlefield
+    if ChosenAnimal.upper() != "N" and len(PossibleAnimals) != 0:
+        Index = 0
+        Animal = None
+        while Index < Animals.AnimalList.shape[0] and Animal is None:
+            if Animals.AnimalList[Index].AnimalName == ChosenAnimal and Animals.AnimalList[Index].CurrentLocation[0] == -1:
+                Animal = Animals.AnimalList[Index]
+
+            Index += 1
+
+        '''Assuming Grid Size = 10x10'''
+        GridLocation = [-1, -1]
+        while not(0 <= GridLocation[0] < 10 and 0 <= GridLocation[1] < 10 and Grid2D[GridLocation[0]][GridLocation[1]][1] == ""):
+            #Get Grid Location From Player
+            GridLocation = input(f"Where on The Grid Would Player {Player} Desire The {ChosenAnimal} to be Placed -- X, Y? ")
+            GridLocation = GridLocation.replace(",", " ")
+            GridLocation = [XY.strip() for XY in GridLocation.split(" ") if XY.strip() != ""]
+            GridLocation = [int(GridLocation[0]), int(GridLocation[1])]
+
+        #Give The Animal a Grid Location
+        Animal.CurrentLocation = np.array(GridLocation, dtype = np.int32)
+        Animals.InBattle = np.append(Animals.InBattle, Animal)
+        Grid2D[GridLocation[0]][GridLocation[1]][1] = Animal
+        print(f"{ChosenAnimal} Placed at {Animal.CurrentLocation}.")
+
+    else:
+        print("Animal Not Placed.")
+
 def CreateEnvironmentGrid():
 
     #Map Environments to Weathers / Natural Disasters
@@ -169,7 +210,7 @@ def CreateEnvironmentGrid():
     Environment = EnvironmentNames[np.random.randint(0, len(EnvironmentNames))]
     Weather = Environments[Environment][np.random.randint(0, Environments[Environment].shape[0])]
     DayNight = ("Day", "Night")[np.random.randint(0, 2)]
-    print(f"Environment = {Environment}, Weather = {Weather}, DayNight = {DayNight}.")
+    print(f"\nEnvironment = {Environment}, Weather = {Weather}, DayNight = {DayNight}.")
 
     Grid2D, DeathGrid2D = CreateGrid(Environment)
 

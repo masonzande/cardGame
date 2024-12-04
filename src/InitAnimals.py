@@ -5,7 +5,9 @@ from copy import deepcopy
 class Animals:
 
     AnimalList = np.array([], dtype = object) #List of Every Animal.
+    InBattle = np.array([], dtype = object) #List of Every Animal in Battle.
     AnimalSizes = ("Tiny", "Small", "Medium", "Large", "Giant")
+    AnimalRarities = ("Common", "Rare", "Epic", "Legendary")
 
     #Define an Animal Object.
     #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
@@ -13,8 +15,8 @@ class Animals:
 
         #Animal Name/Rarity/Health/Armor.
         Animal.Player = Player #Player ID That is Using This Animal
-        Animal.AnimalID = len([OtherAnimal for OtherAnimal in Animals.AnimalList if OtherAnimal.AnimalName == AnimalName]) + 1 #Give a Unique ID to an Animal.
-        Animal.AnimalName = f"Player {Player} {AnimalName}" #String Name of The Animal.
+        Animal.AnimalID = len([OtherAnimal for OtherAnimal in Animals.AnimalList if OtherAnimal.AnimalName.split(" ")[0] == AnimalName]) + 1 #Give a Unique ID to an Animal.
+        Animal.AnimalName = f"{AnimalName} {Animal.AnimalID}" #String Name of The Animal.
         Animal.Rarity = Rarity #String Rarity of The Animal. (Common/Rare/Epic/Legendary).
         Animal.PredPrey = PredPrey #String "Predator" or "Prey" Classification of The Animal
         Animal.MaxHealth = Health #Integer. The Maximum Health of an Animal. Reaching 0 Means The Card is Removed From The Battlefield.
@@ -173,10 +175,10 @@ class Animals:
         print(f"\t{Tabs}Armor: {Animal.Armor}")
 
     #Print The Stats of All Animals. Class Mathod.
-    def PrintAllAnimals():
+    def PrintAllAnimalsInBattle():
 
         print("\nStatistics of All Animals:")
-        for Animal in Animals.AnimalList:
+        for Animal in Animals.InBattle:
             Animal.PrintAnimal("\t")
 
     #Add Movement to All Movements That an Animal Has
@@ -538,8 +540,7 @@ class AbilityTypes():
 
         '''
         Use Cases:
-        #Assuming All Animals in AnimalList Are on The Battlefield
-        AllBattlefieldAnimalsWithThisType = [Animal2 for Animal2 in Animals.AnimalList if Animal2.AnimalName == Animal.AnimalName]
+        AllBattlefieldAnimalsWithThisType = [Animal2 for Animal2 in Animals.InBattle if Animal2.AnimalName == Animal.AnimalName]
         if len(AllBattlefieldAnimalsWithThisType) > 1:
             if The Same Animal is Added to The Battlefield:
                 for SameAnimal in AllBattlefieldAnimalsWithThisType:
@@ -897,25 +898,23 @@ class AbilityTypes():
 
 def CreateGrid(Environment):
 
-    #Create a 2D Grid With Animals Placed Diagonally
-    Grid2D = np.array([[["", ""] for _ in range(Animals.AnimalList.shape[0])] for _ in range(Animals.AnimalList.shape[0])], dtype = object) #(Original, Current)
-    DeathGrid2D = np.array([[0 for _ in range(Animals.AnimalList.shape[0])] for _ in range(Animals.AnimalList.shape[0])], dtype = np.int32)
+    #Create a 2D Grid of Size 10 x 10
+    GridSize = 10
+    MaxNumberObstacles = 3
+    Grid2D = np.array([[["", ""] for _ in range(GridSize)] for _ in range(GridSize)], dtype = object) #(Original, Current)
+    DeathGrid2D = np.array([[0 for _ in range(GridSize)] for _ in range(GridSize)], dtype = np.int32)
     Trees = np.array(["T", "T"], dtype = object)
     Rocks = np.array(["R", "R"], dtype = object)
-    for i in range(Animals.AnimalList.shape[0]):
-        #Place Animal on Grid
-        Grid2D[i][i][1] = Animals.AnimalList[i]
-        Animals.AnimalList[i].CurrentLocation = np.array([i, i], dtype = np.int32)
+    for _ in range(MaxNumberObstacles):
 
-        #Place Some Obstacles Above Animals
-        if i % 2 == 1:
-            if Environment in ("Forest", "Rainforest"):
-                Grid2D[i - 1][i] = Trees #Trees
+        #Randomly Add up to 3 Obstacles to Grid
+        if Environment in ("Forest", "Rainforest"):
+            Grid2D[np.random.randint(0, GridSize)][np.random.randint(0, GridSize)] = Trees #Trees
 
-            elif Environment == "Grasslands":
-                Grid2D[i - 1][i] = Rocks #Rocks
+        elif Environment == "Grasslands":
+            Grid2D[np.random.randint(0, GridSize)][np.random.randint(0, GridSize)] = Rocks #Rocks
 
-    print("Grid Created.\n")
+    print(f"Grid Created of Size {GridSize}x{GridSize} With up to {MaxNumberObstacles} Obstacles.")
 
     return Grid2D, DeathGrid2D
 
@@ -1002,27 +1001,36 @@ def ChooseAnimals(Player, MaxDeckSize):
 
     #Choose How Many of What Animals Get Added to The Player's Deck
     DeckSize = 0
-    AnimalNames = np.array(list(AnimalDeck.keys()), dtype = np.str_)
+
+    #Show The Player What Animals Could be Added to The Deck
+    print(f"\nPlayer {Player}'s Deck is of Size {MaxDeckSize}.")
+    print("Animals to Choose From:")
+    print(list(AnimalDeck.keys()))
+
+    #Assume Animal Rarities Have no Effect Currently
     while DeckSize < MaxDeckSize:
 
-        #Add a Random Number of Animals
-        AddAnimal = np.random.randint(1, 3)
+        #Add a Number of Animals That Player Desires
+        Animal = input(f"Which Animal Would Player {Player} Like to Add to Player {Player}'s Deck? ")
 
-        #Ensure The Added Animal Count is Less Than The Maximum
-        if DeckSize + AddAnimal > MaxDeckSize:
-            AddAnimal = MaxDeckSize - DeckSize
+        #Check That The Player Desires a Valid Animal
+        if Animal in AnimalDeck.keys():
+            AddAnimal = int(input(f"How Many of {Animal} Does Player {Player} Desire? "))
 
-        #Add The Random Number of Animals
-        RandomAnimal = AnimalNames[np.random.randint(0, AnimalNames.shape[0])]
-        if AnimalDeck[RandomAnimal] < AddAnimal:
-            AddAnimal -= AnimalDeck[RandomAnimal]
-            AnimalDeck[RandomAnimal] += AddAnimal
+            #Ensure The Added Animal Count is Less Than The Maximum
+            if DeckSize + AddAnimal > MaxDeckSize:
+                AddAnimal = MaxDeckSize - DeckSize
 
-        #Not Adding Any Animals
-        else:
-            AddAnimal = 0
+            #Add The Number of Animals
+            if AnimalDeck[Animal] < AddAnimal:
+                AddAnimal -= AnimalDeck[Animal]
+                AnimalDeck[Animal] += AddAnimal
 
-        DeckSize += AddAnimal
+            #Not Adding Any Animals
+            else:
+                AddAnimal = 0
+
+            DeckSize += AddAnimal
 
     print(f"Player {Player} Animal Deck Initialized With {DeckSize} Animal Cards.")
 

@@ -38,6 +38,12 @@ class RenderTarget:
 
         GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0)
 
+    def unload(self):
+        if self._gl_loaded:
+            GL.glDeleteFramebuffers(1, int(self._gl_location))
+        self._internal_depth.unload()
+        self._internal_texture.unload()
+
 
     def get_texture(self) -> sprite.Texture:
         return self._internal_texture

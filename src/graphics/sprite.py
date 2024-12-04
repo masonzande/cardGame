@@ -70,6 +70,10 @@ class Texture(TextureLike):
         GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, max_filter)
         GL.glActiveTexture(GL.GL_TEXTURE0)
 
+    def unload(self):
+        if self._gl_loaded:
+            GL.glDeleteTextures(1, int(self._gl_location))
+
 class Sprite(Texture, ILoadable):
     surface: pg.Surface
 

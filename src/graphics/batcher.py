@@ -81,8 +81,11 @@ class SpriteBatcher(Batcher[vertices.VertexPosition3Texture2]):
     _font_program: shader.Shader
     batches: dict[int, SpriteBatch]
 
+    temp_rts: list[target.RenderTarget]
+
     def __init__(self):
         self.batches = {}
+        self.temp_rts = []
         super().__init__()
 
     def begin(self, program, font_program: shader.Shader = None):
@@ -131,6 +134,7 @@ class SpriteBatcher(Batcher[vertices.VertexPosition3Texture2]):
 
         reset = graphics.active_target
         graphics.bind_buffer(rt)
+        graphics.clear(0, 0, 0, 0)
 
         x = 0
         y = str_dim[2]
@@ -163,8 +167,7 @@ class SpriteBatcher(Batcher[vertices.VertexPosition3Texture2]):
 
         graphics.bind_buffer(reset)
         self.draw(rt, pos, pg.Vector2(str_dim[0], str_dim[1]), depth)
-
-        del rt
+        self.temp_rts.append(rt)
 
     def flush(self):
         self.program.use()
@@ -185,3 +188,7 @@ class SpriteBatcher(Batcher[vertices.VertexPosition3Texture2]):
             batch.indices = []
         
         self.batches = {}
+
+        for rt in self.temp_rts:
+            rt.unload()
+        self.temp_rts = []

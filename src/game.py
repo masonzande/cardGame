@@ -9,7 +9,7 @@ from OpenGL.GL import *
 from loader import ContentLoader
 from graphics.target import RenderTarget
 
-from input import InputSet, Key, Button
+from input import Cursor, InputSet, Key, Button
 
 class CardGame(Engine):
     def __init__(self):
@@ -26,7 +26,6 @@ class CardGame(Engine):
         self.target.gl_load()
 
         self.inputset = InputSet()
-        self.inputset.register_input("ACTION", Button(pg.BUTTON_LEFT))
         
     def load(self):
         self.shader = self.content.load_custom("./shaders/basic_vp3t2.sl", Shader)
@@ -43,10 +42,6 @@ class CardGame(Engine):
         self.inputset.update(self.event_queue)
         # Main Game Logic goes here!
 
-        if self.inputset.get_action_pressed("ACTION"):
-            print("ACTION is pressed!")
-        if self.inputset.get_action_down("ACTION"):
-            print("ACTION is held!")
 
         self.dummy += 32 * clock.get_time() / 1000
 

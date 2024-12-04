@@ -9,6 +9,8 @@ from OpenGL.GL import *
 from loader import ContentLoader
 from graphics.target import RenderTarget
 
+from input import InputSet, Key, Button
+
 class CardGame(Engine):
     def __init__(self):
         super().__init__()
@@ -22,6 +24,9 @@ class CardGame(Engine):
         self.content = ContentLoader()
         self.target = RenderTarget(800, 600)
         self.target.gl_load()
+
+        self.inputset = InputSet()
+        self.inputset.register_input("ACTION", Button(pg.BUTTON_LEFT))
         
     def load(self):
         self.shader = self.content.load_custom("./shaders/basic_vp3t2.sl", Shader)
@@ -35,16 +40,14 @@ class CardGame(Engine):
         self.font0.generate_font()
 
     def update(self, clock: pg.time.Clock):
+        self.inputset.update(self.event_queue)
         # Main Game Logic goes here!
-        for event in self.event_queue:
-            if event.type == pg.QUIT:
-                self.quit()
-            if event.type == pg.TEXTINPUT:
-                print(event.text, end="")
-            if event.type == pg.KEYDOWN:
-                if event.key == pg.K_RETURN:
-                    print("\n")
-            # print(pg.event.event_name(event.type))
+
+        if self.inputset.get_action_pressed("ACTION"):
+            print("ACTION is pressed!")
+        if self.inputset.get_action_down("ACTION"):
+            print("ACTION is held!")
+
         self.dummy += 32 * clock.get_time() / 1000
 
     def draw(self):
@@ -68,9 +71,6 @@ class CardGame(Engine):
         self.dummy = 0
 
 # TODO | Next steps for windowing:
-# - Text Rendering
-#     - Font loading and texture generation already handled
-#     - Need to add a render target system and a text batcher for handling actually drawing text
 # - Camera and Gridworld setup
 # - Two-click or drag and drop moveable elements
 

@@ -160,9 +160,11 @@ class SpriteBatcher(Batcher[vertices.VertexPosition3Texture2]):
             
             GL.glDrawElements(GL.GL_TRIANGLES, len(indices), GL.GL_UNSIGNED_INT, None)
             x += (char.advance >> 6)
-        
+
         graphics.bind_buffer(reset)
         self.draw(rt, pos, pg.Vector2(str_dim[0], str_dim[1]), depth)
+
+        del rt
 
     def flush(self):
         self.program.use()

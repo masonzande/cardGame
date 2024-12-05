@@ -13,23 +13,32 @@ import OpenGL
 import OpenGL.GL as GL
 
 class Batcher[T: vertices.AbstractVertex]:
+    started: bool
+
     vertices: list[T]
     indices: list[int]
     program: shader.Shader
 
     def __init__(self):
+        self.started = False
         self.vertices = []
         self.indices = []
     
     def begin(self, program: shader.Shader):
+        if self.started:
+            return
         self.program = program
 
     def draw_indexed(self, vertices: list[T], indices: list[int]):
+        if not self.started:
+            raise UnboundLocalError
         indices = [index + len(self.vertices) for index in indices]
         self.vertices += vertices
         self.indices += indices
 
     def flush(self):
+        if not self.started:
+            return
         self.program.use()
         
         indices = np.array(self.indices, dtype=np.uint32)
@@ -123,13 +132,14 @@ class SpriteBatcher(Batcher[vertices.VertexPosition3Texture2]):
             print(message)
             return
         
-        self._font_program.set_uniform("text_color", type_convert.pg_color_to_numpy_array(color))
-        w, h = graphics.get_screen_size()
-        self._font_program.set_uniform("mvp", graphics.create_ortho_projection(0, w, h, 0))
-        self._font_program.use()
         GL.glActiveTexture(GL.GL_TEXTURE0)
 
         str_dim = font.string_dims(message)
+
+        self._font_program.set_uniform("text_color", type_convert.pg_color_to_numpy_array(color))
+        self._font_program.set_uniform("mvp", graphics.create_ortho_projection(0, str_dim[0], str_dim[1], 0))
+        self._font_program.use()
+
         rt = target.RenderTarget(str_dim[0], str_dim[1])
 
         reset = graphics.active_target

@@ -37,15 +37,19 @@ def get_screen_size() -> tuple[int, int]:
     return _pg.display.get_window_size()
 
 def bind_buffer(buffer: _target.RenderTarget):
+    global active_target
+
     if buffer:
         if not buffer._gl_loaded:
             buffer.gl_load()
         _GL.glBindFramebuffer(_GL.GL_FRAMEBUFFER, buffer._gl_location)
-        active_target = buffer._gl_location
+        _GL.glViewport(0, 0, buffer.width, buffer.height)
+        active_target = buffer
     else:
         _GL.glBindFramebuffer(_GL.GL_FRAMEBUFFER, 0)
-        active_target = 0
-    
+        width, height = _pg.display.get_window_size()
+        _GL.glViewport(0, 0, width, height)
+        active_target = None
 
 if __name__ == "__main__":
     pass

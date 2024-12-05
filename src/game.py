@@ -8,6 +8,7 @@ from graphics.sprite import Sprite, SpriteFont
 from OpenGL.GL import *
 from loader import ContentLoader
 from graphics.target import RenderTarget
+import elements.card
 
 from input import Cursor, InputSet, Key, Button
 
@@ -25,23 +26,35 @@ class CardGame(Engine):
         self.target = RenderTarget(800, 600)
         self.target.gl_load()
 
+        self.card = elements.card.Card(None, pg.Vector2(150, 210))
+
         self.inputset = InputSet()
+        self.inputset.register_input("Click", Button(pg.BUTTON_LEFT))
+        self.inputset.register_cursor("Mouse", Cursor())
         
     def load(self):
         self.shader = self.content.load_custom("./shaders/basic_vp3t2.sl", Shader)
+        self.copy_shader = self.content.load_custom("./shaders/basic_vp3t2.sl", Shader)
         self.font_shader = self.content.load_custom("./shaders/text_vp3t2.sl", Shader)
+
+
         winx, winy = pg.display.get_window_size()
         self.shader.set_uniform('mvp', create_ortho_projection(0, winx, 0, winy))
+
         self.texture0 = self.content.load_custom("./card_portraits/Legendary - Giraffe.jpg", Sprite)
         self.texture1 = self.content.load_custom("./card_portraits/Common - Deer.png", Sprite)
         self.font0 = self.content.load_custom("./fonts/OpenSans-Regular.ttf", SpriteFont)
         self.font0.set_font_size(48)
         self.font0.generate_font()
 
+        self.card.load(self.content)
+
     def update(self, clock: pg.time.Clock):
         self.inputset.update(self.event_queue)
         # Main Game Logic goes here!
 
+        if self.inputset.get_action_down("Click") and self.card.bounds.contains(self.inputset.get_cursor_pos("Mouse"), (0, 0)):
+            self.card.nudge(pg.Vector2(self.inputset.get_cursor_delta("Mouse")))
 
         self.dummy += 32 * clock.get_time() / 1000
 
@@ -49,6 +62,11 @@ class CardGame(Engine):
         # Drawing logic goes here
         bind_buffer(self.target)
         clear(0.0, 0.0, 1.0)
+
+        self.batcher.begin(self.copy_shader, font_program=self.font_shader)
+        self.card.prerender(self.batcher)
+        self.batcher.flush()
+
         self.batcher.begin(self.shader, font_program=self.font_shader)
         self.batcher.draw(self.texture0, pg.Vector2(32, 32), pg.Vector2(256, 128+64), 0)
         self.batcher.draw(self.texture1, pg.Vector2(92, 63), pg.Vector2(256, 256), 0)
@@ -60,6 +78,9 @@ class CardGame(Engine):
         self.batcher.draw(self.target, pg.Vector2(32, 32), pg.Vector2(256, 128+64), 0.5)
         self.batcher.draw(self.target, pg.Vector2(287, 67), pg.Vector2(256, 128+64), 0.5)
         self.batcher.draw_string(self.font0, "Hello!", pg.Vector2(5, 5), 0)
+
+        self.card.draw(self.batcher, 1, 0)
+
         self.batcher.flush()
 
     def unload(self):

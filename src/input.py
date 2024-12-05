@@ -154,6 +154,10 @@ class InputSet[T]:
         for _, inputs in self.inputs.items():
             for input in inputs:
                 input.update()
+        for _, cursors in self.cursors.items():
+            for cursor in cursors:
+                cursor.update()
+        
         for event in event_queue:
             if event.type in self._event_map.keys():
                 for input in self._event_map[event.type]:

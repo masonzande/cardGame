@@ -1,5 +1,5 @@
 from copy import deepcopy
-from InitAnimals import Animals, CreateAttackAbilityTypes, CreateAnimalDeck
+from InitAnimals import Animals, CreateAttackAbilityTypes, CreateAnimalDeck, CreateEachAnimal
 from AnimalGrid import AnimalSight, CreateEnvironmentGrid, AddAnimalToGrid
 import numpy as np
 
@@ -78,8 +78,8 @@ def MovementAction(Animal, Environment, DayNight, Grid2D, AttackRadiusAnimals, V
 
     Movements = np.array(Movements, dtype = np.str_)
     Movement = ""
-    while Movement not in Movements:
-        Movement = input(f"Which Valid Movement Type Should {Animal} Choose to Use From {Movements}? ")
+    while Movement not in Movements and Movement.upper() != "N":
+        Movement = input(f"Which Valid Movement Type Should {Animal} Choose to Use From {Movements} (N For None)? ")
     SaveLocation = Animal.CurrentLocation
 
     #Animal Movements Cannot Move Into The Same Grid Location as Another Animal
@@ -170,8 +170,8 @@ def ExtraAction(Animal, DayNight, Grid2D, AttackRadiusAnimals, VisionPlusRadius,
 
     Action = ""
     if Actions.shape[0] != 0:
-        while Action not in Actions:
-            Action = input(f"Which Valid Action Should {Animal} Choose to Use From {Actions}? ")
+        while Action not in Actions and Action.upper() != "N":
+            Action = input(f"Which Valid Action Should {Animal} Choose to Use From {Actions} (N For None)? ")
         print(f"{Animal} Used {Action}.")
 
     #Remove Animal From InBattle to Not Affect Itself.
@@ -288,39 +288,41 @@ def AttackAction(Animal, AttackRadiusAnimals):
         if PossibleAttacks.shape[0] != 0:
             #Choose a Valid Attack Type
             ChosenAttackType = ""
-            while ChosenAttackType not in PossibleAttackNames:
-                ChosenAttackType = input(f"Which Valid Attack Should {Animal} Choose to Use? ")
-            ChosenAttackType = PossibleAttacks[np.where(PossibleAttackNames == ChosenAttackType)[0][0]]
-            ValidDefenders = AttackRadiusAnimals[ChosenAttackType][1:]
-            ValidDefenderNames = np.array(["None"] + [Defender.AnimalName for Defender in ValidDefenders], dtype = object)
-            print(f"With Chosen Attack {ChosenAttackType.AttackName}, {Animal} Could Attack: {ValidDefenderNames}")
+            while ChosenAttackType not in PossibleAttackNames and ChosenAttackType.upper() != "N":
+                ChosenAttackType = input(f"Which Valid Attack Should {Animal} Choose to Use (N For None)? ")
 
-            if ValidDefenders.shape[0] != 0:
-                #Choose Animals to Attack.
-                ChosenDefender = ""
-                while ChosenDefender not in ValidDefenderNames:
-                    ChosenDefender = input(f"Which Valid Defender Should {Animal} Choose to Attack? ")
-                Defenders = np.array([AttackRadiusAnimals[ChosenAttackType][np.where(ValidDefenderNames == ChosenDefender)[0][0]]], dtype = object)
+            if ChosenAttackType.upper() != "N":
+                ChosenAttackType = PossibleAttacks[np.where(PossibleAttackNames == ChosenAttackType)[0][0]]
+                ValidDefenders = AttackRadiusAnimals[ChosenAttackType][1:]
+                ValidDefenderNames = np.array(["None"] + [Defender.AnimalName for Defender in ValidDefenders], dtype = object)
+                print(f"With Chosen Attack {ChosenAttackType.AttackName}, {Animal} Could Attack: {ValidDefenderNames}")
 
-                if ChosenAttackType.SplashDamage[0] and np.where(Defenders == "None")[0].shape[0] == 0: #Assume Splash Hits Every Seen Opposing Animal in Attack Radius Right Now, Not Through Obstacles or Animals.
-                    print(f"{Animal} Splash Attacks All.")
-                    Defenders = np.append(Defenders, ValidDefenders)
-                    for Defender in ValidDefenders:
-                        if Defender in Animals.InBattle:
-                            Animals.InBattle = np.delete(Animals.InBattle, np.where(Animals.InBattle == Defender)[0][0]) #Remove Chosen Defenders to Not Choose The Same Defender Twice.
+                if ValidDefenders.shape[0] != 0:
+                    #Choose Animals to Attack.
+                    ChosenDefender = ""
+                    while ChosenDefender not in ValidDefenderNames:
+                        ChosenDefender = input(f"Which Valid Defender Should {Animal} Choose to Attack? ")
+                    Defenders = np.array([AttackRadiusAnimals[ChosenAttackType][np.where(ValidDefenderNames == ChosenDefender)[0][0]]], dtype = object)
 
-                else:
-                    print(f"{Animal} Attacks {Defenders[0]}.")
-                    #Check if Animal Chooses to Attack at All
-                    if Defenders[0] in Animals.InBattle:
-                        Animals.InBattle = np.delete(Animals.InBattle, np.where(Animals.InBattle == Defenders[0])[0][0]) #Remove Chosen Defenders to Not Choose The Same Defender Twice (Consistency).
-
-                        #Attack Chosen Animals.
-                        for Defender in np.array(Defenders, dtype = object):
-                            Defenders = Animal.Attack(Defender, Animal.AttackTypes[ChosenAttackType][0], Defenders, ChosenAttackType) #Defender, Damage, AttackType.
+                    if ChosenAttackType.SplashDamage[0] and np.where(Defenders == "None")[0].shape[0] == 0: #Assume Splash Hits Every Seen Opposing Animal in Attack Radius Right Now, Not Through Obstacles or Animals.
+                        print(f"{Animal} Splash Attacks All.")
+                        Defenders = np.append(Defenders, ValidDefenders)
+                        for Defender in ValidDefenders:
+                            if Defender in Animals.InBattle:
+                                Animals.InBattle = np.delete(Animals.InBattle, np.where(Animals.InBattle == Defender)[0][0]) #Remove Chosen Defenders to Not Choose The Same Defender Twice.
 
                     else:
-                        Defenders = np.array([], dtype = object)
+                        print(f"{Animal} Attacks {Defenders[0]}.")
+                        #Check if Animal Chooses to Attack at All
+                        if Defenders[0] in Animals.InBattle:
+                            Animals.InBattle = np.delete(Animals.InBattle, np.where(Animals.InBattle == Defenders[0])[0][0]) #Remove Chosen Defenders to Not Choose The Same Defender Twice (Consistency).
+
+                            #Attack Chosen Animals.
+                            for Defender in np.array(Defenders, dtype = object):
+                                Defenders = Animal.Attack(Defender, Animal.AttackTypes[ChosenAttackType][0], Defenders, ChosenAttackType) #Defender, Damage, AttackType.
+
+                        else:
+                            Defenders = np.array([], dtype = object)
 
     return Defenders
 
@@ -445,6 +447,9 @@ def main():
 
     #Create Attack Types + Ability Types
     CreateAttackAbilityTypes()
+
+    #Create 1 of Every Animal For Later Copies
+    CreateEachAnimal()
 
     #Create Players + Player Decks
     Player1, Player2 = input("Player 1 Name: "), input("Player 2 Name: ")

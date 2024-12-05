@@ -1,5 +1,8 @@
 import numpy as np
 from copy import deepcopy
+from DebugMode import *
+
+debug_mode = True
 
 #Class For Every Animal in The Game.
 class Animals:
@@ -221,7 +224,7 @@ class AbilityTypes():
 
     AbilityTypeList = np.array([], dtype = np.int32) #List of Every AbilityType.
 
-    #Define an Ability Type Object.
+    # Define an Ability Type Object.
     def __init__(AbilityType, AbilityName, AbilityFunction, SubEffects = np.array([], dtype = np.str_)):
 
         AbilityType.AbilityName = AbilityName #String Name of The Ability. Unique.
@@ -229,11 +232,11 @@ class AbilityTypes():
         AbilityTypes.AbilityTypeList = np.append(AbilityTypes.AbilityTypeList, AbilityType) #The AbilityTypes Class Contains a List of Every AbilityType.
         AbilityType.AbilityFunction = AbilityFunction #Function Pointer For This Ability
 
-    #Apply Venom to Animal. Assume Conditions Met.
-    #Venom = Being Bitten by The Animal Causes Toxic Damage. Ignores Armor. Max 2.
+    # Apply Venom to Animal. Assume Conditions Met.
+    # Venom = Being Bitten by The Animal Causes Toxic Damage. Ignores Armor. Max 2.
     def Venom(VenomObject, Animal, SubEffect = None, Reverse = False):
 
-        '''
+        """
         Use Cases:
         if Animal Attacked:
             FoundAbility = Animals.FindAbility("Venom", OtherAnimal.AttackTypes, AttackObject)
@@ -245,16 +248,19 @@ class AbilityTypes():
                 #The Animal Takes Toxic Damage. Ignores Armor.
                 FoundAbility = Animals.FindAbility("Venom")
                 FoundAbility.AbilityFunction(FoundAbility, Animal, Reverse = True)
-        '''
+        """
+        # Debug tools
+        initial_health = Animal.Health
+        initial_venom = Animal.CurrentAbilities["Venom"]
 
-        #Check if This is a SubEffect
+        # Check if This is a SubEffect
         if SubEffect is not None:
-            pass #SubEffects do Not Exist For Venom
+            pass  # SubEffects do Not Exist For Venom
 
-        #Not a SubEffect
+        # Not a SubEffect
         else:
-            #Change The Level of Venom That The Animal Has Applied to The Animal. This Damages The Animal Over Time.
-            #Each Time The Venom Damages The Animal (Equal to Level Damage), The Level of Venom Decreases.
+            # Change The Level of Venom That The Animal Has Applied to The Animal. This Damages The Animal Over Time.
+            # Each Time The Venom Damages The Animal (Equal to Level Damage), The Level of Venom Decreases.
             if Reverse:
                 Animal.Health -= Animal.CurrentAbilities["Venom"] if Animal.Health - Animal.CurrentAbilities["Venom"] > 0 else 0
                 print(f"Venom Damaged {Animal} by {Animal.CurrentAbilities['Venom']}.")
@@ -264,6 +270,9 @@ class AbilityTypes():
             else:
                 Animal.CurrentAbilities["Venom"] += 1 if Animal.CurrentAbilities["Venom"] < 2 else 0
                 print(f"Venom Level {Animal.CurrentAbilities['Venom']} Applied to {Animal}.")
+
+        if debug_mode:
+            venom_test(VenomObject, Animal, Reverse, initial_venom, initial_health)
 
     #Apply Paralysis to Animal. Assume Conditions Met.
     #Paralysis = Immobilization of Smaller Animals. Chance 1-3 Turns of no Movement (50% Chance of Attack Paralysis During That Time).
@@ -291,6 +300,8 @@ class AbilityTypes():
         Can Also Get Paralysis From Exhaustion Level 2
         '''
 
+        initial_paralysis = Animal.CurrentAbilities["Paralysis"]
+
         #Check if This is a SubEffect
         if SubEffect == ParalysisObject.SubEffects[0]: #SubEffect == "Exhaustion"
             #Set Whether The Animal Has Paralysis Applied to The Animal to True or False. This Cuts Off Movement
@@ -316,6 +327,10 @@ class AbilityTypes():
             else:
                 Animal.CurrentAbilities["Paralysis"] = np.array([True, np.random.randint(1, 4)], dtype = object)
                 print(f"Paralysis Applied to {Animal} For {Animal.CurrentAbilities['Paralysis'][1]} Turn{'s' if Animal.CurrentAbilities['Paralysis'][1] != 1 else ''}.")
+
+        # Debug Mode
+        if debug_mode:
+            paralysis_test(ParalysisObject, Animal, SubEffect, Reverse, initial_paralysis, NewTime)
 
     #Apply ColdBlooded to Animal. Assume Conditions Met.
     #ColdBlooded = Gains 1 HP Per Turn in Sun (Not Over Maximum), -1 HP Per Turn in Wildfire, Drought. Half Speed Rounded Down in Blizzard, Tundra.

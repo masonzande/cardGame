@@ -149,6 +149,29 @@ class InputSet[T]:
         if action in self.cursors.keys():
             for cursor in self.cursors[action]:
                 return isinstance(cursor, Cursor) and cursor.delta()
+            
+    def get_cursor_button(self, action: T, cursor_action: T):
+        if action in self.inputs.keys() and cursor_action in self.cursors.keys():
+            position = None
+            delta = None
+            pressed = None
+            down = None
+            released = None
+            for cursor in self.cursors[cursor_action]:
+                position = cursor.position()
+                delta = cursor.delta()
+            for input in self.inputs[action]:
+                pressed = input.pressed()
+                down = input.down()
+                released = input.released()
+            return {
+                "position": position,
+                "delta": delta,
+                "pressed": pressed,
+                "down": down,
+                "released": released
+            }
+        
     
     def update(self, event_queue: list[pg.event.Event]):
         for _, inputs in self.inputs.items():

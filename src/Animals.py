@@ -392,16 +392,11 @@ def EndTurnEffects(Animal, Weather, Environment, Action, Movement, DeathGrid2D):
         FoundAbility = Animals.FindAbility("Scavenger", Animal.AbilityTypes, "None")
         FoundAbility[0].AbilityFunction(FoundAbility[0], Animal, FoundAbility[1])
 
-    #Poison
-    if Animal.CurrentAbilities["Poison"] > 0:
-        #The Animal Takes Toxic Damage. Ignores Armor.
-        FoundAbility = Animals.FindAbility("Poison")
-        FoundAbility.AbilityFunction(FoundAbility, Animal, Reverse = True)
-
-    #Fear
-    if Animal.CurrentAbilities["Fear"] > 0:
-        FoundAbility = Animals.FindAbility("Fear")
-        FoundAbility.AbilityFunction(FoundAbility, Animal, Reverse = True)
+    #Poison (The Animal Takes Toxic Damage. Ignores Armor), Fear
+    for Ability in ("Poison", "Fear"):
+        if Animal.CurrentAbilities[Ability] > 0:
+            FoundAbility = Animals.FindAbility(Ability)
+            FoundAbility.AbilityFunction(FoundAbility, Animal, Reverse = True)
 
     return DeathGrid2D
 
@@ -460,49 +455,74 @@ def main():
     #Choose Environment, Weather / Natural Disaster, Time of Day.
     Environment, Weather, DayNight, Grid2D, DeathGrid2D = CreateEnvironmentGrid()
 
-    for Turn in range(1, 21): #Change Turn Count Here
-        print(f"\nTurn {Turn}:")
+    Turn = 1
+    GameOver = False
+    LastTurnPlus = 21
+    while not(GameOver) and Turn < LastTurnPlus: #Change Turn Count Here
 
-        #Print The Stats of All Animals Starting The Turn.
-        Animals.PrintAllAnimalsInBattle()
+        #Check if Game Over (Game Ends When at Least One Player Has no Animals on The Battlefield)
+        Player1Animals = [Animal for Animal in Animals.InBattle if Animal.Player == Player1]
+        Player2Animals = [Animal for Animal in Animals.InBattle if Animal.Player == Player2]
+        if Turn == 1 or (Player1Animals != [] and Player2Animals != []):
+            print(f"\nTurn {Turn}:")
 
-        #Players Can Place an Animal This Turn or Not
-        AddAnimalToGrid(Player1, MaxDeckSize1, Grid2D)
-        AddAnimalToGrid(Player2, MaxDeckSize2, Grid2D)
+            #Print The Stats of All Animals Starting The Turn.
+            Animals.PrintAllAnimalsInBattle()
 
-        '''Update Join-Battle Effects.'''
-        JoinBattleEffects()
+            #Players Can Place an Animal This Turn or Not
+            AddAnimalToGrid(Player1, MaxDeckSize1, Grid2D)
+            AddAnimalToGrid(Player2, MaxDeckSize2, Grid2D)
 
-        #All Animals Attack a Random Opposing Animal
-        for Animal in np.array(Animals.InBattle, dtype = object):
-            SkipTurn = False
-            NoMovement = False
+            '''Update Join-Battle Effects.'''
+            JoinBattleEffects()
 
-            if Animal.Health > 0:
+            #All Animals Attack a Random Opposing Animal
+            for Animal in np.array(Animals.InBattle, dtype = object):
+                SkipTurn = False
+                NoMovement = False
 
-                '''Animal Turn Start, Update Effects.'''
-                print(f"\nPlayer {Animal.Player}'s {Animal}'s Turn.")
-                NoMovement, SkipTurn = StartTurnEffects(Animal, Weather, Environment, NoMovement, SkipTurn)
+                if Animal.Health > 0:
 
-                '''Turn.'''
-                if not(SkipTurn):
+                    '''Animal Turn Start, Update Effects.'''
+                    print(f"\nPlayer {Animal.Player}'s {Animal}'s Turn.")
+                    NoMovement, SkipTurn = StartTurnEffects(Animal, Weather, Environment, NoMovement, SkipTurn)
 
-                    '''Determine Who The Animal Can See (Using Camoflauge, Night Vision).'''
-                    AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen = AnimalSight(Animal, Grid2D, DayNight)
+                    '''Turn.'''
+                    if not(SkipTurn):
 
-                    '''Perform a Movement Action.'''
-                    Movement, AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen = MovementAction(Animal, Environment, DayNight, Grid2D, AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen)
+                        '''Determine Who The Animal Can See (Using Camoflauge, Night Vision).'''
+                        AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen = AnimalSight(Animal, Grid2D, DayNight)
 
-                    '''Perform a Non-Movement, Non-Attack Action.'''
-                    Action, Grid2D, AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen, Defenders = ExtraAction(Animal, DayNight, Grid2D, AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen)
+                        '''Perform a Movement Action.'''
+                        Movement, AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen = MovementAction(Animal, Environment, DayNight, Grid2D, AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen)
 
-                    '''Perform an Attack Action.'''
-                    Defenders2 = AttackAction(Animal, AttackRadiusAnimals)
+                        '''Perform a Non-Movement, Non-Attack Action.'''
+                        Action, Grid2D, AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen, Defenders = ExtraAction(Animal, DayNight, Grid2D, AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen)
 
-                '''Animal Turn End, Update Effects.'''
-                DeathGrid2D = EndTurnEffects(Animal, Weather, Environment, Action, Movement, DeathGrid2D)
+                        '''Perform an Attack Action.'''
+                        Defenders2 = AttackAction(Animal, AttackRadiusAnimals)
 
-                #End of Turn
-                DeathGrid2D = EndTurn(Animal, SkipTurn, NoMovement, Defenders, Defenders2, DeathGrid2D)
+                    '''Animal Turn End, Update Effects.'''
+                    DeathGrid2D = EndTurnEffects(Animal, Weather, Environment, Action, Movement, DeathGrid2D)
+
+                    #End of Turn
+                    DeathGrid2D = EndTurn(Animal, SkipTurn, NoMovement, Defenders, Defenders2, DeathGrid2D)
+
+            Turn += 1
+
+        else:
+            GameOver = True
+
+            #Print The Winner
+            if Player1Animals == [] and Player2Animals == []:
+                print("The Game is a Tie!")
+            elif Player1Animals == []:
+                print(f"Player {Player2} Wins!")
+            elif Player2Animals == []:
+                print(f"Player {Player1} Wins!")
+
+    #Print That The Time Ran Out
+    if Turn == LastTurnPlus:
+        print("Game Ran Out of Time! The Game is a Tie!")
 
 main()

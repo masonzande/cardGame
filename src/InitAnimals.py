@@ -16,7 +16,7 @@ class Animals:
         #Animal Name/Rarity/Health/Armor.
         Animal.Player = Player #Player ID That is Using This Animal
         Animal.EnvironmentPref = EnvironmentPref #Preferred Environment For This Animal
-        Animal.AnimalID = len([OtherAnimal for OtherAnimal in Animals.AnimalList if OtherAnimal.AnimalName.split(" ")[0] == AnimalName]) + 1 #Give a Unique ID to an Animal.
+        Animal.AnimalID = len([OtherAnimal for OtherAnimal in Animals.AnimalList if OtherAnimal.AnimalName.split(" ")[0] == AnimalName.split(" ")[0]]) + 1 #Give a Unique ID to an Animal.
         Animal.AnimalName = f"{AnimalName} {Animal.AnimalID}" #String Name of The Animal.
         Animal.Rarity = Rarity #String Rarity of The Animal. (Common/Rare/Epic/Legendary).
         Animal.PredPrey = PredPrey #String "Predator" or "Prey" Classification of The Animal

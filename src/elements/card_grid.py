@@ -23,10 +23,10 @@ class CardGrid:
             for dock in row:
                 dock.update(clock, inputs)
 
-    def update_cards(self, cards: list[card.Card]):
+    def update_cards(self, cards: list[card.Card], inputs: input.InputSet[game_actions.CardGameActions]):
         for row in self.docks:
             for dock in row:
-                dock.card_above(cards)
+                dock.card_above(cards, inputs)
 
     def draw(self, batcher: batcher.SpriteBatcher, depth: float):
         for row in self.docks:

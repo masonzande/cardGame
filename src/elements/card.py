@@ -8,6 +8,7 @@ from loader import ContentLoader
 import input
 from game_actions import CardGameActions
 import loader
+from enum import IntEnum
 
 # TODO: Convert all Assets to png
 # ID any missing drawings and replace them with something stock
@@ -26,6 +27,8 @@ class Card:
     _actual_size: pg.Vector2
 
     _dock: "CardDock"
+
+    _travel_back: bool
 
     animal: Animal
 
@@ -47,6 +50,7 @@ class Card:
         self._up = False
         self._actual_size = size
         self._dock = None
+        self._travel_back = False
 
         self.mouse_holding = False
 
@@ -58,8 +62,8 @@ class Card:
         if self._loaded:
             return
         try:
-            #f_name = f"./card_portraits/{self.animal.Rarity} - {self.animal.AnimalName}.png"
-            f_name = "./card_portraits/Legendary - Giraffe.jpg"
+            f_name = f"./card_portraits/{self.animal.Rarity} - {self.animal.AnimalName}.png"
+            #f_name = "./card_portraits/Legendary - Giraffe.jpg"
             self.portrait_sprite = loader.load_custom(f_name, graphics.sprite.Sprite)
         except Exception as e:
             print("Failed to load animal image:", e)
@@ -91,15 +95,17 @@ class Card:
             mouse_pos = pg.Vector2(mouse_data["position"])
 
             self.lerp_to(mouse_pos - pg.Vector2(self.bounds.size) / 2, 0.75)
-
+            self._travel_back = False
             self.mouse_holding = True
 
         if self.mouse_holding:
             mouse_pos = pg.Vector2(mouse_data["position"])
             self.lerp_to(mouse_pos - pg.Vector2(self.bounds.size) / 2, 0.75)
+        elif self._dock:
+            self._travel_back = True
+            self.lerp_to(pg.Vector2(self._dock.bounds.center) - pg.Vector2(self.bounds.size) / 2, 0.4)
 
         if mouse_data["released"]:
-
             self.mouse_holding = False
 
 
@@ -155,46 +161,49 @@ class Card:
 
         batcher.draw(self.card_render, pg.Vector2(pos_x, pos_y), pg.Vector2(size_x, size_y) * render_scale, depth)
 
+class DockType(IntEnum):
+    DECK = 0
+    HAND = 1
+    TILE = 2
+
 class CardDock:
-    Sprite: graphics.sprite.Sprite = None
-    
+    Sprite: graphics.sprite.Sprite = None 
+
     bounds: pg.Rect
-
     holding: Card
+    above: list[Card]
 
-    above: Card
+    dock_type: DockType
 
-
-    def __init__(self, position: pg.Vector2, size: pg.Vector2):
+    def __init__(self, position: pg.Vector2, size: pg.Vector2, type: DockType = DockType.TILE):
         self.bounds = pg.Rect(position, size)
+        self.above = []
         self.holding = None
-        self.above = None
+
+        self.dock_type = type
 
     def load(self, loader: loader.ContentLoader):
         if CardDock.Sprite == None:
             CardDock.Sprite = loader.load_custom("./game_elements/Dock_Border.png", graphics.sprite.Sprite)
 
     def pre_update(self, inputs: input.InputSet):
-        if self.holding and not self.bounds.contains(self.holding.bounds.center, (0, 0)):
-            self.holding.resize(None)
-            self.holding = None
+        pass
 
     def update(self, clock: pg.time.Clock, inputs: input.InputSet):
-        if self.above and self.holding == None:
-            self.holding = self.above
-            self.above = None
-            self.holding.resize(self.bounds.size)
-            self.holding._dock = self
+        for card in self.above:
+            if inputs.get_action_released(CardGameActions.PICK_UP):
+                card._dock = self
+                self.holding = card
+            card.resize(self.bounds.size)
+            card.lerp_to(pg.Vector2(self.bounds.center) - pg.Vector2(card.bounds.size) / 2, 0.7)    
 
-        if self.holding:
-            self.holding.lerp_to(pg.Vector2(self.bounds.center) - pg.Vector2(self.holding.bounds.size) / 2, 0.7)    
-
-    def card_above(self, cards: list[Card]) -> tuple[bool, Card] :
+    def card_above(self, cards: list[Card], inputs: input.InputSet) -> list[Card] :
+        for card in self.above:
+            card.resize(None)
+        self.above = []
         for card in cards:
-            if self.bounds.contains(card.bounds.center, (0, 0)) and not (card is self.holding):
-                self.above = card
-                return self.above
-        self.above = None
+            if self.bounds.contains(card.bounds.center, (0, 0)):
+                self.above.append(card)
         return self.above
     
     def draw(self, batcher: graphics.batcher.SpriteBatcher, depth: float):

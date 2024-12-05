@@ -33,6 +33,7 @@ class CardGame(Engine):
         self.display = pg.display.set_mode((1280, 720), pg.OPENGL | pg.DOUBLEBUF)
 
         self.card = elements.card.Card(None, pg.Vector2(75, 105))
+        self.card.flip()
         self.grid = elements.card_grid.CardGrid(pg.Vector2(320, 64), 10, 8, pg.Vector2(64, 64))
         self.p1_dock = elements.player_dock.PlayerDock(pg.Vector2(0, 0), pg.Vector2(194, 720), 4)
 
@@ -59,10 +60,10 @@ class CardGame(Engine):
         # Main Game Logic goes here!
 
         self.card.update(clock, self.inputset)
-        self.grid.update_cards([self.card])
+        self.grid.update_cards([self.card], self.inputset)
         self.grid.update(clock, self.inputset)
         self.p1_dock.show_hand()
-        self.p1_dock.update_card([self.card])
+        self.p1_dock.update_card([self.card], self.inputset)
         self.p1_dock.update(clock, self.inputset)
 
         self.dummy += 32 * clock.get_time() / 1000

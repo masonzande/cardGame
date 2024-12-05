@@ -25,19 +25,14 @@ class PlayerDock:
             dock.update(clock, inputs)
         self.deck.update(clock, inputs)
 
-    def update_card(self, cards: list[card.Card]):
+    def update_card(self, cards: list[card.Card], inputs: input.InputSet[game_actions.CardGameActions]):
         for dock in self.hand:
-            dock.card_above(cards)
+            dock.card_above(cards, inputs)
 
     def hide_hand(self):
-        for dock in self.hand:
-            if dock.holding and dock.holding._up:
-                dock.holding.flip()
-    
+        pass
     def show_hand(self):
-        for dock in self.hand:
-            if dock.holding and not dock.holding._up:
-                dock.holding.flip()
+        pass
 
     def draw(self, batcher: batcher.SpriteBatcher, depth: float):
         for dock in self.hand:

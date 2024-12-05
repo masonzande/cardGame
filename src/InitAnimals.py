@@ -16,7 +16,7 @@ class Animals:
         #Animal Name/Rarity/Health/Armor.
         Animal.Player = Player #Player ID That is Using This Animal
         Animal.EnvironmentPref = EnvironmentPref #Preferred Environment For This Animal
-        Animal.AnimalID = len([OtherAnimal for OtherAnimal in Animals.AnimalList if OtherAnimal.AnimalName.split(" ")[0] == AnimalName]) + 1 #Give a Unique ID to an Animal.
+        Animal.AnimalID = 0 #Give a Unique ID to an Animal. Starts at 1. Animal Will be Copied, With ID & Name Updated.
         Animal.AnimalName = f"{AnimalName} {Animal.AnimalID}" #String Name of The Animal.
         Animal.Rarity = Rarity #String Rarity of The Animal. (Common/Rare/Epic/Legendary).
         Animal.PredPrey = PredPrey #String "Predator" or "Prey" Classification of The Animal
@@ -1037,688 +1037,634 @@ def ChooseAnimals(Player, MaxDeckSize):
 
     return AnimalDeck
 
+#Create 1 of Every Animal For Later Copies
+def CreateEachAnimal():
+
+    #Create Rattlesnake (Legendary).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[0]: np.array([1, AbilityTypes.AbilityTypeList[0], AbilityTypes.AbilityTypeList[1]], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[2], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object),
+        "Rattle": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0]], dtype = object), np.array([AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[2]], dtype = object)], dtype = object),
+        "Smell": np.array([AbilityTypes.AbilityTypeList[4]], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Slither": 3
+    }
+
+    Animals("Rattlesnake", "Small", "Desert", "Predator", "Legendary", "", 10, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Camel (Rare).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[1]: np.array([2, AbilityTypes.AbilityTypeList[5]], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[6], AbilityTypes.AbilityTypeList[13]], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Walk": 2
+    }
+
+    Animals("Camel", "Large", "Desert", "Prey", "Rare", "", 20, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Scorpion (Rare).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[2]: np.array([1, AbilityTypes.AbilityTypeList[0]], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[2], AbilityTypes.AbilityTypeList[13]], dtype = object),
+        "OnSight": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[1]], dtype = object)], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Walk": 2
+    }
+
+    Animals("Scorpion", "Small", "Desert", "Predator", "Rare", "", 8, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Silver Ant (Rare).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[0]: np.array([1], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[7], np.array([AbilityTypes.AbilityTypeList[2], AbilityTypes.AbilityTypeList[2].SubEffects[0]], dtype = object), np.array([AbilityTypes.AbilityTypeList[13], AbilityTypes.AbilityTypeList[13].SubEffects[0]], dtype = object), AbilityTypes.AbilityTypeList[10]], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Walk": 6
+    }
+
+    Animals("Silver Ant", "Tiny", "Desert", "Prey", "Rare", "", 5, 2, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Wolf (Rare).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[0]: np.array([2, AbilityTypes.AbilityTypeList[8]], dtype = object),
+        AttackTypes.AttackTypeList[3]: np.array([1, AbilityTypes.AbilityTypeList[8]], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]], dtype = object),
+        "OnSight": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0]], dtype = object)], dtype = object),
+        "Smell": np.array([np.array([AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[0]], dtype = object)], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Walk": 3
+    }
+
+    Animals("Wolf", "Medium", "Forest", "Predator", "Rare", "", 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Grizzly Bear (Legendary).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[0]: np.array([3, AbilityTypes.AbilityTypeList[8]], dtype = object),
+        AttackTypes.AttackTypeList[3]: np.array([2, AbilityTypes.AbilityTypeList[8]], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[3]], dtype = object), AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]], dtype = object),
+        "OnSight": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0]], dtype = object)], dtype = object),
+        "Smell": np.array([np.array([AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[0]], dtype = object)], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Walk": 3
+    }
+
+    Animals("Grizzly Bear", "Large", "Forest", "Predator", "Legendary", "", 20, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Black Bear (Epic).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[0]: np.array([2, AbilityTypes.AbilityTypeList[8]], dtype = object),
+        AttackTypes.AttackTypeList[3]: np.array([2, AbilityTypes.AbilityTypeList[8]], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]], dtype = object),
+        "Smell": np.array([np.array([AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[0]], dtype = object)], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Walk": 3,
+        "Climb": 1
+    }
+
+    Animals("Black Bear", "Large", "Forest", "Predator", "Epic", "", 17, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Deer (Common).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[1]: np.array([1, AbilityTypes.AbilityTypeList[5]], dtype = object),
+        AttackTypes.AttackTypeList[4]: np.array([2, AbilityTypes.AbilityTypeList[8]], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Walk": 3,
+        "Jump": 2
+    }
+
+    Animals("Deer", "Medium", "Forest", "Prey", "Common", "", 10, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Rabbit (Common).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[1]: np.array([1, AbilityTypes.AbilityTypeList[5]], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[13]], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Walk": 4,
+        "Jump": 2
+    }
+
+    Animals("Rabbit", "Small", "Forest", "Prey", "Common", "", 6, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Moose (Epic).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[1]: np.array([2, AbilityTypes.AbilityTypeList[5]], dtype = object),
+        AttackTypes.AttackTypeList[4]: np.array([3, AbilityTypes.AbilityTypeList[8]], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Walk": 3,
+        "Swim": 2
+    }
+
+    Animals("Moose", "Large", "Forest", "Prey", "Epic", "", 15, 3, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Eagle (Common).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[3]: np.array([2], dtype = object),
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[13]], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Walk": 1,
+        "Fly": 4
+    }
+
+    Animals("Eagle", "Medium", "Forest", "Predator", "Common", "", 6, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Hawk (Common).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[3]: np.array([2], dtype = object),
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[13]], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Walk": 1,
+        "Fly": 3
+    }
+
+    Animals("Hawk", "Medium", "Forest", "Predator", "Common", "", 7, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Shark (Epic).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[0]: np.array([3, AbilityTypes.AbilityTypeList[8]], dtype = object),
+        AttackTypes.AttackTypeList[5]: np.array([2, AbilityTypes.AbilityTypeList[5]], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]], dtype = object),
+        "OnSight": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[2]], dtype = object)], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Swim": 3
+    }
+
+    Animals("Shark", "Large", "Ocean", "Predator", "Epic", "", 14, 4, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Dolphin (Epic).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[5]: np.array([1, AbilityTypes.AbilityTypeList[5]], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]], dtype = object),
+        "Echo Location": np.array([np.array([AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[1]], dtype = object)], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Swim": 4
+    }
+
+    Animals("Dolphin", "Medium", "Ocean", "Prey", "Epic", "", 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Orca (Legendary).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[0]: np.array([3, AbilityTypes.AbilityTypeList[8]], dtype = object),
+        AttackTypes.AttackTypeList[5]: np.array([3, AbilityTypes.AbilityTypeList[5]], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[13]], dtype = object),
+        "OnSight": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0]], dtype = object)], dtype = object),
+        "Echo Location": np.array([AbilityTypes.AbilityTypeList[4], np.array([AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[1]], dtype = object)], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Swim": 3
+    }
+
+    Animals("Orca", "Large", "Ocean", "Predator", "Legendary", "", 20, 5, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Plankton (Common).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[6], AbilityTypes.AbilityTypeList[13]], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Swim": 1
+    }
+
+    Animals("Plankton", "Tiny", "Ocean", "Prey", "Common", "", 2, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Octopus (Rare).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[6]: np.array([1], dtype = object),
+        AttackTypes.AttackTypeList[7]: np.array([0, AbilityTypes.AbilityTypeList[1]], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Swim": 2
+    }
+
+    Animals("Octopus", "Small", "Ocean", "Prey", "Rare", "", 9, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Crab (Rare).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[3]: np.array([2], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[4].SubEffects[0]], dtype = object), AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Walk": 2,
+        "Swim": 1
+    }
+
+    Animals("Crab", "Small", "Ocean", "Prey", "Rare", "", 3, 6, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Lion (Legendary).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[0]: np.array([3, AbilityTypes.AbilityTypeList[8]], dtype = object),
+        AttackTypes.AttackTypeList[3]: np.array([2, AbilityTypes.AbilityTypeList[8]], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[13]], dtype = object),
+        "OnSight": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0]], dtype = object)], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Walk": 3
+    }
+
+    Animals("Lion", "Medium", "Grasslands", "Predator", "Legendary", "", 16, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Giraffe (Legendary).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[1]: np.array([3, AbilityTypes.AbilityTypeList[5]], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[13]], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Walk": 2
+    }
+
+    Animals("Giraffe", "Giant", "Grasslands", "Prey", "Legendary", "", 25, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Elephant (Legendary).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[8]: np.array([3, AbilityTypes.AbilityTypeList[1]], dtype = object),
+        AttackTypes.AttackTypeList[7]: np.array([0, AbilityTypes.AbilityTypeList[1]], dtype = object),
+        AttackTypes.AttackTypeList[1]: np.array([2, AbilityTypes.AbilityTypeList[5]], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[13]], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Walk": 2
+    }
+
+    Animals("Elephant", "Giant", "Grasslands", "Prey", "Legendary", "", 20, 4, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Zebra (Common).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[1]: np.array([1, AbilityTypes.AbilityTypeList[5]], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[13]], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Walk": 3
+    }
+
+    Animals("Zebra", "Medium", "Grasslands", "Prey", "Common", "", 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Hyena (Rare).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[0]: np.array([2, AbilityTypes.AbilityTypeList[8]], dtype = object),
+        AttackTypes.AttackTypeList[3]: np.array([1, AbilityTypes.AbilityTypeList[8]], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[10], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Walk": 3
+    }
+
+    Animals("Hyena", "Medium", "Grasslands", "Predator", "Rare", "", 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Gazelle (Common).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[1]: np.array([1, AbilityTypes.AbilityTypeList[5]], dtype = object),
+        AttackTypes.AttackTypeList[4]: np.array([2, AbilityTypes.AbilityTypeList[8]], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Walk": 3,
+        "Jump": 2
+    }
+
+    Animals("Gazelle", "Medium", "Grasslands", "Prey", "Common", "", 10, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Bison (Epic).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[1]: np.array([2, AbilityTypes.AbilityTypeList[5]], dtype = object),
+        AttackTypes.AttackTypeList[8]: np.array([3, AbilityTypes.AbilityTypeList[5]], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([np.array([AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[7].SubEffects[0]], dtype = object), AbilityTypes.AbilityTypeList[13]], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Walk": 3
+    }
+
+    Animals("Bison", "Large", "Grasslands", "Prey", "Epic", "", 15, 2, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Vulture (Rare).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[3]: np.array([2], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[10], np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[4].SubEffects[0]], dtype = object), AbilityTypes.AbilityTypeList[13]], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Walk": 1,
+        "Fly": 3
+    }
+
+    Animals("Vulture", "Medium", "Grasslands", "Prey", "Rare", "", 8, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Monkey (Rare).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[6]: np.array([1], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[13]], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Walk": 2,
+        "Climb": 2
+    }
+
+    Animals("Monkey", "Medium", "Rainforest", "Prey", "Rare", "", 9, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Ape (Rare).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[6]: np.array([2], dtype = object),
+        AttackTypes.AttackTypeList[7]: np.array([0, AbilityTypes.AbilityTypeList[1]], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[13]], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Walk": 2
+    }
+
+    Animals("Ape", "Large", "Rainforest", "Predator", "Rare", "", 13, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Alligator (Epic).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[0]: np.array([3, AbilityTypes.AbilityTypeList[8]], dtype = object),
+        AttackTypes.AttackTypeList[9]: np.array([4, AbilityTypes.AbilityTypeList[8]], dtype = object),
+        AttackTypes.AttackTypeList[5]: np.array([2, AbilityTypes.AbilityTypeList[5]], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object),
+        "OnSight": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0]], dtype = object)], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Walk": 2,
+        "Swim": 2
+    }
+
+    Animals("Alligator", "Medium", "Rainforest", "Predator", "Epic", "", 17, 6, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Crocodile (Epic).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[0]: np.array([3, AbilityTypes.AbilityTypeList[8]], dtype = object),
+        AttackTypes.AttackTypeList[9]: np.array([4, AbilityTypes.AbilityTypeList[8]], dtype = object),
+        AttackTypes.AttackTypeList[5]: np.array([2, AbilityTypes.AbilityTypeList[5]], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object),
+        "OnSight": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0]], dtype = object)], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Walk": 2,
+        "Swim": 2
+    }
+
+    Animals("Crocodile", "Medium", "Rainforest", "Predator", "Epic", "", 21, 2, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Poison Frog (Common).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[13]], dtype = object),
+        "Hurt": np.array([AbilityTypes.AbilityTypeList[11]], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Walk": 1,
+        "Jump": 2
+    }
+
+    Animals("Poison Frog", "Small", "Rainforest", "Prey", "Common", "", 7, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Polar Bear (Legendary).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[0]: np.array([4, AbilityTypes.AbilityTypeList[8]], dtype = object),
+        AttackTypes.AttackTypeList[3]: np.array([3, AbilityTypes.AbilityTypeList[8]], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object),
+        "OnSight": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0]], dtype = object)], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Walk": 3,
+        "Swim": 3
+    }
+
+    Animals("Polar Bear", "Large", "Tundra", "Predator", "Legendary", "", 20, 5, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Arctic Fox (Rare).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[0]: np.array([2], dtype = object),
+        AttackTypes.AttackTypeList[3]: np.array([1], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object),
+        "Bark": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[2]], dtype = object)], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Walk": 2
+    }
+
+    Animals("Arctic Fox", "Medium", "Tundra", "Predator", "Rare", "", 8, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Penguin (Common).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[0]: np.array([1], dtype = object)
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Walk": 1,
+        "Swim": 2
+    }
+
+    Animals("Penguin", "Medium", "Tundra", "Prey", "Common", "", 8, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
+
+    #Create Seal (Common).
+    AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
+        AttackTypes.AttackTypeList[8]: np.array([1, AbilityTypes.AbilityTypeList[1]], dtype = object),
+    }
+
+    AnimalAbilities = { #"Activation": (AbilityType Objects)
+        "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object)
+    }
+
+    AnimalMovements = { #"MovementType": MovementRadius
+        "Swim": 2
+    }
+
+    Animals("Seal", "Medium", "Tundra", "Prey", "Common", "", 12, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+
 #Create Decks of Animals.
 def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
 
     AnimalDeck = ChooseAnimals(Player, MaxDeckSize)
 
-    for _ in range(AnimalDeck["Rattlesnake"]):
-
-        #Create Rattlesnake (Legendary).
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[0]: np.array([1, AbilityTypes.AbilityTypeList[0], AbilityTypes.AbilityTypeList[1]], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[2], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object),
-            "Rattle": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0]], dtype = object), np.array([AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[2]], dtype = object)], dtype = object),
-            "Smell": np.array([AbilityTypes.AbilityTypeList[4]], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Slither": 3
-        }
-
-        Animals("Rattlesnake", "Small", "Desert", "Predator", "Legendary", Player, 10, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Camel (Rare).
-    for _ in range(AnimalDeck["Camel"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[1]: np.array([2, AbilityTypes.AbilityTypeList[5]], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[6], AbilityTypes.AbilityTypeList[13]], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Walk": 2
-        }
-
-        Animals("Camel", "Large", "Desert", "Prey", "Rare", Player, 20, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Scorpion (Rare).
-    for _ in range(AnimalDeck["Scorpion"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[2]: np.array([1, AbilityTypes.AbilityTypeList[0]], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[2], AbilityTypes.AbilityTypeList[13]], dtype = object),
-            "OnSight": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[1]], dtype = object)], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Walk": 2
-        }
-
-        Animals("Scorpion", "Small", "Desert", "Predator", "Rare", Player, 8, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Silver Ant (Rare).
-    for _ in range(AnimalDeck["Silver Ant"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[0]: np.array([1], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[7], np.array([AbilityTypes.AbilityTypeList[2], AbilityTypes.AbilityTypeList[2].SubEffects[0]], dtype = object), np.array([AbilityTypes.AbilityTypeList[13], AbilityTypes.AbilityTypeList[13].SubEffects[0]], dtype = object), AbilityTypes.AbilityTypeList[10]], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Walk": 6
-        }
-
-        Animals("Silver Ant", "Tiny", "Desert", "Prey", "Rare", Player, 5, 2, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Wolf (Rare).
-    for _ in range(AnimalDeck["Wolf"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[0]: np.array([2, AbilityTypes.AbilityTypeList[8]], dtype = object),
-            AttackTypes.AttackTypeList[3]: np.array([1, AbilityTypes.AbilityTypeList[8]], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]], dtype = object),
-            "OnSight": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0]], dtype = object)], dtype = object),
-            "Smell": np.array([np.array([AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[0]], dtype = object)], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Walk": 3
-        }
-
-        Animals("Wolf", "Medium", "Forest", "Predator", "Rare", Player, 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Grizzly Bear (Legendary).
-    for _ in range(AnimalDeck["Grizzly Bear"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[0]: np.array([3, AbilityTypes.AbilityTypeList[8]], dtype = object),
-            AttackTypes.AttackTypeList[3]: np.array([2, AbilityTypes.AbilityTypeList[8]], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[3]], dtype = object), AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]], dtype = object),
-            "OnSight": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0]], dtype = object)], dtype = object),
-            "Smell": np.array([np.array([AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[0]], dtype = object)], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Walk": 3
-        }
-
-        Animals("Grizzly Bear", "Large", "Forest", "Predator", "Legendary", Player, 20, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Black Bear (Epic).
-    for _ in range(AnimalDeck["Black Bear"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[0]: np.array([2, AbilityTypes.AbilityTypeList[8]], dtype = object),
-            AttackTypes.AttackTypeList[3]: np.array([2, AbilityTypes.AbilityTypeList[8]], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]], dtype = object),
-            "Smell": np.array([np.array([AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[0]], dtype = object)], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Walk": 3,
-            "Climb": 1
-        }
-
-        Animals("Black Bear", "Large", "Forest", "Predator", "Epic", Player, 17, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Deer (Common).
-    for _ in range(AnimalDeck["Deer"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[1]: np.array([1, AbilityTypes.AbilityTypeList[5]], dtype = object),
-            AttackTypes.AttackTypeList[4]: np.array([2, AbilityTypes.AbilityTypeList[8]], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Walk": 3,
-            "Jump": 2
-        }
-
-        Animals("Deer", "Medium", "Forest", "Prey", "Common", Player, 10, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Rabbit (Common).
-    for _ in range(AnimalDeck["Rabbit"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[1]: np.array([1, AbilityTypes.AbilityTypeList[5]], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[13]], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Walk": 4,
-            "Jump": 2
-        }
-
-        Animals("Rabbit", "Small", "Forest", "Prey", "Common", Player, 6, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Moose (Epic).
-    for _ in range(AnimalDeck["Moose"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[1]: np.array([2, AbilityTypes.AbilityTypeList[5]], dtype = object),
-            AttackTypes.AttackTypeList[4]: np.array([3, AbilityTypes.AbilityTypeList[8]], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Walk": 3,
-            "Swim": 2
-        }
-
-        Animals("Moose", "Large", "Forest", "Prey", "Epic", Player, 15, 3, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Eagle (Common).
-    for _ in range(AnimalDeck["Eagle"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[3]: np.array([2], dtype = object),
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[13]], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Walk": 1,
-            "Fly": 4
-        }
-
-        Animals("Eagle", "Medium", "Forest", "Predator", "Common", Player, 6, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Hawk (Common).
-    for _ in range(AnimalDeck["Hawk"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[3]: np.array([2], dtype = object),
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[13]], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Walk": 1,
-            "Fly": 3
-        }
-
-        Animals("Hawk", "Medium", "Forest", "Predator", "Common", Player, 7, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Shark (Epic).
-    for _ in range(AnimalDeck["Shark"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[0]: np.array([3, AbilityTypes.AbilityTypeList[8]], dtype = object),
-            AttackTypes.AttackTypeList[5]: np.array([2, AbilityTypes.AbilityTypeList[5]], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]], dtype = object),
-            "OnSight": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[2]], dtype = object)], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Swim": 3
-        }
-
-        Animals("Shark", "Large", "Ocean", "Predator", "Epic", Player, 14, 4, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Dolphin (Epic).
-    for _ in range(AnimalDeck["Dolphin"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[5]: np.array([1, AbilityTypes.AbilityTypeList[5]], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]], dtype = object),
-            "Echo Location": np.array([np.array([AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[1]], dtype = object)], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Swim": 4
-        }
-
-        Animals("Dolphin", "Medium", "Ocean", "Prey", "Epic", Player, 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Orca (Legendary).
-    for _ in range(AnimalDeck["Orca"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[0]: np.array([3, AbilityTypes.AbilityTypeList[8]], dtype = object),
-            AttackTypes.AttackTypeList[5]: np.array([3, AbilityTypes.AbilityTypeList[5]], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[13]], dtype = object),
-            "OnSight": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0]], dtype = object)], dtype = object),
-            "Echo Location": np.array([AbilityTypes.AbilityTypeList[4], np.array([AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[3].SubEffects[1]], dtype = object)], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Swim": 3
-        }
-
-        Animals("Orca", "Large", "Ocean", "Predator", "Legendary", Player, 20, 5, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Plankton (Common).
-    for _ in range(AnimalDeck["Plankton"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[6], AbilityTypes.AbilityTypeList[13]], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Swim": 1
-        }
-
-        Animals("Plankton", "Tiny", "Ocean", "Prey", "Common", Player, 2, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Octopus (Rare).
-    for _ in range(AnimalDeck["Octopus"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[6]: np.array([1], dtype = object),
-            AttackTypes.AttackTypeList[7]: np.array([0, AbilityTypes.AbilityTypeList[1]], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Swim": 2
-        }
-
-        Animals("Octopus", "Small", "Ocean", "Prey", "Rare", Player, 9, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Crab (Rare).
-    for _ in range(AnimalDeck["Crab"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[3]: np.array([2], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[4].SubEffects[0]], dtype = object), AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Walk": 2,
-            "Swim": 1
-        }
-
-        Animals("Crab", "Small", "Ocean", "Prey", "Rare", Player, 3, 6, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Lion (Legendary).
-    for _ in range(AnimalDeck["Lion"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[0]: np.array([3, AbilityTypes.AbilityTypeList[8]], dtype = object),
-            AttackTypes.AttackTypeList[3]: np.array([2, AbilityTypes.AbilityTypeList[8]], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[13]], dtype = object),
-            "OnSight": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0]], dtype = object)], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Walk": 3
-        }
-
-        Animals("Lion", "Medium", "Grasslands", "Predator", "Legendary", Player, 16, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Giraffe (Legendary).
-    for _ in range(AnimalDeck["Giraffe"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[1]: np.array([3, AbilityTypes.AbilityTypeList[5]], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[13]], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Walk": 2
-        }
-
-        Animals("Giraffe", "Giant", "Grasslands", "Prey", "Legendary", Player, 25, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Elephant (Legendary).
-    for _ in range(AnimalDeck["Elephant"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[8]: np.array([3, AbilityTypes.AbilityTypeList[1]], dtype = object),
-            AttackTypes.AttackTypeList[7]: np.array([0, AbilityTypes.AbilityTypeList[1]], dtype = object),
-            AttackTypes.AttackTypeList[1]: np.array([2, AbilityTypes.AbilityTypeList[5]], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[13]], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Walk": 2
-        }
-
-        Animals("Elephant", "Giant", "Grasslands", "Prey", "Legendary", Player, 20, 4, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Zebra (Common).
-    for _ in range(AnimalDeck["Zebra"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[1]: np.array([1, AbilityTypes.AbilityTypeList[5]], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[13]], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Walk": 3
-        }
-
-        Animals("Zebra", "Medium", "Grasslands", "Prey", "Common", Player, 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Hyena (Rare).
-    for _ in range(AnimalDeck["Hyena"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[0]: np.array([2, AbilityTypes.AbilityTypeList[8]], dtype = object),
-            AttackTypes.AttackTypeList[3]: np.array([1, AbilityTypes.AbilityTypeList[8]], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[10], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Walk": 3
-        }
-
-        Animals("Hyena", "Medium", "Grasslands", "Predator", "Rare", Player, 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Gazelle (Common).
-    for _ in range(AnimalDeck["Gazelle"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[1]: np.array([1, AbilityTypes.AbilityTypeList[5]], dtype = object),
-            AttackTypes.AttackTypeList[4]: np.array([2, AbilityTypes.AbilityTypeList[8]], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Walk": 3,
-            "Jump": 2
-        }
-
-        Animals("Gazelle", "Medium", "Grasslands", "Prey", "Common", Player, 10, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Bison (Epic).
-    for _ in range(AnimalDeck["Bison"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[1]: np.array([2, AbilityTypes.AbilityTypeList[5]], dtype = object),
-            AttackTypes.AttackTypeList[8]: np.array([3, AbilityTypes.AbilityTypeList[5]], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([np.array([AbilityTypes.AbilityTypeList[7], AbilityTypes.AbilityTypeList[7].SubEffects[0]], dtype = object), AbilityTypes.AbilityTypeList[13]], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Walk": 3
-        }
-
-        Animals("Bison", "Large", "Grasslands", "Prey", "Epic", Player, 15, 2, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Vulture (Rare).
-    for _ in range(AnimalDeck["Vulture"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[3]: np.array([2], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[10], np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[4].SubEffects[0]], dtype = object), AbilityTypes.AbilityTypeList[13]], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Walk": 1,
-            "Fly": 3
-        }
-
-        Animals("Vulture", "Medium", "Grasslands", "Prey", "Rare", Player, 8, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Monkey (Rare).
-    for _ in range(AnimalDeck["Monkey"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[6]: np.array([1], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[13]], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Walk": 2,
-            "Climb": 2
-        }
-
-        Animals("Monkey", "Medium", "Rainforest", "Prey", "Rare", Player, 9, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Ape (Rare).
-    for _ in range(AnimalDeck["Ape"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[6]: np.array([2], dtype = object),
-            AttackTypes.AttackTypeList[7]: np.array([0, AbilityTypes.AbilityTypeList[1]], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[9], AbilityTypes.AbilityTypeList[13]], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Walk": 2
-        }
-
-        Animals("Ape", "Large", "Rainforest", "Predator", "Rare", Player, 13, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Alligator (Epic).
-    for _ in range(AnimalDeck["Alligator"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[0]: np.array([3, AbilityTypes.AbilityTypeList[8]], dtype = object),
-            AttackTypes.AttackTypeList[9]: np.array([4, AbilityTypes.AbilityTypeList[8]], dtype = object),
-            AttackTypes.AttackTypeList[5]: np.array([2, AbilityTypes.AbilityTypeList[5]], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object),
-            "OnSight": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0]], dtype = object)], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Walk": 2,
-            "Swim": 2
-        }
-
-        Animals("Alligator", "Medium", "Rainforest", "Predator", "Epic", Player, 17, 6, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Crocodile (Epic).
-    for _ in range(AnimalDeck["Crocodile"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[0]: np.array([3, AbilityTypes.AbilityTypeList[8]], dtype = object),
-            AttackTypes.AttackTypeList[9]: np.array([4, AbilityTypes.AbilityTypeList[8]], dtype = object),
-            AttackTypes.AttackTypeList[5]: np.array([2, AbilityTypes.AbilityTypeList[5]], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object),
-            "OnSight": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0]], dtype = object)], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Walk": 2,
-            "Swim": 2
-        }
-
-        Animals("Crocodile", "Medium", "Rainforest", "Predator", "Epic", Player, 21, 2, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Poison Frog (Common).
-    for _ in range(AnimalDeck["Poison Frog"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[13]], dtype = object),
-            "Hurt": np.array([AbilityTypes.AbilityTypeList[11]], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Walk": 1,
-            "Jump": 2
-        }
-
-        Animals("Poison Frog", "Small", "Rainforest", "Prey", "Common", Player, 7, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Polar Bear (Legendary).
-    for _ in range(AnimalDeck["Polar Bear"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[0]: np.array([4, AbilityTypes.AbilityTypeList[8]], dtype = object),
-            AttackTypes.AttackTypeList[3]: np.array([3, AbilityTypes.AbilityTypeList[8]], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object),
-            "OnSight": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[0]], dtype = object)], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Walk": 3,
-            "Swim": 3
-        }
-
-        Animals("Polar Bear", "Large", "Tundra", "Predator", "Legendary", Player, 20, 5, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Arctic Fox (Rare).
-    for _ in range(AnimalDeck["Arctic Fox"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[0]: np.array([2], dtype = object),
-            AttackTypes.AttackTypeList[3]: np.array([1], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object),
-            "Bark": np.array([np.array([AbilityTypes.AbilityTypeList[12], AbilityTypes.AbilityTypeList[12].SubEffects[2]], dtype = object)], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Walk": 2
-        }
-
-        Animals("Arctic Fox", "Medium", "Tundra", "Predator", "Rare", Player, 8, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Penguin (Common).
-    for _ in range(AnimalDeck["Penguin"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[0]: np.array([1], dtype = object)
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[13]], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Walk": 1,
-            "Swim": 2
-        }
-
-        Animals("Penguin", "Medium", "Tundra", "Prey", "Common", Player, 8, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-
-
-    #Create Seal (Common).
-    for _ in range(AnimalDeck["Seal"]):
-
-        AnimalAttacks = { #AttackType Object: (Damage, AbilityType Objects)
-            AttackTypes.AttackTypeList[8]: np.array([1, AbilityTypes.AbilityTypeList[1]], dtype = object),
-        }
-
-        AnimalAbilities = { #"Activation": (AbilityType Objects)
-            "None": np.array([AbilityTypes.AbilityTypeList[4], AbilityTypes.AbilityTypeList[3], AbilityTypes.AbilityTypeList[13]], dtype = object)
-        }
-
-        AnimalMovements = { #"MovementType": MovementRadius
-            "Swim": 2
-        }
-
-        Animals("Seal", "Medium", "Tundra", "Prey", "Common", Player, 12, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+    AnimalDeckKeys = list(AnimalDeck.keys())
+    EveryAnimal = len(AnimalDeckKeys)
+    i = 0
+    while i < EveryAnimal:
+
+        for _ in range(AnimalDeck[AnimalDeckKeys[i]]):
+            AnimalObject = deepcopy(Animals.AnimalList[i])
+            AnimalObject.AnimalID = len([OtherAnimal for OtherAnimal in Animals.AnimalList if OtherAnimal.AnimalName.split(" ")[0] == AnimalObject.AnimalName.split(" ")[0]]) #Give a Unique ID to an Animal.
+            AnimalObject.AnimalName = " ".join(AnimalObject.AnimalName.split(" ")[:-1] + [f"{AnimalObject.AnimalID}"])
+            AnimalObject.Player = Player
+            Animals.AnimalList = np.append(Animals.AnimalList, AnimalObject)
+        i += 1

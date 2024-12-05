@@ -163,7 +163,7 @@ def AddAnimalToGrid(Player, MaxDeckSize, Grid2D):
     #Player Chooses an Animal
     ChosenAnimal = ""
     while ChosenAnimal not in PossibleAnimals and ChosenAnimal.upper() != "N":
-        ChosenAnimal = input(f"Which Animal Does Player {Player} Wish to Choose to Place on The Battlefield? ")
+        ChosenAnimal = input(f"Which Animal Does Player {Player} Wish to Choose to Place on The Battlefield (N For None)? ")
 
     #Place The Animal on The Battlefield
     if ChosenAnimal.upper() != "N" and len(PossibleAnimals) != 0:

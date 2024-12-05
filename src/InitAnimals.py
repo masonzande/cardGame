@@ -301,6 +301,7 @@ class AbilityTypes():
         '''
 
         initial_paralysis = Animal.CurrentAbilities["Paralysis"]
+        NewTime = 0
 
         #Check if This is a SubEffect
         if SubEffect == ParalysisObject.SubEffects[0]: #SubEffect == "Exhaustion"
@@ -330,7 +331,7 @@ class AbilityTypes():
 
         # Debug Mode
         if debug_mode:
-            paralysis_test(ParalysisObject, Animal, SubEffect, Reverse, initial_paralysis, NewTime)
+            paralysis_test(ParalysisObject, Animal, SubEffect, Reverse, NewTime)
 
     #Apply ColdBlooded to Animal. Assume Conditions Met.
     #ColdBlooded = Gains 1 HP Per Turn in Sun (Not Over Maximum), -1 HP Per Turn in Wildfire, Drought. Half Speed Rounded Down in Blizzard, Tundra.
@@ -362,6 +363,9 @@ class AbilityTypes():
                     FoundAbility = Animals.FindAbility("ColdBlooded")
                     FoundAbility.AbilityFunction(FoundAbility, Animal, Environment, True)
         '''
+
+        # debug tools
+        initial_health = Animal.Health
 
         #Check if This is a SubEffect
         if SubEffect == ColdBloodedObject.SubEffects[0]: #SubEffect == "+1 HP in Wildfire, Drought"

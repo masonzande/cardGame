@@ -12,7 +12,7 @@ def venom_test(venom_object, animal, reverse, initial_venom, initial_health):
         assert animal.Health == (initial_health - initial_venom)
 
 
-def paralysis_test(paralysis_object, animal, sub_effect, reverse, initial_paralysis, new_time):
+def paralysis_test(paralysis_object, animal, sub_effect, reverse, new_time=0):
     print("Testing Paralysis")
     if sub_effect == paralysis_object.SubEffects[0]:
         if reverse:

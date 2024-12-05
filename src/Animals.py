@@ -2,6 +2,7 @@ from copy import deepcopy
 from InitAnimals import Animals, CreateAttackAbilityTypes, CreateAnimalDeck
 from AnimalGrid import AnimalSight, CreateEnvironmentGrid, AddAnimalToGrid
 import numpy as np
+debug_mode = True
 
 '''Update Join-Battle Effects.'''
 def JoinBattleEffects():

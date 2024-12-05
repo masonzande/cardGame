@@ -1,16 +1,16 @@
 from copy import deepcopy
 from InitAnimals import Animals, CreateAttackAbilityTypes, CreateAnimalDeck
-from AnimalGrid import AnimalSight, CreateEnvironmentGrid
+from AnimalGrid import AnimalSight, CreateEnvironmentGrid, AddAnimalToGrid
 import numpy as np
 
-'''Update Pre-Battle Effects.'''
-def PreBattleEffects():
+'''Update Join-Battle Effects.'''
+def JoinBattleEffects():
 
-    #Grouping (Assuming All Animals Start on The Battlefield).
-    print("Pre-Battle Effects Applied.")
-    UniqueAnimals = np.unique(np.array([Animal2.AnimalName for Animal2 in Animals.AnimalList], dtype = object))
+    #Grouping.
+    print("\nJoin-Battle Effects Applied.")
+    UniqueAnimals = np.unique(np.array([Animal2.AnimalName for Animal2 in Animals.InBattle], dtype = object))
     for AnimalName in UniqueAnimals:
-        AllBattlefieldAnimalsWithThisType = np.array([OtherAnimal for OtherAnimal in Animals.AnimalList if OtherAnimal.AnimalName == AnimalName], dtype = object)
+        AllBattlefieldAnimalsWithThisType = np.array([OtherAnimal for OtherAnimal in Animals.InBattle if OtherAnimal.AnimalName == AnimalName], dtype = object)
         if AllBattlefieldAnimalsWithThisType.shape[0] > 1:
             #Assume Each of The Same Animal Has Grouping or Not
             FoundAbility = Animals.FindAbility("Grouping", AllBattlefieldAnimalsWithThisType[0].AbilityTypes, "None")
@@ -77,7 +77,9 @@ def MovementAction(Animal, Environment, DayNight, Grid2D, AttackRadiusAnimals, V
             Movements.append(MovementType)
 
     Movements = np.array(Movements, dtype = np.str_)
-    Movement = Movements[np.random.randint(0, Movements.shape[0])]
+    Movement = ""
+    while Movement not in Movements:
+        Movement = input(f"Which Valid Movement Type Should {Animal} Choose to Use From {Movements}? ")
     SaveLocation = Animal.CurrentLocation
 
     #Animal Movements Cannot Move Into The Same Grid Location as Another Animal
@@ -121,7 +123,14 @@ def MovementAction(Animal, Environment, DayNight, Grid2D, AttackRadiusAnimals, V
     if Movement != "None":
         #Move Animal
         print(f"Valid Movements For {Movement}: {ValidMovements[Movement]}")
-        Animal.CurrentLocation = ValidMovements[Movement][np.random.randint(0, ValidMovements[Movement].shape[0])]
+        print(f"This Includes Movements up to Twice The Value of {Animal}'s Movement Speed For Movement {Movement}.")
+        GridLocation = Animal.CurrentLocation
+        while not(any(np.array_equal(GridLocation, ValidMove) for ValidMove in ValidMovements[Movement])):
+            GridLocation = input(f"Which Location Should {Animal} go to? ")
+            GridLocation = GridLocation.replace(",", " ")
+            GridLocation = [XY.strip() for XY in GridLocation.split(" ") if XY.strip() != ""]
+            GridLocation = np.array([int(GridLocation[0]), int(GridLocation[1])], dtype = np.int32)
+        Animal.CurrentLocation = GridLocation
 
         #Check if Movement Was 2x
         if np.abs(Animal.CurrentLocation[0] - SaveLocation[0]) > Animal.MovementTypes[Movement] or np.abs(Animal.CurrentLocation[1] - SaveLocation[1]) > Animal.MovementTypes[Movement]:
@@ -158,12 +167,15 @@ def ExtraAction(Animal, DayNight, Grid2D, AttackRadiusAnimals, VisionPlusRadius,
             if (AbilityType == "Cut Trees" and ObstaclesBeside.shape[0] != 0) or AbilityType != "Cut Trees":
                 Actions.append(AbilityType)
     Actions = np.array(Actions, dtype = np.str_)
-    Action = Actions[np.random.randint(0, Actions.shape[0])] if Actions.shape[0] != 0 else ""
-    if Action != "":
+
+    Action = ""
+    if Actions.shape[0] != 0:
+        while Action not in Actions:
+            Action = input(f"Which Valid Action Should {Animal} Choose to Use From {Actions}? ")
         print(f"{Animal} Used {Action}.")
 
-    #Remove Animal From AnimalList to Not Affect Itself.
-    Animals.AnimalList = np.delete(Animals.AnimalList, np.where(Animals.AnimalList == Animal)[0][0])
+    #Remove Animal From InBattle to Not Affect Itself.
+    Animals.InBattle = np.delete(Animals.InBattle, np.where(Animals.InBattle == Animal)[0][0])
     Defenders = np.array([], dtype = object)
 
     if Action == "Rattle":
@@ -189,8 +201,8 @@ def ExtraAction(Animal, DayNight, Grid2D, AttackRadiusAnimals, VisionPlusRadius,
         print(f"{Animal} Smelled The Surrounding Animals: {np.array([OtherAnimal.AnimalName for OtherAnimal in VisionPlusRadius], dtype = object)}")
         Defenders = np.append(Defenders, VisionPlusRadius)
         for Defender in VisionPlusRadius:
-            if Defender in Animals.AnimalList:
-                Animals.AnimalList = np.delete(Animals.AnimalList, np.where(Animals.AnimalList == Defender)[0][0]) #Remove Chosen Defenders to Not Choose The Same Defender Twice.
+            if Defender in Animals.InBattle:
+                Animals.InBattle = np.delete(Animals.InBattle, np.where(Animals.InBattle == Defender)[0][0]) #Remove Chosen Defenders to Not Choose The Same Defender Twice.
 
         #Camoflauge
         for Defender in Defenders:
@@ -214,8 +226,8 @@ def ExtraAction(Animal, DayNight, Grid2D, AttackRadiusAnimals, VisionPlusRadius,
         print(f"{Animal} Echo Located The Surrounding Animals: {np.array([OtherAnimal.AnimalName for OtherAnimal in VisionPlusRadius], dtype = object)}")
         Defenders = np.append(Defenders, VisionPlusRadius)
         for Defender in VisionPlusRadius:
-            if Defender in Animals.AnimalList:
-                Animals.AnimalList = np.delete(Animals.AnimalList, np.where(Animals.AnimalList == Defender)[0][0]) #Remove Chosen Defenders to Not Choose The Same Defender Twice.
+            if Defender in Animals.InBattle:
+                Animals.InBattle = np.delete(Animals.InBattle, np.where(Animals.InBattle == Defender)[0][0]) #Remove Chosen Defenders to Not Choose The Same Defender Twice.
 
         #Camoflauge
         for Defender in Defenders:
@@ -245,7 +257,10 @@ def ExtraAction(Animal, DayNight, Grid2D, AttackRadiusAnimals, VisionPlusRadius,
     elif Action == "Cut Trees":
         '''Cut Trees.'''
         print(f"Trees That {Animal} Could Cut: {ObstaclesBeside}")
-        DestroyObstacle = ObstaclesBeside[np.random.randint(0, ObstaclesBeside.shape[0])] #Does Not Care if an Animal is on The Obstacle
+        DestroyObstacle = np.array([-1, -1], dtype = np.int32)
+        #Does Not Care if an Animal is on The Obstacle
+        while not(any(np.array_equal(DestroyObstacle, ValidObstacle) for ValidObstacle in ObstaclesBeside)):
+            DestroyObstacle = input(f"Which Tree Should {Animal} Choose to Cut From {ObstaclesBeside}? ")
         Grid2D[DestroyObstacle[0]][DestroyObstacle[1]][0] = ""
         print(f"{Animal} Cut a Tree at {DestroyObstacle}.")
 
@@ -268,28 +283,37 @@ def AttackAction(Animal, AttackRadiusAnimals):
         #Choose an AttackType.
         PossibleAttacks = np.array([AttackType for AttackType in Animal.AttackTypes.keys() if AttackRadiusAnimals[AttackType].shape[0] != 1], dtype = object)
 
-        print(f"{Animal}'s Possible Attacks: {np.array([Attack.AttackName for Attack in PossibleAttacks], dtype = np.str_)}")
+        PossibleAttackNames = np.array([Attack.AttackName for Attack in PossibleAttacks], dtype = np.str_)
+        print(f"{Animal}'s Possible Attacks: {PossibleAttackNames}")
         if PossibleAttacks.shape[0] != 0:
             #Choose a Valid Attack Type
-            ChosenAttackType = PossibleAttacks[np.random.randint(0, PossibleAttacks.shape[0])]
+            ChosenAttackType = ""
+            while ChosenAttackType not in PossibleAttackNames:
+                ChosenAttackType = input(f"Which Valid Attack Should {Animal} Choose to Use? ")
+            ChosenAttackType = PossibleAttacks[np.where(PossibleAttackNames == ChosenAttackType)[0][0]]
             ValidDefenders = AttackRadiusAnimals[ChosenAttackType][1:]
-            print(f"With Chosen Attack {ChosenAttackType.AttackName}, {Animal} Could Attack: {np.array([Defender.AnimalName for Defender in ValidDefenders], dtype = object)}")
+            ValidDefenderNames = np.array(["None"] + [Defender.AnimalName for Defender in ValidDefenders], dtype = object)
+            print(f"With Chosen Attack {ChosenAttackType.AttackName}, {Animal} Could Attack: {ValidDefenderNames}")
 
             if ValidDefenders.shape[0] != 0:
                 #Choose Animals to Attack.
-                Defenders = np.array([AttackRadiusAnimals[ChosenAttackType][np.random.randint(0, len(AttackRadiusAnimals[ChosenAttackType]))]], dtype = object)
+                ChosenDefender = ""
+                while ChosenDefender not in ValidDefenderNames:
+                    ChosenDefender = input(f"Which Valid Defender Should {Animal} Choose to Attack? ")
+                Defenders = np.array([AttackRadiusAnimals[ChosenAttackType][np.where(ValidDefenderNames == ChosenDefender)[0][0]]], dtype = object)
+
                 if ChosenAttackType.SplashDamage[0] and np.where(Defenders == "None")[0].shape[0] == 0: #Assume Splash Hits Every Seen Opposing Animal in Attack Radius Right Now, Not Through Obstacles or Animals.
                     print(f"{Animal} Splash Attacks All.")
                     Defenders = np.append(Defenders, ValidDefenders)
                     for Defender in ValidDefenders:
-                        if Defender in Animals.AnimalList:
-                            Animals.AnimalList = np.delete(Animals.AnimalList, np.where(Animals.AnimalList == Defender)[0][0]) #Remove Chosen Defenders to Not Choose The Same Defender Twice.
+                        if Defender in Animals.InBattle:
+                            Animals.InBattle = np.delete(Animals.InBattle, np.where(Animals.InBattle == Defender)[0][0]) #Remove Chosen Defenders to Not Choose The Same Defender Twice.
 
                 else:
                     print(f"{Animal} Attacks {Defenders[0]}.")
                     #Check if Animal Chooses to Attack at All
-                    if Defenders[0] in Animals.AnimalList:
-                        Animals.AnimalList = np.delete(Animals.AnimalList, np.where(Animals.AnimalList == Defenders[0])[0][0]) #Remove Chosen Defenders to Not Choose The Same Defender Twice (Consistency).
+                    if Defenders[0] in Animals.InBattle:
+                        Animals.InBattle = np.delete(Animals.InBattle, np.where(Animals.InBattle == Defenders[0])[0][0]) #Remove Chosen Defenders to Not Choose The Same Defender Twice (Consistency).
 
                         #Attack Chosen Animals.
                         for Defender in np.array(Defenders, dtype = object):
@@ -368,34 +392,29 @@ def EndTurnEffects(Animal, Weather, Environment, Action, Movement, DeathGrid2D):
         FoundAbility = Animals.FindAbility("Scavenger", Animal.AbilityTypes, "None")
         FoundAbility[0].AbilityFunction(FoundAbility[0], Animal, FoundAbility[1])
 
-    #Poison
-    if Animal.CurrentAbilities["Poison"] > 0:
-        #The Animal Takes Toxic Damage. Ignores Armor.
-        FoundAbility = Animals.FindAbility("Poison")
-        FoundAbility.AbilityFunction(FoundAbility, Animal, Reverse = True)
-
-    #Fear
-    if Animal.CurrentAbilities["Fear"] > 0:
-        FoundAbility = Animals.FindAbility("Fear")
-        FoundAbility.AbilityFunction(FoundAbility, Animal, Reverse = True)
+    #Poison (The Animal Takes Toxic Damage. Ignores Armor), Fear
+    for Ability in ("Poison", "Fear"):
+        if Animal.CurrentAbilities[Ability] > 0:
+            FoundAbility = Animals.FindAbility(Ability)
+            FoundAbility.AbilityFunction(FoundAbility, Animal, Reverse = True)
 
     return DeathGrid2D
 
 def EndTurn(Animal, SkipTurn, NoMovement, Defenders, Defenders2, DeathGrid2D):
 
     if not(SkipTurn):
-        #Append Animals Back to AnimalList.
+        #Append Animals Back to InBattle.
         AllAnimals = np.array(list(set(np.append(Defenders, Defenders2))), dtype = object)
         AllAnimals = np.append(AllAnimals, Animal)
         for Animal2 in AllAnimals:
             if Animal2.Health > 0:
-                Animals.AnimalList = np.append(Animals.AnimalList, Animal2)
+                Animals.InBattle = np.append(Animals.InBattle, Animal2)
 
             else:
                 print(f"{Animal2} is Dead.")
                 DeathGrid2D[Animal2.CurrentLocation[0]][Animal2.CurrentLocation[1]] += 1
 
-                #Grouping (Assuming All Animals Start on The Battlefield).
+                #Grouping.
                 AllBattlefieldAnimalsWithThisType = np.array([OtherAnimal for OtherAnimal in AllAnimals if OtherAnimal.AnimalName == Animal2.AnimalName], dtype = object)
                 if AllBattlefieldAnimalsWithThisType.shape[0] > 1:
                     for SameAnimal in AllBattlefieldAnimalsWithThisType:
@@ -408,12 +427,12 @@ def EndTurn(Animal, SkipTurn, NoMovement, Defenders, Defenders2, DeathGrid2D):
             Animal.MovementTypes = deepcopy(Animal.OriginalMovementTypes)
 
         if Animal.Health <= 0:
-            AllBattlefieldAnimalsWithThisType = np.array([OtherAnimal for OtherAnimal in Animals.AnimalList if OtherAnimal.AnimalName == Animal.AnimalName], dtype = object)
-            Animals.AnimalList = np.delete(Animals.AnimalList, np.where(Animals.AnimalList == Animal)[0][0])
+            AllBattlefieldAnimalsWithThisType = np.array([OtherAnimal for OtherAnimal in Animals.InBattle if OtherAnimal.AnimalName == Animal.AnimalName], dtype = object)
+            Animals.InBattle = np.delete(Animals.InBattle, np.where(Animals.InBattle == Animal)[0][0])
             print(f"{Animal} is Dead.")
             DeathGrid2D[Animal.CurrentLocation[0]][Animal.CurrentLocation[1]] += 1
 
-            #Grouping (Assuming All Animals Start on The Battlefield).
+            #Grouping.
             if AllBattlefieldAnimalsWithThisType.shape[0] > 1:
                 for SameAnimal in AllBattlefieldAnimalsWithThisType:
                     FoundAbility = Animals.FindAbility("Grouping", SameAnimal.AbilityTypes, "None")
@@ -428,7 +447,7 @@ def main():
     CreateAttackAbilityTypes()
 
     #Create Players + Player Decks
-    Player1, Player2 = 1, 2
+    Player1, Player2 = input("Player 1 Name: "), input("Player 2 Name: ")
     MaxDeckSize1, MaxDeckSize2 = 12, 12 #Change Deck Sizes Here
     CreateAnimalDeck(Player1, MaxDeckSize1)
     CreateAnimalDeck(Player2, MaxDeckSize2)
@@ -436,48 +455,74 @@ def main():
     #Choose Environment, Weather / Natural Disaster, Time of Day.
     Environment, Weather, DayNight, Grid2D, DeathGrid2D = CreateEnvironmentGrid()
 
-    '''Update Pre-Battle Effects.'''
-    PreBattleEffects()
+    Turn = 1
+    GameOver = False
+    LastTurnPlus = 21
+    while not(GameOver) and Turn < LastTurnPlus: #Change Turn Count Here
 
-    #Print The Stats of All Animals Before Any Attacks.
-    Animals.PrintAllAnimals()
+        #Check if Game Over (Game Ends When at Least One Player Has no Animals on The Battlefield)
+        Player1Animals = [Animal for Animal in Animals.InBattle if Animal.Player == Player1]
+        Player2Animals = [Animal for Animal in Animals.InBattle if Animal.Player == Player2]
+        if Turn == 1 or (Player1Animals != [] and Player2Animals != []):
+            print(f"\nTurn {Turn}:")
 
-    for Turn in range(1, 21): #Change Turn Count Here
-        print(f"\nTurn {Turn}:")
+            #Print The Stats of All Animals Starting The Turn.
+            Animals.PrintAllAnimalsInBattle()
 
-        #All Animals Attack a Random Opposing Animal (Assume All Animals Are on The Battlefield)
-        for Animal in np.array(Animals.AnimalList, dtype = object):
-            SkipTurn = False
-            NoMovement = False
+            #Players Can Place an Animal This Turn or Not
+            AddAnimalToGrid(Player1, MaxDeckSize1, Grid2D)
+            AddAnimalToGrid(Player2, MaxDeckSize2, Grid2D)
 
-            if Animal.Health > 0:
+            '''Update Join-Battle Effects.'''
+            JoinBattleEffects()
 
-                '''Animal Turn Start, Update Effects.'''
-                print(f"\n{Animal}'s Turn.")
-                NoMovement, SkipTurn = StartTurnEffects(Animal, Weather, Environment, NoMovement, SkipTurn)
+            #All Animals Attack a Random Opposing Animal
+            for Animal in np.array(Animals.InBattle, dtype = object):
+                SkipTurn = False
+                NoMovement = False
 
-                '''Turn.'''
-                if not(SkipTurn):
+                if Animal.Health > 0:
 
-                    '''Determine Who The Animal Can See (Using Camoflauge, Night Vision).'''
-                    AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen = AnimalSight(Animal, Grid2D, DayNight)
+                    '''Animal Turn Start, Update Effects.'''
+                    print(f"\nPlayer {Animal.Player}'s {Animal}'s Turn.")
+                    NoMovement, SkipTurn = StartTurnEffects(Animal, Weather, Environment, NoMovement, SkipTurn)
 
-                    '''Perform a Movement Action.'''
-                    Movement, AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen = MovementAction(Animal, Environment, DayNight, Grid2D, AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen)
+                    '''Turn.'''
+                    if not(SkipTurn):
 
-                    '''Perform a Non-Movement, Non-Attack Action.'''
-                    Action, Grid2D, AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen, Defenders = ExtraAction(Animal, DayNight, Grid2D, AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen)
+                        '''Determine Who The Animal Can See (Using Camoflauge, Night Vision).'''
+                        AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen = AnimalSight(Animal, Grid2D, DayNight)
 
-                    '''Perform an Attack Action.'''
-                    Defenders2 = AttackAction(Animal, AttackRadiusAnimals)
+                        '''Perform a Movement Action.'''
+                        Movement, AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen = MovementAction(Animal, Environment, DayNight, Grid2D, AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen)
 
-                '''Animal Turn End, Update Effects.'''
-                DeathGrid2D = EndTurnEffects(Animal, Weather, Environment, Action, Movement, DeathGrid2D)
+                        '''Perform a Non-Movement, Non-Attack Action.'''
+                        Action, Grid2D, AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen, Defenders = ExtraAction(Animal, DayNight, Grid2D, AttackRadiusAnimals, VisionPlusRadius, ValidMovements, ObstaclesBeside, AnimalsSeen)
 
-                #End of Turn
-                DeathGrid2D = EndTurn(Animal, SkipTurn, NoMovement, Defenders, Defenders2, DeathGrid2D)
+                        '''Perform an Attack Action.'''
+                        Defenders2 = AttackAction(Animal, AttackRadiusAnimals)
 
-        #Print The Stats of All Animals After The Turn.
-        Animals.PrintAllAnimals()
+                    '''Animal Turn End, Update Effects.'''
+                    DeathGrid2D = EndTurnEffects(Animal, Weather, Environment, Action, Movement, DeathGrid2D)
+
+                    #End of Turn
+                    DeathGrid2D = EndTurn(Animal, SkipTurn, NoMovement, Defenders, Defenders2, DeathGrid2D)
+
+            Turn += 1
+
+        else:
+            GameOver = True
+
+            #Print The Winner
+            if Player1Animals == [] and Player2Animals == []:
+                print("The Game is a Tie!")
+            elif Player1Animals == []:
+                print(f"Player {Player2} Wins!")
+            elif Player2Animals == []:
+                print(f"Player {Player1} Wins!")
+
+    #Print That The Time Ran Out
+    if Turn == LastTurnPlus:
+        print("Game Ran Out of Time! The Game is a Tie!")
 
 main()

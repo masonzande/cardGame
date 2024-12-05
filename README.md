@@ -14,6 +14,7 @@ Required packages should be placed in the `requirements` file and can be install
 Currently using:
 ```
 pygame              - Game Development Framework
+numpy               - Fixed width integer arrays for OpenGL
 PyOpenGL            - OpenGL bindings and abstraction layer
 PyOpenGL_accelerate - Additional abstractions and C bindings to reduce the signature of complex function calls
 ```

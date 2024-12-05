@@ -5,16 +5,19 @@ from copy import deepcopy
 class Animals:
 
     AnimalList = np.array([], dtype = object) #List of Every Animal.
+    InBattle = np.array([], dtype = object) #List of Every Animal in Battle.
     AnimalSizes = ("Tiny", "Small", "Medium", "Large", "Giant")
+    AnimalRarities = ("Common", "Rare", "Epic", "Legendary")
 
     #Define an Animal Object.
-    #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
-    def __init__(Animal, AnimalName, Size, PredPrey, Rarity, Player, Health, Armor, AttackTypes, MovementTypes, AbilityTypes):
+    #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+    def __init__(Animal, AnimalName, Size, EnvironmentPref, PredPrey, Rarity, Player, Health, Armor, AttackTypes, MovementTypes, AbilityTypes):
 
         #Animal Name/Rarity/Health/Armor.
         Animal.Player = Player #Player ID That is Using This Animal
-        Animal.AnimalID = len([OtherAnimal for OtherAnimal in Animals.AnimalList if OtherAnimal.AnimalName == AnimalName]) + 1 #Give a Unique ID to an Animal.
-        Animal.AnimalName = f"Player {Player} {AnimalName}" #String Name of The Animal.
+        Animal.EnvironmentPref = EnvironmentPref #Preferred Environment For This Animal
+        Animal.AnimalID = len([OtherAnimal for OtherAnimal in Animals.AnimalList if OtherAnimal.AnimalName.split(" ")[0] == AnimalName.split(" ")[0]]) + 1 #Give a Unique ID to an Animal.
+        Animal.AnimalName = f"{AnimalName} {Animal.AnimalID}" #String Name of The Animal.
         Animal.Rarity = Rarity #String Rarity of The Animal. (Common/Rare/Epic/Legendary).
         Animal.PredPrey = PredPrey #String "Predator" or "Prey" Classification of The Animal
         Animal.MaxHealth = Health #Integer. The Maximum Health of an Animal. Reaching 0 Means The Card is Removed From The Battlefield.
@@ -173,10 +176,10 @@ class Animals:
         print(f"\t{Tabs}Armor: {Animal.Armor}")
 
     #Print The Stats of All Animals. Class Mathod.
-    def PrintAllAnimals():
+    def PrintAllAnimalsInBattle():
 
         print("\nStatistics of All Animals:")
-        for Animal in Animals.AnimalList:
+        for Animal in Animals.InBattle:
             Animal.PrintAnimal("\t")
 
     #Add Movement to All Movements That an Animal Has
@@ -538,8 +541,7 @@ class AbilityTypes():
 
         '''
         Use Cases:
-        #Assuming All Animals in AnimalList Are on The Battlefield
-        AllBattlefieldAnimalsWithThisType = [Animal2 for Animal2 in Animals.AnimalList if Animal2.AnimalName == Animal.AnimalName]
+        AllBattlefieldAnimalsWithThisType = [Animal2 for Animal2 in Animals.InBattle if Animal2.AnimalName == Animal.AnimalName]
         if len(AllBattlefieldAnimalsWithThisType) > 1:
             if The Same Animal is Added to The Battlefield:
                 for SameAnimal in AllBattlefieldAnimalsWithThisType:
@@ -897,25 +899,23 @@ class AbilityTypes():
 
 def CreateGrid(Environment):
 
-    #Create a 2D Grid With Animals Placed Diagonally
-    Grid2D = np.array([[["", ""] for _ in range(Animals.AnimalList.shape[0])] for _ in range(Animals.AnimalList.shape[0])], dtype = object) #(Original, Current)
-    DeathGrid2D = np.array([[0 for _ in range(Animals.AnimalList.shape[0])] for _ in range(Animals.AnimalList.shape[0])], dtype = np.int32)
+    #Create a 2D Grid of Size 10 x 10
+    GridSize = 10
+    MaxNumberObstacles = 3
+    Grid2D = np.array([[["", ""] for _ in range(GridSize)] for _ in range(GridSize)], dtype = object) #(Original, Current)
+    DeathGrid2D = np.array([[0 for _ in range(GridSize)] for _ in range(GridSize)], dtype = np.int32)
     Trees = np.array(["T", "T"], dtype = object)
     Rocks = np.array(["R", "R"], dtype = object)
-    for i in range(Animals.AnimalList.shape[0]):
-        #Place Animal on Grid
-        Grid2D[i][i][1] = Animals.AnimalList[i]
-        Animals.AnimalList[i].CurrentLocation = np.array([i, i], dtype = np.int32)
+    for _ in range(MaxNumberObstacles):
 
-        #Place Some Obstacles Above Animals
-        if i % 2 == 1:
-            if Environment in ("Forest", "Rainforest"):
-                Grid2D[i - 1][i] = Trees #Trees
+        #Randomly Add up to 3 Obstacles to Grid
+        if Environment in ("Forest", "Rainforest"):
+            Grid2D[np.random.randint(0, GridSize)][np.random.randint(0, GridSize)] = Trees #Trees
 
-            elif Environment == "Grasslands":
-                Grid2D[i - 1][i] = Rocks #Rocks
+        elif Environment == "Grasslands":
+            Grid2D[np.random.randint(0, GridSize)][np.random.randint(0, GridSize)] = Rocks #Rocks
 
-    print("Grid Created.\n")
+    print(f"Grid Created of Size {GridSize}x{GridSize} With up to {MaxNumberObstacles} Obstacles.")
 
     return Grid2D, DeathGrid2D
 
@@ -1002,27 +1002,36 @@ def ChooseAnimals(Player, MaxDeckSize):
 
     #Choose How Many of What Animals Get Added to The Player's Deck
     DeckSize = 0
-    AnimalNames = np.array(list(AnimalDeck.keys()), dtype = np.str_)
+
+    #Show The Player What Animals Could be Added to The Deck
+    print(f"\nPlayer {Player}'s Deck is of Size {MaxDeckSize}.")
+    print("Animals to Choose From:")
+    print(list(AnimalDeck.keys()))
+
+    #Assume Animal Rarities Have no Effect Currently
     while DeckSize < MaxDeckSize:
 
-        #Add a Random Number of Animals
-        AddAnimal = np.random.randint(1, 3)
+        #Add a Number of Animals That Player Desires
+        Animal = input(f"Which Animal Would Player {Player} Like to Add to Player {Player}'s Deck? ")
 
-        #Ensure The Added Animal Count is Less Than The Maximum
-        if DeckSize + AddAnimal > MaxDeckSize:
-            AddAnimal = MaxDeckSize - DeckSize
+        #Check That The Player Desires a Valid Animal
+        if Animal in AnimalDeck.keys():
+            AddAnimal = int(input(f"How Many of {Animal} Does Player {Player} Desire? "))
 
-        #Add The Random Number of Animals
-        RandomAnimal = AnimalNames[np.random.randint(0, AnimalNames.shape[0])]
-        if AnimalDeck[RandomAnimal] < AddAnimal:
-            AddAnimal -= AnimalDeck[RandomAnimal]
-            AnimalDeck[RandomAnimal] += AddAnimal
+            #Ensure The Added Animal Count is Less Than The Maximum
+            if DeckSize + AddAnimal > MaxDeckSize:
+                AddAnimal = MaxDeckSize - DeckSize
 
-        #Not Adding Any Animals
-        else:
-            AddAnimal = 0
+            #Add The Number of Animals
+            if AnimalDeck[Animal] < AddAnimal:
+                AddAnimal -= AnimalDeck[Animal]
+                AnimalDeck[Animal] += AddAnimal
 
-        DeckSize += AddAnimal
+            #Not Adding Any Animals
+            else:
+                AddAnimal = 0
+
+            DeckSize += AddAnimal
 
     print(f"Player {Player} Animal Deck Initialized With {DeckSize} Animal Cards.")
 
@@ -1050,7 +1059,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Slither": 3
         }
 
-        Animals("Rattlesnake", "Small", "Predator", "Legendary", Player, 10, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Rattlesnake", "Small", "Desert", "Predator", "Legendary", Player, 10, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Camel (Rare).
@@ -1068,7 +1077,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Walk": 2
         }
 
-        Animals("Camel", "Large", "Prey", "Rare", Player, 20, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Camel", "Large", "Desert", "Prey", "Rare", Player, 20, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Scorpion (Rare).
@@ -1087,7 +1096,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Walk": 2
         }
 
-        Animals("Scorpion", "Small", "Predator", "Rare", Player, 8, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Scorpion", "Small", "Desert", "Predator", "Rare", Player, 8, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Silver Ant (Rare).
@@ -1105,7 +1114,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Walk": 6
         }
 
-        Animals("Silver Ant", "Tiny", "Prey", "Rare", Player, 5, 2, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Silver Ant", "Tiny", "Desert", "Prey", "Rare", Player, 5, 2, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Wolf (Rare).
@@ -1126,7 +1135,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Walk": 3
         }
 
-        Animals("Wolf", "Medium", "Predator", "Rare", Player, 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Wolf", "Medium", "Forest", "Predator", "Rare", Player, 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Grizzly Bear (Legendary).
@@ -1147,7 +1156,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Walk": 3
         }
 
-        Animals("Grizzly Bear", "Large", "Predator", "Legendary", Player, 20, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Grizzly Bear", "Large", "Forest", "Predator", "Legendary", Player, 20, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Black Bear (Epic).
@@ -1168,7 +1177,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Climb": 1
         }
 
-        Animals("Black Bear", "Large", "Predator", "Epic", Player, 17, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Black Bear", "Large", "Forest", "Predator", "Epic", Player, 17, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Deer (Common).
@@ -1188,7 +1197,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Jump": 2
         }
 
-        Animals("Deer", "Medium", "Prey", "Common", Player, 10, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Deer", "Medium", "Forest", "Prey", "Common", Player, 10, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Rabbit (Common).
@@ -1207,7 +1216,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Jump": 2
         }
 
-        Animals("Rabbit", "Small", "Prey", "Common", Player, 6, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Rabbit", "Small", "Forest", "Prey", "Common", Player, 6, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Moose (Epic).
@@ -1227,7 +1236,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Swim": 2
         }
 
-        Animals("Moose", "Large", "Prey", "Epic", Player, 15, 3, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Moose", "Large", "Forest", "Prey", "Epic", Player, 15, 3, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Eagle (Common).
@@ -1246,7 +1255,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Fly": 4
         }
 
-        Animals("Eagle", "Medium", "Predator", "Common", Player, 6, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Eagle", "Medium", "Forest", "Predator", "Common", Player, 6, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Hawk (Common).
@@ -1265,7 +1274,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Fly": 3
         }
 
-        Animals("Hawk", "Medium", "Predator", "Common", Player, 7, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Hawk", "Medium", "Forest", "Predator", "Common", Player, 7, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Shark (Epic).
@@ -1285,7 +1294,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Swim": 3
         }
 
-        Animals("Shark", "Large", "Predator", "Epic", Player, 14, 4, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Shark", "Large", "Ocean", "Predator", "Epic", Player, 14, 4, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Dolphin (Epic).
@@ -1304,7 +1313,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Swim": 4
         }
 
-        Animals("Dolphin", "Medium", "Prey", "Epic", Player, 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Dolphin", "Medium", "Ocean", "Prey", "Epic", Player, 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Orca (Legendary).
@@ -1325,7 +1334,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Swim": 3
         }
 
-        Animals("Orca", "Large", "Predator", "Legendary", Player, 20, 5, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Orca", "Large", "Ocean", "Predator", "Legendary", Player, 20, 5, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Plankton (Common).
@@ -1342,7 +1351,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Swim": 1
         }
 
-        Animals("Plankton", "Tiny", "Prey", "Common", Player, 2, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Plankton", "Tiny", "Ocean", "Prey", "Common", Player, 2, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Octopus (Rare).
@@ -1361,7 +1370,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Swim": 2
         }
 
-        Animals("Octopus", "Small", "Prey", "Rare", Player, 9, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Octopus", "Small", "Ocean", "Prey", "Rare", Player, 9, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Crab (Rare).
@@ -1380,7 +1389,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Swim": 1
         }
 
-        Animals("Crab", "Small", "Prey", "Rare", Player, 3, 6, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Crab", "Small", "Ocean", "Prey", "Rare", Player, 3, 6, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Lion (Legendary).
@@ -1400,7 +1409,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Walk": 3
         }
 
-        Animals("Lion", "Medium", "Predator", "Legendary", Player, 16, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Lion", "Medium", "Grasslands", "Predator", "Legendary", Player, 16, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Giraffe (Legendary).
@@ -1418,7 +1427,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Walk": 2
         }
 
-        Animals("Giraffe", "Giant", "Prey", "Legendary", Player, 25, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Giraffe", "Giant", "Grasslands", "Prey", "Legendary", Player, 25, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Elephant (Legendary).
@@ -1438,7 +1447,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Walk": 2
         }
 
-        Animals("Elephant", "Giant", "Prey", "Legendary", Player, 20, 4, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Elephant", "Giant", "Grasslands", "Prey", "Legendary", Player, 20, 4, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Zebra (Common).
@@ -1456,7 +1465,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Walk": 3
         }
 
-        Animals("Zebra", "Medium", "Prey", "Common", Player, 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Zebra", "Medium", "Grasslands", "Prey", "Common", Player, 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Hyena (Rare).
@@ -1475,7 +1484,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Walk": 3
         }
 
-        Animals("Hyena", "Medium", "Predator", "Rare", Player, 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Hyena", "Medium", "Grasslands", "Predator", "Rare", Player, 12, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Gazelle (Common).
@@ -1495,7 +1504,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Jump": 2
         }
 
-        Animals("Gazelle", "Medium", "Prey", "Common", Player, 10, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Gazelle", "Medium", "Grasslands", "Prey", "Common", Player, 10, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Bison (Epic).
@@ -1514,7 +1523,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Walk": 3
         }
 
-        Animals("Bison", "Large", "Prey", "Epic", Player, 15, 2, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Bison", "Large", "Grasslands", "Prey", "Epic", Player, 15, 2, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Vulture (Rare).
@@ -1533,7 +1542,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Fly": 3
         }
 
-        Animals("Vulture", "Medium", "Prey", "Rare", Player, 8, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Vulture", "Medium", "Grasslands", "Prey", "Rare", Player, 8, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Monkey (Rare).
@@ -1552,7 +1561,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Climb": 2
         }
 
-        Animals("Monkey", "Medium", "Prey", "Rare", Player, 9, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Monkey", "Medium", "Rainforest", "Prey", "Rare", Player, 9, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Ape (Rare).
@@ -1571,7 +1580,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Walk": 2
         }
 
-        Animals("Ape", "Large", "Predator", "Rare", Player, 13, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Ape", "Large", "Rainforest", "Predator", "Rare", Player, 13, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Alligator (Epic).
@@ -1593,7 +1602,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Swim": 2
         }
 
-        Animals("Alligator", "Medium", "Predator", "Epic", Player, 17, 6, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Alligator", "Medium", "Rainforest", "Predator", "Epic", Player, 17, 6, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Crocodile (Epic).
@@ -1615,7 +1624,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Swim": 2
         }
 
-        Animals("Crocodile", "Medium", "Predator", "Epic", Player, 21, 2, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Crocodile", "Medium", "Rainforest", "Predator", "Epic", Player, 21, 2, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Poison Frog (Common).
@@ -1634,7 +1643,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Jump": 2
         }
 
-        Animals("Poison Frog", "Small", "Prey", "Common", Player, 7, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Poison Frog", "Small", "Rainforest", "Prey", "Common", Player, 7, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Polar Bear (Legendary).
@@ -1655,7 +1664,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Swim": 3
         }
 
-        Animals("Polar Bear", "Large", "Predator", "Legendary", Player, 20, 5, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Polar Bear", "Large", "Tundra", "Predator", "Legendary", Player, 20, 5, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Arctic Fox (Rare).
@@ -1675,7 +1684,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Walk": 2
         }
 
-        Animals("Arctic Fox", "Medium", "Predator", "Rare", Player, 8, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Arctic Fox", "Medium", "Tundra", "Predator", "Rare", Player, 8, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Penguin (Common).
@@ -1694,7 +1703,7 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Swim": 2
         }
 
-        Animals("Penguin", "Medium", "Prey", "Common", Player, 8, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Penguin", "Medium", "Tundra", "Prey", "Common", Player, 8, 0, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
 
 
     #Create Seal (Common).
@@ -1712,4 +1721,4 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
             "Swim": 2
         }
 
-        Animals("Seal", "Medium", "Prey", "Common", Player, 12, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
+        Animals("Seal", "Medium", "Tundra", "Prey", "Common", Player, 12, 1, AnimalAttacks, AnimalMovements, AnimalAbilities) #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.

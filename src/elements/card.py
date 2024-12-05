@@ -183,6 +183,7 @@ class CardDock:
         if self.above and self.holding == None:
             self.holding = self.above
             self.above = None
+            self.holding.resize(self.bounds.size)
             self.holding._dock = self
 
         if self.holding:

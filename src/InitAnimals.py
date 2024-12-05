@@ -1,5 +1,43 @@
 import numpy as np
 from copy import deepcopy
+from enum import StrEnum
+
+class AnimalType(StrEnum):
+    RATTLESNAKE = "Rattlesnake"
+    CAMEL = "Camel"
+    SCORPION = "Scorpion"
+    SILVER_ANT = "Silver Ant"
+    WOLF = "Wolf"
+    GRIZZLY_BEAR = "Grizzly Bear"
+    BLACK_BEAR = "Black Bear"
+    DEER = "Deer"
+    RABBIT = "Rabbit"
+    MOOSE = "Moose"
+    EAGLE = "Eagle"
+    HAWK = "Hawk"
+    SHARK = "Shark"
+    DOLPHIN = "Dolphin"
+    ORCA = "Orca"
+    PLANKTON = "Plankton"
+    OCTOPUS = "Octopus"
+    CRAB = "Crab"
+    LION = "Lion"
+    GIRAFFE = "Giraffe"
+    ELEPHANT = "Elephant"
+    ZEBRA = "Zebra"
+    HYENA = "Hyena"
+    GAZELLE = "Gazelle"
+    BISON = "Bison"
+    VULTURE = "Vulture"
+    MONKEY = "Monkey"
+    APE = "Ape"
+    ALLIGATOR = "Alligator"
+    CROCODILE = "Crocodile"
+    POISON_FROG = "Poison Frog"
+    POLAR_BEAR = "Polar Bear"
+    ARCTIC_FOX = "Arctic Fox"
+    PENGUIN = "Penguin"
+    SEAL = "Seal"
 
 #Class For Every Animal in The Game.
 class Animals:
@@ -8,6 +46,8 @@ class Animals:
     InBattle = np.array([], dtype = object) #List of Every Animal in Battle.
     AnimalSizes = ("Tiny", "Small", "Medium", "Large", "Giant")
     AnimalRarities = ("Common", "Rare", "Epic", "Legendary")
+
+    NameToIndex: dict[str, int] = {}
 
     #Define an Animal Object.
     #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
@@ -25,6 +65,7 @@ class Animals:
         Animal.Armor = Armor #Integer. Damage Done Affects Armor First. Health Cannot be Damaged When Armor Has Not Broken.
         Animal.MaxArmor = Armor #Integer. Maximum Value For Armor. Damage Done Affects Armor First. Health Cannot be Damaged When Armor Has Not Broken.
         Animal.Size = Size #String Size of The Animal. (Tiny/Small/Medium/Large/Giant).
+        Animals.NameToIndex[AnimalName] = Animals.AnimalList.shape[0]
         Animals.AnimalList = np.append(Animals.AnimalList, Animal) #The Animals Class Contains a List of Every Animal.
 
         #Animal Movement.
@@ -187,6 +228,14 @@ class Animals:
 
         for MovementType, MovementRadius in Animal.MovementTypes.items():
             Animal.MovementTypes[MovementType] = MovementRadius + Addition
+
+    def CreateFrom(Name: str, ForPlayer: str) -> "Animals":
+        new_animal: Animals = deepcopy(Animals.AnimalList[Animals.NameToIndex[Name]])
+        new_animal.AnimalID = len([OtherAnimal for OtherAnimal in Animals.AnimalList if OtherAnimal.AnimalName.split(" ")[0] == new_animal.AnimalName.split(" ")[0]]) #Give a Unique ID to an Animal.
+        new_animal.AnimalName = " ".join(new_animal.AnimalName.split(" ")[:-1] + [f"{new_animal.AnimalID}"])
+        new_animal.Player = ForPlayer
+        Animals.AnimalList = np.append(Animals.AnimalList, new_animal)
+        return new_animal
 
     #Print Animal.AnimalName When print(Animal).
     def __str__(Animal):
@@ -1653,18 +1702,7 @@ def CreateEachAnimal():
 
 #Create Decks of Animals.
 def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
-
     AnimalDeck = ChooseAnimals(Player, MaxDeckSize)
-
-    AnimalDeckKeys = list(AnimalDeck.keys())
-    EveryAnimal = len(AnimalDeckKeys)
-    i = 0
-    while i < EveryAnimal:
-
-        for _ in range(AnimalDeck[AnimalDeckKeys[i]]):
-            AnimalObject = deepcopy(Animals.AnimalList[i])
-            AnimalObject.AnimalID = len([OtherAnimal for OtherAnimal in Animals.AnimalList if OtherAnimal.AnimalName.split(" ")[0] == AnimalObject.AnimalName.split(" ")[0]]) #Give a Unique ID to an Animal.
-            AnimalObject.AnimalName = " ".join(AnimalObject.AnimalName.split(" ")[:-1] + [f"{AnimalObject.AnimalID}"])
-            AnimalObject.Player = Player
-            Animals.AnimalList = np.append(Animals.AnimalList, AnimalObject)
-        i += 1
+    for key in AnimalDeck.keys():
+        for _ in range(AnimalDeck[key]):
+            Animals.CreateFrom(key, Player)

@@ -1,7 +1,7 @@
-from InitAnimals import Animals, OnSightFear, CreateGrid
+from animals import Animals, OnSightFear, CreateGrid
 import numpy as np
 
-def CheckDirection(Animal, i, Vision, Direction, XY, AnimalsSeen, ValidMovements, VisionPlusRadius, ObstacleBlocked, AnimalBlocked, Index):
+def CheckDirection(animal, i, Vision, Direction, XY, AnimalsSeen, ValidMovements, VisionPlusRadius, ObstacleBlocked, AnimalBlocked, Index):
 
     if Direction[1] not in ("T", "R") and not(ObstacleBlocked[Index]):
         #Check if This Square is an Animal
@@ -9,13 +9,13 @@ def CheckDirection(Animal, i, Vision, Direction, XY, AnimalsSeen, ValidMovements
             #Square is an Animal
 
             #Stop Appending Opposing Animals to VisionPlusRadius After Vision + 1 Radius
-            if i < Vision + 2 and Animal.Player != Direction[1].Player:
+            if i < Vision + 2 and animal.Player != Direction[1].Player:
                 VisionPlusRadius.append(Direction[1])
 
             #Effects Only Occur to Seen Opposing Animals
             if not(AnimalBlocked[Index]):
                 #Empty Path to This Square. This Square is an Animal
-                if i <= Direction[1].CurrentAbilities["Camoflauge"] and Animal.Player != Direction[1].Player:
+                if i <= Direction[1].CurrentAbilities["Camoflauge"] and animal.Player != Direction[1].Player:
                     AnimalsSeen.append(Direction[1])
 
                 #Animals Are Blocks
@@ -24,16 +24,16 @@ def CheckDirection(Animal, i, Vision, Direction, XY, AnimalsSeen, ValidMovements
         else:
             #Square is Empty
             #Valid Movements Are Within 2xMovement
-            if "Walk" in Animal.MovementTypes.keys() and i <= 2 * Animal.MovementTypes["Walk"] and not(AnimalBlocked[Index]):
+            if "Walk" in animal.MovementTypes.keys() and i <= 2 * animal.MovementTypes["Walk"] and not(AnimalBlocked[Index]):
                 #Empty Path to This Square, Including Square
                 ValidMovements["Walk"].append(XY)
-            if "Swim" in Animal.MovementTypes.keys() and i <= 2 * Animal.MovementTypes["Swim"] and not(AnimalBlocked[Index]):
+            if "Swim" in animal.MovementTypes.keys() and i <= 2 * animal.MovementTypes["Swim"] and not(AnimalBlocked[Index]):
                 #Empty Path to This Square, Including Square
                 ValidMovements["Swim"].append(XY)
-            if "Slither" in Animal.MovementTypes.keys() and i <= 2 * Animal.MovementTypes["Slither"] and not(AnimalBlocked[Index]):
+            if "Slither" in animal.MovementTypes.keys() and i <= 2 * animal.MovementTypes["Slither"] and not(AnimalBlocked[Index]):
                 #Empty Path to This Square, Including Square
                 ValidMovements["Slither"].append(XY)
-            if "Fly" in Animal.MovementTypes.keys() and i <= 2 * Animal.MovementTypes["Fly"]:
+            if "Fly" in animal.MovementTypes.keys() and i <= 2 * animal.MovementTypes["Fly"]:
                 #Maybe Empty Path to This Square (Can Fly Over Animals), Empty Square
                 ValidMovements["Fly"].append(XY)
 
@@ -49,9 +49,9 @@ def CheckDirection(Animal, i, Vision, Direction, XY, AnimalsSeen, ValidMovements
             else:
                 #Empty Path to This Square. This Square is Just an Obstacle
                 #Valid Movements Are Within 2xMovement
-                if "Slither" in Animal.MovementTypes.keys() and i <= 2 * Animal.MovementTypes["Slither"]:
+                if "Slither" in animal.MovementTypes.keys() and i <= 2 * animal.MovementTypes["Slither"]:
                     ValidMovements["Slither"].append(XY)
-                if "Fly" in Animal.MovementTypes.keys() and i <= 2 * Animal.MovementTypes["Fly"]:
+                if "Fly" in animal.MovementTypes.keys() and i <= 2 * animal.MovementTypes["Fly"]:
                     ValidMovements["Fly"].append(XY)
 
             ObstacleBlocked[Index] = True

@@ -3,7 +3,7 @@ import graphics
 import graphics.sprite
 import graphics.batcher
 import graphics.target
-from InitAnimals import Animals as Animal
+from animals import Animals as Animal
 from loader import ContentLoader
 import input
 from game_actions import CardGameActions
@@ -11,8 +11,6 @@ import loader
 from enum import IntEnum
 
 # TODO: Convert all Assets to png
-# ID any missing drawings and replace them with something stock
-# Have cards move themselves to their docks when not held by the mouse, instead of having docks lock them in place
 
 _CARD_SIZE: tuple[int, int] = (1500, 2100)
 _PORTRAIT_HEIGHT: int = 1125

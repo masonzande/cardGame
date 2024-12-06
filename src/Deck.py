@@ -1,10 +1,13 @@
 import random
 import numpy as np
-
+import animals
 
 class Deck:
-    def __init__(self, card_array, player):
-        self.cards = card_array
+    cards: list[animals.Animals]
+    player: str
+
+    def __init__(self, card_array: np.ndarray[animals.Animals], player: str):
+        self.cards = card_array.tolist()
         self.player = player
 
     def shuffle(self):
@@ -14,13 +17,12 @@ class Deck:
         """Remove and return the top card from the deck."""
         if len(self.cards) == 0:
             raise ValueError("No cards left in deck")
-        top_card = self.cards[0]
-        self.cards = self.cards[1:]  # Remove the top value from the array
+        top_card = self.cards.pop(0)
         return top_card
 
     def __len__(self):
         """Return the number of cards remaining in the deck."""
-        return self.cards.size
+        return len(self.cards)
 
     def __str__(self):
         return f"Deck of {self.player}:\n{self.cards}"

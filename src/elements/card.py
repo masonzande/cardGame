@@ -60,7 +60,7 @@ class Card:
         if self._loaded:
             return
         try:
-            f_name = f"./card_portraits/{self.animal.Rarity} - {self.animal.AnimalName}.png"
+            f_name = f"./card_portraits/{self.animal.Rarity} - {self.animal.animal_type}.png"
             #f_name = "./card_portraits/Legendary - Giraffe.jpg"
             self.portrait_sprite = loader.load_custom(f_name, graphics.sprite.Sprite)
         except Exception as e:

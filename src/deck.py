@@ -6,12 +6,12 @@ class Deck:
     cards: list[animals.Animals]
     player: str
 
-    def __init__(self, card_array: np.ndarray[animals.Animals], player: str):
-        self.cards = card_array.tolist()
+    def __init__(self, card_array: np.ndarray[animals.Animals] | list[animals.Animals], player: str):
+        self.cards = card_array.tolist() if isinstance(card_array, np.ndarray) else card_array
         self.player = player
 
     def shuffle(self):
-        np.random.shuffle(self.cards)
+        random.shuffle(self.cards)
 
     def deal_one(self):
         """Remove and return the top card from the deck."""

@@ -41,6 +41,8 @@ class AnimalType(StrEnum):
 
 #Class For Every Animal in The Game.
 class Animals:
+    AnimalName: str
+    animal_type: AnimalType
 
     AnimalList = np.array([], dtype = object) #List of Every Animal.
     InBattle = np.array([], dtype = object) #List of Every Animal in Battle.
@@ -52,7 +54,11 @@ class Animals:
     #Define an Animal Object.
     #"AnimalName", "Size", "EnvironmentPref", "PredPrey", "Rarity", Player, Health, Armor, {AttackTypes}, {MovementTypes}, {AbilityTypes}.
     def __init__(Animal, AnimalName, Size, EnvironmentPref, PredPrey, Rarity, Player, Health, Armor, AttackTypes, MovementTypes, AbilityTypes):
-
+        try: 
+            Animal.animal_type = AnimalType(AnimalName)
+        except ValueError:
+            Animal.animal_type = None
+        
         #Animal Name/Rarity/Health/Armor.
         Animal.Player = Player #Player ID That is Using This Animal
         Animal.EnvironmentPref = EnvironmentPref #Preferred Environment For This Animal
@@ -1706,3 +1712,5 @@ def CreateAnimalDeck(Player, MaxDeckSize): #{AnimalDeck}, Player
     for key in AnimalDeck.keys():
         for _ in range(AnimalDeck[key]):
             Animals.CreateFrom(key, Player)
+
+

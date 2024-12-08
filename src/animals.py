@@ -235,7 +235,7 @@ class Animals:
         for MovementType, MovementRadius in Animal.MovementTypes.items():
             Animal.MovementTypes[MovementType] = MovementRadius + Addition
 
-    def CreateFrom(Name: str, ForPlayer: str) -> "Animals":
+    def CreateFrom(Name: str | AnimalType, ForPlayer: str) -> "Animals":
         new_animal: Animals = deepcopy(Animals.AnimalList[Animals.NameToIndex[Name]])
         new_animal.AnimalID = len([OtherAnimal for OtherAnimal in Animals.AnimalList if OtherAnimal.AnimalName.split(" ")[0] == new_animal.AnimalName.split(" ")[0]]) #Give a Unique ID to an Animal.
         new_animal.AnimalName = " ".join(new_animal.AnimalName.split(" ")[:-1] + [f"{new_animal.AnimalID}"])

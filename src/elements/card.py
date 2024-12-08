@@ -1,4 +1,5 @@
 import pygame as pg
+from deck import Deck
 import graphics
 import graphics.sprite
 import graphics.batcher
@@ -21,12 +22,13 @@ class Card:
     _rerender: bool
 
     _up: bool
-
     _actual_size: pg.Vector2
 
     _dock: "CardDock"
-
     _travel_back: bool
+
+    _active: bool
+    _visible: bool
 
     animal: Animal
 
@@ -40,7 +42,7 @@ class Card:
 
     mouse_holding: bool
 
-    def __init__(self, animal: Animal, size: pg.Vector2):
+    def __init__(self, animal: Animal, size: pg.Vector2, active: bool = True):
         self.animal = animal
         self._loaded = False
         self._prerender_complete = False
@@ -49,9 +51,11 @@ class Card:
         self._actual_size = size
         self._dock = None
         self._travel_back = False
+        self._active = active
+        self._visible = self._active
 
         self.mouse_holding = False
-
+    
         self.bounds = pg.Rect(pg.Vector2(0), size)
 
         self.card_render = graphics.target.RenderTarget(_CARD_SIZE[0], _CARD_SIZE[1])
@@ -84,6 +88,8 @@ class Card:
         self._rerender = True
 
     def update(self, time: pg.time.Clock, inputs: input.InputSet[CardGameActions]):
+        if not self._active:
+            return
         mouse_data = inputs.get_cursor_button(CardGameActions.PICK_UP, CardGameActions.CURSOR)
 
         if mouse_data == None:
@@ -158,6 +164,25 @@ class Card:
         pos_x, pos_y = self.bounds.topleft
 
         batcher.draw(self.card_render, pg.Vector2(pos_x, pos_y), pg.Vector2(size_x, size_y) * render_scale, depth)
+    
+    def set_active(self, state: bool):
+        self._active = state
+
+    def set_visible(self, state: bool):
+        self._visible = state
+
+    @classmethod
+    def from_deck(cls, deck: Deck, size: pg.Vector2) -> list["Card"]:
+        """Create the card objects for a deck.
+
+        Create visual card objects for a given deck. 
+        Cards generated in this way default to inactive so that they can be manually enabled when drawn from a dock
+
+        @param deck: The deck to create card objects for
+        @param size: The default size of the cards to generate
+        @return: A list of Card objects
+        """
+        return [Card(animal, size, False) for animal in deck.animals]
 
 class DockType(IntEnum):
     DECK = 0

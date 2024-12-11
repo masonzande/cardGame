@@ -16,6 +16,13 @@ from enum import IntEnum
 _CARD_SIZE: tuple[int, int] = (1500, 2100)
 _PORTRAIT_HEIGHT: int = 1125
 
+class CardState(IntEnum):
+    FREE = -1
+    IN_DECK = 0
+    IN_HAND = 1
+    ON_GRID = 2
+    DISCARD = 3
+
 class Card:
     _loaded: bool
     _prerender_complete: bool
@@ -42,6 +49,8 @@ class Card:
 
     mouse_holding: bool
 
+    current_state: CardState
+
     def __init__(self, animal: Animal, size: pg.Vector2, active: bool = True):
         self.animal = animal
         self._loaded = False
@@ -58,14 +67,18 @@ class Card:
     
         self.bounds = pg.Rect(pg.Vector2(0), size)
 
+        self.current_state = CardState.FREE
+
         self.card_render = graphics.target.RenderTarget(_CARD_SIZE[0], _CARD_SIZE[1])
+
+    def set_state(self, state: CardState):
+        self.current_state = state
 
     def load(self, loader: ContentLoader):
         if self._loaded:
             return
         try:
             f_name = f"./card_portraits/{self.animal.Rarity} - {self.animal.animal_type}.png"
-            #f_name = "./card_portraits/Legendary - Giraffe.jpg"
             self.portrait_sprite = loader.load_custom(f_name, graphics.sprite.Sprite)
         except Exception as e:
             print("Failed to load animal image:", e)
@@ -114,6 +127,9 @@ class Card:
 
 
     def prerender(self, batcher: graphics.batcher.SpriteBatcher):
+        if self._prerender_complete and not self._rerender:
+            return
+
         old = graphics.active_target
 
         batcher.program.set_uniform('mvp', graphics.create_ortho_projection(0, _CARD_SIZE[0], _CARD_SIZE[1], 0)) 
@@ -157,9 +173,8 @@ class Card:
         self.bounds = pg.Rect(self.bounds.topleft, pg.Vector2(self.bounds.size) - adjust)
 
     def draw(self, batcher: graphics.batcher.SpriteBatcher, render_scale: float, depth: float):
-        if (not self._prerender_complete) or self._rerender:
-            self.prerender(batcher)
-        
+        if not self._visible:
+            return
         size_x, size_y = self.bounds.size
         pos_x, pos_y = self.bounds.topleft
 
@@ -171,8 +186,15 @@ class Card:
     def set_visible(self, state: bool):
         self._visible = state
 
+    def set_dock(self, dock: "CardDock"):
+        if self._dock:
+            self._dock.holding = None
+        self._dock = dock
+        self._dock.holding = self
+        self.resize(self._dock.bounds.size)
+
     @classmethod
-    def from_deck(cls, deck: Deck, size: pg.Vector2) -> list["Card"]:
+    def from_deck(cls, deck: Deck, size: pg.Vector2) -> dict[str, "Card"]:
         """Create the card objects for a deck.
 
         Create visual card objects for a given deck. 
@@ -182,7 +204,7 @@ class Card:
         @param size: The default size of the cards to generate
         @return: A list of Card objects
         """
-        return [Card(animal, size, False) for animal in deck.animals]
+        return dict([(animal.AnimalName, Card(animal, size, False)) for animal in deck.cards])
 
 class DockType(IntEnum):
     DECK = 0
@@ -214,11 +236,13 @@ class CardDock:
 
     def update(self, clock: pg.time.Clock, inputs: input.InputSet):
         for card in self.above:
-            if inputs.get_action_released(CardGameActions.PICK_UP):
+            if inputs.get_action_released(CardGameActions.PICK_UP) and self.holding == None:
+                card._dock.holding = None
                 card._dock = self
                 self.holding = card
             card.resize(self.bounds.size)
-            card.lerp_to(pg.Vector2(self.bounds.center) - pg.Vector2(card.bounds.size) / 2, 0.7)    
+            if not card._travel_back:
+                card.lerp_to(pg.Vector2(self.bounds.center) - pg.Vector2(card.bounds.size) / 2, 0.7)    
 
     def card_above(self, cards: list[Card], inputs: input.InputSet) -> list[Card] :
         for card in self.above:

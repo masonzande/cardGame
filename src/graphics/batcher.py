@@ -190,7 +190,7 @@ class SpriteBatcher(Batcher[vertices.VertexPosition3Texture2]):
             vertex_buffer = vertices.VertexArrayObject(batch.vertices)
             vertex_buffer.bind()
 
-            batch.texture.bind()
+            batch.texture.bind(min_filter=GL.LINEAR)
 
             GL.glDrawElements(GL.GL_TRIANGLES, len(indices), GL.GL_UNSIGNED_INT, None)
 

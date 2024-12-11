@@ -1,4 +1,5 @@
 import random
+from types import NoneType
 import numpy as np
 import animals
 
@@ -13,12 +14,15 @@ class Deck:
     def shuffle(self):
         random.shuffle(self.cards)
 
-    def deal_one(self):
+    def deal_one(self) -> animals.Animals | NoneType:
         """Remove and return the top card from the deck."""
-        if len(self.cards) == 0:
-            raise ValueError("No cards left in deck")
-        top_card = self.cards.pop(0)
+        top_card = None
+        if len(self.cards) > 0:
+            top_card = self.cards.pop(0)
         return top_card
+    
+    def empty(self) -> bool:
+        return len(self.cards) == 0
 
     def __len__(self):
         """Return the number of cards remaining in the deck."""
